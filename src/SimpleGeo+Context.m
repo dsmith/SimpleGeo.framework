@@ -31,43 +31,39 @@
 #import <YAJL/YAJL.h>
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Internal.h"
-
+#import "SGQuery.h"
 
 @implementation SimpleGeo (Context)
 
 - (void)getContextForPoint:(SGPoint *)point
 {
-    NSURL *endpoint = [self endpointForString:
-                       [NSString stringWithFormat:@"/%@/context/%f,%f.json",
-                        SIMPLEGEO_API_VERSION,
-                        [point latitude], [point longitude]]];
-    
-    ASIHTTPRequest *request = [self requestWithURL:endpoint];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestContext:", @"targetSelector",
-                          point, @"point",
-                          nil
-                          ]];
-    [request startAsynchronous];
+    [self getContextForQuery:[SGQuery queryWithPoint:point]];
 }
 
 - (void)getContextForAddress:(NSString *)address
 {
-    NSURL *endpoint = [self endpointForString:
-                       [NSString stringWithFormat:@"/%@/context/address.json?address=%@",
-                        SIMPLEGEO_API_VERSION,
-                        [self URLEncodedString:address],
-                        nil
-                        ]];
+    [self getContextForQuery:[SGQuery queryWithAddress:address]];
+}
 
+- (void)getContextForQuery:(SGQuery *)query
+{
+    NSString *endpointString;
+    if ([query point]) {
+        endpointString = [NSString stringWithFormat:@"/%@/context/%f,%f.json",
+                          SIMPLEGEO_API_VERSION, [[query point] latitude], [[query point] longitude]];
+    } else {
+        endpointString = [NSString stringWithFormat:@"/%@/context/address.json?address=%@",
+                          SIMPLEGEO_API_VERSION, [self URLEncodedString:[query address]]];
+    }
+    
+    if (![query action]) [query setAction:@selector(didRequestContext:)];
+    
+    NSURL *endpoint = [self endpointForString:endpointString];
     ASIHTTPRequest *request = [self requestWithURL:endpoint];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestContext:", @"targetSelector",
-                          address, @"address",
-                          nil
-                          ]];
+    [request setUserInfo:[query userInfo]];
     [request startAsynchronous];
 }
+
 
 #pragma mark Dispatcher Methods
 

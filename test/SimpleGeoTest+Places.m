@@ -83,7 +83,8 @@
 {
     [self prepare];
 
-    [[self createClient] getPlacesNear:[self point]];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [[self createClient] getPlacesForQuery:testQuery];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
@@ -93,8 +94,9 @@
 {
     [self prepare];
 	
-    [[self createClient] getPlacesNear:[self point] 
-                                 count:2];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setLimit:2];
+    [[self createClient] getPlacesForQuery:testQuery];
 	
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
@@ -104,7 +106,9 @@
 {
     [self prepare];
 
-    [[self createClient] getPlacesNear:[self point] within:1.5];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setRadius:1.5];
+    [[self createClient] getPlacesForQuery:testQuery];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.5];
@@ -114,9 +118,11 @@
 {
     [self prepare];
 	
-    [[self createClient] getPlacesNear:[self point]
-                                within:1.5
-                                 count:2];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setLimit:2];
+    [testQuery setRadius:1.5];
+    [[self createClient] getPlacesForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.5];
 }
@@ -125,8 +131,9 @@
 {
     [self prepare];
 
-    [[self createClient] getPlacesNear:[self point]
-                              matching:@"öne"];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setSearchQuery:@"öne"];
+    [[self createClient] getPlacesForQuery:testQuery];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
@@ -136,9 +143,11 @@
 {
     [self prepare];
 	
-    [[self createClient] getPlacesNear:[self point]
-                              matching:@"öne"
-                                 count:2];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setSearchQuery:@"öne"];
+    [testQuery setLimit:2];
+    [[self createClient] getPlacesForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -147,9 +156,10 @@
 {
     [self prepare];
 
-    [[self createClient] getPlacesNear:[self point]
-                              matching:@"burgers"
-                            inCategory:@"Restaurants & Bars"];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setSearchQuery:@"burgers"];
+    [testQuery setCategories:[NSArray arrayWithObject:@"Restaurants & Bars"]];
+    [[self createClient] getPlacesForQuery:testQuery];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
@@ -158,11 +168,13 @@
 - (void)testGetPlacesNearMatchingInCategoryWithCount
 {
     [self prepare];
+    
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setSearchQuery:@"burgers"];
+    [testQuery setCategories:[NSArray arrayWithObject:@"Restaurants & Bars"]];
+    [testQuery setLimit:2];
+    [[self createClient] getPlacesForQuery:testQuery];
 	
-    [[self createClient] getPlacesNear:[self point]
-                              matching:@"burgers"
-                            inCategory:@"Restaurants & Bars"
-                                 count:2];
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -170,8 +182,9 @@
 - (void)testGetPlacesNearAddress
 {
     [self prepare];
-
-    [[self createClient] getPlacesNearAddress:@"41 Decatur St., San Francisco, CA"];
+    
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:@"41 Decatur St., San Francisco, CA"];
+    [[self createClient] getPlacesForQuery:testQuery];
 
     [self waitForStatus:kGHUnitWaitStatusSuccess
                  timeout:0.25];
@@ -180,8 +193,10 @@
 - (void)testGetPlacesNearAddressWithCount
 {
     [self prepare];
-	
-    [[self createClient] getPlacesNearAddress:@"41 Decatur St., San Francisco, CA" count:2];
+    
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:@"41 Decatur St., San Francisco, CA"];
+    [testQuery setLimit:2];
+    [[self createClient] getPlacesForQuery:testQuery];
 	
     [self waitForStatus:kGHUnitWaitStatusSuccess
 				timeout:0.25];

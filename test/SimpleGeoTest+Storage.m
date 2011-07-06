@@ -104,8 +104,10 @@
 - (void)testGetRecordsInLayer
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -115,9 +117,11 @@
 - (void)testGetRecordsInLayerNearPointWithRadius
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                    radius:1.5];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setRadius:1.5];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -125,20 +129,24 @@
 - (void)testGetRecordsInLayerNearPoinWithCount
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                     count:2];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setLimit:2];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
 
 - (void)testGetRecordsInLayerNearPoinWithRadiusAndCount
 {
-        [self prepare];
-        [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                          near:[self point]
-                                        radius:1.5
-                                         count:3];
+    [self prepare];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setRadius:1.5];
+    [testQuery setLimit:3];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -146,10 +154,11 @@
 - (void)testGetRecordsInLayerNearPoinWithCursor
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                    cursor:cursor];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -157,11 +166,12 @@
 - (void)testGetRecordsInLayerNearPoinWithRadiusAndCursor
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                    radius:1.5
-                                    cursor:cursor];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setRadius:1.5];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -169,12 +179,13 @@
 - (void)testGetRecordsInLayerNearPoinWithRadiusCursorAndCount
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                    radius:1.5
-                                    cursor:cursor
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setRadius:1.5];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -182,11 +193,12 @@
 - (void)testGetRecordsInLayerNearPoinWithCursorAndCount
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                                      near:[self point]
-                                    cursor:cursor
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -196,8 +208,10 @@
 - (void)testGetRecordsInLayerNearAddress
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -205,9 +219,11 @@
 - (void)testGetRecordsInLayerNearAddressWithRadius
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    radius:1.5];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setRadius:1.5];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -215,9 +231,11 @@
 - (void)testGetRecordsInLayerNearAddressWithCount
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -225,10 +243,12 @@
 - (void)testGetRecordsInLayerNearAddressWithRadiusAndCount
 {
     [self prepare];
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    radius:1.5
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setRadius:1.5];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -236,10 +256,11 @@
 - (void)testGetRecordsInLayerNearAddressWithCursor
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    cursor:cursor];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -247,11 +268,12 @@
 - (void)testGetRecordsInLayerNearAddressWithRadiusAndCursor
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    radius:1.5
-                                    cursor:cursor];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setRadius:1.5];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -259,12 +281,13 @@
 - (void)testGetRecordsInLayerNearAddressWithRadiusCursorAndCount
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    radius:1.5
-                                    cursor:cursor
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setRadius:1.5];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -272,11 +295,12 @@
 - (void)testGetRecordsInLayerNearAddressWithCursorAndCount
 {
     [self prepare];
-    NSString *cursor = @"page1";
-    [[self createClient] getRecordsInLayer:@"mojodna.test"
-                               nearAddress:@"SiliconValley"
-                                    cursor:cursor
-                                     count:4];
+    
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:@"SiliconValley" inLayer:@"mojodna.test"];
+    [testQuery setCursor:@"page1"];
+    [testQuery setLimit:4];
+    [[self createClient] getRecordsForQuery:testQuery];
+    
     [self waitForStatus:kGHUnitWaitStatusSuccess
                 timeout:0.25];
 }
@@ -470,7 +494,7 @@
     NSString *layer = [query objectForKey:@"layer"];
     int count = [[query objectForKey:@"limit"] intValue];
 
-    GHAssertEqualObjects([history.geometries objectAtIndex:0],
+    GHAssertEqualObjects([[history geometries] objectAtIndex:0],
                          [SGPoint pointWithLatitude:37.761835 longitude:-122.422917], nil);
 
     if (recordId && cursor && count > 0) {

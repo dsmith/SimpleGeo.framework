@@ -29,10 +29,10 @@
 //
 
 #import "SimpleGeo.h"
-#import "SGFeatureCollection.h"
-#import "SGGeometryCollection.h"
-#import "SGStoredRecord.h"
-
+@class SGFeatureCollection;
+@class SGGeometryCollection;
+@class SGStoredRecord;
+@class SGStorageQuery;
 
 /*!
  * Informal delegate protocol for Storage functionality.
@@ -173,6 +173,11 @@
 - (void)deleteRecordInLayer:(NSString *)layer
                      withId:(NSString *)id;
 
+/*!
+ * Request a record by id.
+ *
+ * @param id    ID of the record.
+ */
 - (void)getRecordFromLayer:(NSString *)layer
                     withId:(NSString *)id;
 
@@ -185,7 +190,7 @@
  * @param point Origin point.
  */
 - (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point;
+                     near:(SGPoint *)point __attribute__((deprecated));
 
 /*!
  * Get records nearest to a point.
@@ -196,7 +201,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
-                   radius:(double)radius;
+                   radius:(double)radius __attribute__((deprecated));
 
 /*!
  * Get records nearest to a point.
@@ -207,7 +212,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get records nearest to a point.
@@ -220,7 +225,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
                    radius:(double)radius
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to a point.
@@ -231,7 +236,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
-                   cursor:(NSString *)cursor;
+                   cursor:(NSString *)cursor __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to a point.
@@ -244,7 +249,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
                    radius:(double)radius
-                   cursor:(NSString *)cursor;
+                   cursor:(NSString *)cursor __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to a point.
@@ -259,7 +264,7 @@
                      near:(SGPoint *)point
                    radius:(double)radius
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to a point.
@@ -272,7 +277,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
                      near:(SGPoint *)point
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to a point.
@@ -287,7 +292,7 @@
                      near:(SGPoint *)point
                    radius:(double)radius
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 #pragma mark Methods for querying by address
 
@@ -298,7 +303,7 @@
  * @param address Address.
  */
 - (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address;
+              nearAddress:(NSString *)address __attribute__((deprecated));
 
 /*!
  * Get records nearest to an address.
@@ -309,7 +314,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
-                   radius:(double)radius;
+                   radius:(double)radius __attribute__((deprecated));
 
 /*!
  * Get records nearest to an address.
@@ -320,7 +325,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get records nearest to an address.
@@ -333,7 +338,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
                    radius:(double)radius
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to an address.
@@ -344,7 +349,7 @@
  */
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor;
+                   cursor:(NSString *)cursor __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to an address.
@@ -357,7 +362,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
                    radius:(double)radius
-                   cursor:(NSString *)cursor;
+                   cursor:(NSString *)cursor __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to an address.
@@ -372,7 +377,7 @@
               nearAddress:(NSString *)address
                    radius:(double)radius
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to an address.
@@ -385,7 +390,7 @@
 - (void)getRecordsInLayer:(NSString *)layer
               nearAddress:(NSString *)address
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
 
 /*!
  * Get additional records nearest to an address.
@@ -400,7 +405,16 @@
               nearAddress:(NSString *)address
                    radius:(double)radius
                    cursor:(NSString *)cursor
-                    count:(int)count;
+                    count:(int)count __attribute__((deprecated));
+
+#pragma mark Standard Request Method
+
+/*!
+ * Get nearby records using an SGStorageQuery
+ *
+ * @param query   Storage query.
+ */
+- (void)getRecordsForQuery:(SGStorageQuery *)query;
 
 #pragma mark Record History
 

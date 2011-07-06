@@ -31,8 +31,10 @@
 #import "ASIHTTPRequest.h"
 #import "SGFeature.h"
 #import "SGFeatureCollection.h"
+#import "SGStoredRecord.h"
 
 #import "SGGeometry.h"
+#import "SGGeometryCollection.h"
 #import "SGPoint.h"
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
@@ -43,6 +45,10 @@
     #import "SGPolygon+Mapkit.h"
     #import "SGMultiPolygon+Mapkit.h"    
 #endif
+
+#import "SGQuery.h"
+#import "SGPlacesQuery.h"
+#import "SGStorageQuery.h"
 
 /*!
  * \mainpage

@@ -29,7 +29,7 @@
 //
 
 #import "SimpleGeo.h"
-
+@class SGQuery;
 
 /*!
  * Informal delegate protocol for Context functionality.
@@ -64,5 +64,11 @@
  * @param address Query address.
  */
 - (void)getContextForAddress:(NSString *)address;
+
+/*!
+ * Get Context information for a SGQuery object (SimpleGeo+Context.h)
+ * @param query Query object.
+ */
+- (void)getContextForQuery:(SGQuery *)query;
 
 @end
