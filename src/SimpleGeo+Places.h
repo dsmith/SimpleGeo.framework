@@ -32,11 +32,73 @@
 @class SGPlacesQuery;
 
 /*!
+ * Informal delegate protocol for Places functionality.
+ */
+@interface NSObject (SimpleGeoPlaceDelegate)
+
+#pragma mark Delegate Methods
+
+/*!
+ * Called when a collection of places were loaded from the Places database.
+ * @param places Collection of places.
+ * @param query  Query information.
+ */
+- (void)didLoadPlaces:(SGFeatureCollection *)places
+             forQuery:(NSDictionary *)query __attribute__((deprecated));
+
+/*!
+ * Called when a collection of places were loaded from the Places database.
+ * @param places Collection of places.
+ * @param query  Relevant SGPlacesQuery object.
+ */
+- (void)didLoadPlaces:(SGFeatureCollection *)places
+           forSGQuery:(SGPlacesQuery *)query;
+
+/*!
+ * Called when a feature was successfully added to the Places database.
+ * @param feature Feature that was added.
+ * @param handle  Assigned handle.
+ * @param url     Canonical URL for the created feature.
+ * @param token   Status token.
+ */
+- (void)didAddPlace:(SGFeature *)feature
+             handle:(NSString *)handle
+                URL:(NSURL *)url
+              token:(NSString *)token;
+
+/*!
+ * Called when a place was successfully updated in the Places database.
+ * @param feature Updated feature.
+ * @param handle  Handle of updated place.
+ * @param token   Status token.
+ */
+- (void)didUpdatePlace:(SGFeature *)feature
+                handle:(NSString *)handle
+                 token:(NSString *)token;
+
+/*!
+ * Called when a place was successfully removed from the Places database.
+ * @param handle Handle of deleted place.
+ * @param token  Status token.
+ */
+- (void)didDeletePlace:(NSString *)handle
+                 token:(NSString *)token;
+
+@end
+
+
+/*!
  * Client support for the Places API.
  */
 @interface SimpleGeo (Places)
 
-#pragma mark Place Manipulation Methods
+#pragma mark Request Methods
+
+/*!
+ * Find places matching a SimpleGeo query object (SimpleGeo+Places.h).
+ * @param query     request query.
+ */
+- (void)getPlacesForQuery:(SGPlacesQuery *)query;
 
 /*!
  * Add a feature to the Places database (SimpleGeo+Places.h).
@@ -61,6 +123,32 @@
  * @param handle Handle of feature to remove.
  */
 - (void)deletePlace:(NSString *)handle;
+
+#pragma mark Dispatcher Methods
+
+/*!
+ * Called when a places fetch request returns
+ * @param request The manufactured request.
+ */
+- (void)didReceivePlaces:(ASIHTTPRequest *)request;
+
+/*!
+ * Called when a places add request returns
+ * @param request The manufactured request.
+ */
+- (void)didAddPlace:(ASIHTTPRequest *)request;
+
+/*!
+ * Called when a places update request returns
+ * @param request The manufactured request.
+ */
+- (void)didUpdatePlace:(ASIHTTPRequest *)request;
+
+/*!
+ * Called when a places delete request returns
+ * @param request The manufactured request.
+ */
+- (void)didDeletePlace:(ASIHTTPRequest *)request;
 
 #pragma mark Deprecated Convenience Methods
 
@@ -316,67 +404,5 @@
                   inCategory:(NSString *)category
                       within:(double)radius
                        count:(int)limit __attribute__((deprecated));
-
-#pragma mark Standard Request Method
-
-/*!
- * Find places matching a SimpleGeo query object (SimpleGeo+Places.h).
- * @param query     request query.
- */
-- (void)getPlacesForQuery:(SGPlacesQuery *)query;
-
-@end
-
-
-/*!
- * Informal delegate protocol for Places functionality.
- */
-@interface NSObject (SimpleGeoPlaceDelegate)
-
-#pragma mark Dispatcher Methods
-
-/*!
- * Called when a places request is made.
- * @param request The manufactured request.
- */
-- (void)didRequestPlaces:(ASIHTTPRequest *)request;
-
-/*!
- * Called when a collection of places were loaded from the Places database.
- * @param places Collection of places.
- * @param query  Query information.
- */
-- (void)didLoadPlaces:(SGFeatureCollection *)places
-             forQuery:(NSDictionary *)query;
-
-/*!
- * Called when a feature was successfully added to the Places database.
- * @param feature Feature that was added.
- * @param handle  Assigned handle.
- * @param url     Canonical URL for the created feature.
- * @param token   Status token.
- */
-- (void)didAddPlace:(SGFeature *)feature
-             handle:(NSString *)handle
-                URL:(NSURL *)url
-              token:(NSString *)token;
-
-/*!
- * Called when a place was successfully updated in the Places database.
- * @param feature Updated feature.
- * @param handle  Handle of updated place.
- * @param token   Status token.
- */
-- (void)didUpdatePlace:(SGFeature *)feature
-                handle:(NSString *)handle
-                 token:(NSString *)token;
-
-/*!
- * Called when a place was successfully removed from the Places database.
- * @param handle Handle of deleted place.
- * @param token  Status token.
- */
-- (void)didDeletePlace:(NSString *)handle
-                 token:(NSString *)token;
 
 @end

@@ -70,31 +70,6 @@
     return [self.query objectForKey:@"address"];
 }
 
-- (NSDictionary *)asDictionary
-{
-    return [NSDictionary dictionaryWithDictionary:query];
-}
-
-- (NSObject *)target
-{
-    return [self.query objectForKey:@"target"];
-}
-
-- (void)setTarget:(NSObject *)target
-{
-    [self.query setObject:target forKey:@"target"];
-}
-
-- (SEL)action
-{
-    return NSSelectorFromString([self.query objectForKey:@"action"]);
-}
-
-- (void)setAction:(SEL)action
-{
-    [self.query setObject:NSStringFromSelector(action) forKey:@"action"];
-}
-
 - (NSDictionary *)userInfo
 {
     return [self.query objectForKey:@"userInfo"];
@@ -103,6 +78,13 @@
 - (void)setUserInfo:(NSDictionary*)userInfo
 {
     [self.query setObject:[userInfo retain] forKey:@"userInfo"];
+}
+
+#pragma mark Conversion Methods
+
+- (NSDictionary *)asDictionary
+{
+    return [NSDictionary dictionaryWithDictionary:query];
 }
 
 @end

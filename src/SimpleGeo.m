@@ -34,7 +34,6 @@
 #import "SimpleGeo+Internal.h"
 #import "SGFeature+Private.h"
 
-
 NSString * const SIMPLEGEO_API_VERSION = @"1.0";
 NSString * const SIMPLEGEO_URL_PREFIX = @"http://api.simplegeo.com";
 NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
@@ -44,7 +43,6 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 - (void)requestFailed:(ASIHTTPRequest *)request;
 
 @end
-
 
 @implementation SimpleGeo
 

@@ -35,10 +35,13 @@
 #import "SGGeometryCollection+Private.h"
 #import "SGStoredRecord.h"
 #import "SGStorageQuery.h"
+#import "SGQuery+Private.h"
 
 #define SIMPLEGEO_API_VERSION_FOR_STORAGE @"0.1"
 
 @implementation SimpleGeo (Storage)
+
+#pragma mark Record Request Methods
 
 - (void)getRecordFromLayer:(NSString *)layer
                     withId:(NSString *)id
@@ -114,188 +117,6 @@
     [request startAsynchronous];
 }
 
-#pragma mark Methods for querying by point (DEPRECATED)
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-#pragma mark Methods for querying by address (DEPRECATED)
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-#pragma mark Standard Request Method
-     
 - (void)getRecordsForQuery:(SGStorageQuery *)query
 {
     NSMutableString *endpoint;
@@ -307,7 +128,7 @@
                     [[query point] longitude]];
     } else {
         endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/%@.json",
-                     SIMPLEGEO_API_VERSION_FOR_STORAGE, [query layer], [query address]];
+                    SIMPLEGEO_API_VERSION_FOR_STORAGE, [query layer], [query address]];
     }
     
     NSMutableArray *queryParams = [NSMutableArray array];
@@ -328,11 +149,11 @@
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    if (![query action]) [query setAction:@selector(didLoadRecords:forQuery:cursor:)];
+    [query setAction:@selector(didLoadRecords:)];
     
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[query userInfo]];
+    [request setUserInfo:[query asDictionary]];
     [request startAsynchronous];
 }
 
@@ -374,7 +195,7 @@
     NSMutableString *endpoint  = [NSMutableString stringWithFormat:@"/%@/records/%@/%@/history.json",
                                   SIMPLEGEO_API_VERSION_FOR_STORAGE, layer,recordId];
     NSMutableArray *queryParams = [NSMutableArray array];
-
+    
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                      @"didLoadHistory:", @"targetSelector",
                                      recordId, @"recordId",
@@ -385,16 +206,16 @@
         NSNumber *objCount = [NSNumber numberWithDouble:count];
         [userInfo setObject:objCount forKey:@"limit"];
     }
-
+    
     if (cursor && ! [cursor isEqualToString:@""]) {
         [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"cursor", cursor]];
         [userInfo setObject:cursor forKey:@"cursor"];
     }
-
+    
     if ([queryParams count] > 0) {
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
-
+    
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setUserInfo:userInfo];
@@ -424,7 +245,7 @@
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/layers/%@.json",
                                                   SIMPLEGEO_API_VERSION_FOR_STORAGE, name]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-        
+    
     NSMutableDictionary *layerDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                       name, @"name",
                                       title, @"title",
@@ -438,7 +259,7 @@
         [layerDict setValue:@"false"
                      forKey:@"public"];
     }
-        
+    
     [request appendPostData:[[layerDict yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
     [request setRequestMethod:@"PUT"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
@@ -598,17 +419,17 @@
 - (void)didLoadHistory:(ASIHTTPRequest *)request
 {
     if ([delegate respondsToSelector:@selector(didLoadHistory:forRecordId:forQuery:cursor:)]) {
-    NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-
-    NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
-    [query removeObjectForKey:@"targetSelector"];
-
-    SGGeometryCollection *history = [SGGeometryCollection geometryCollectionWithDictionary:jsonResponse];
-    [delegate didLoadHistory:history
-                 forRecordId:[[[[request userInfo] objectForKey:@"recordId"] retain] autorelease]
-                    forQuery:query
-                      cursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
-
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        
+        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
+        [query removeObjectForKey:@"targetSelector"];
+        
+        SGGeometryCollection *history = [SGGeometryCollection geometryCollectionWithDictionary:jsonResponse];
+        [delegate didLoadHistory:history
+                     forRecordId:[[[[request userInfo] objectForKey:@"recordId"] retain] autorelease]
+                        forQuery:query
+                          cursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
+        
     } else {
         NSLog(@"Delegate does not implement didLoadHistory:forRecordId:inLayer:cursor:");
     }
@@ -632,17 +453,203 @@
 
 - (void)didLoadRecords:(ASIHTTPRequest *)request
 {
-    if ([delegate respondsToSelector:@selector(didLoadRecords:forQuery:cursor:)]) {
-        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
-        [query removeObjectForKey:@"targetSelector"];
+    if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:cursor:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        SGFeatureCollection *records = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
+        SGStorageQuery *storageQuery = [SGStorageQuery queryWithDictionary:[request userInfo]];
+        [delegate didLoadRecords:records
+                      forSGQuery:storageQuery
+                          cursor:[storageQuery cursor]];
+    
+    /* TODO: remove (deprecated) */
+    } else if ([delegate respondsToSelector:@selector(didLoadRecords:forQuery:cursor:)]) {
         NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
         SGFeatureCollection *records = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
         [delegate didLoadRecords:records
-                        forQuery:query
+                        forQuery:[request userInfo]
                           cursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
+        
     } else {
-        NSLog(@"Delegate does not implement didLoadRecords:forQuery:cursor:");
+        NSLog(@"Delegate does not implement didLoadRecords:forSGQuery:cursor:");
     }
+}
+
+#pragma mark Deprecated Convenience Request Methods
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   radius:(double)radius
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   radius:(double)radius
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   cursor:(NSString *)cursor
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setCursor:cursor];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   radius:(double)radius
+                   cursor:(NSString *)cursor
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setCursor:cursor];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   cursor:(NSString *)cursor
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setCursor:cursor];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+                     near:(SGPoint *)point
+                   radius:(double)radius
+                   cursor:(NSString *)cursor
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setCursor:cursor];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   radius:(double)radius
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   radius:(double)radius
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   cursor:(NSString *)cursor
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setCursor:cursor];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   radius:(double)radius
+                   cursor:(NSString *)cursor
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setCursor:cursor];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   cursor:(NSString *)cursor
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setCursor:cursor];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
+}
+
+- (void)getRecordsInLayer:(NSString *)layer
+              nearAddress:(NSString *)address
+                   radius:(double)radius
+                   cursor:(NSString *)cursor
+                    count:(int)count
+{
+    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
+    [storageQuery setLayer:layer];
+    [storageQuery setRadius:radius];
+    [storageQuery setCursor:cursor];
+    [storageQuery setLimit:count];
+    [self getRecordsForQuery:storageQuery];
 }
 
 @end

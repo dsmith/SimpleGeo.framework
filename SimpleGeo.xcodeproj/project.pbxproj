@@ -43,7 +43,6 @@
 		5D687FF312F8D53F001716EA /* SGGeometryCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D687FF112F8D53F001716EA /* SGGeometryCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5D687FF412F8D53F001716EA /* SGGeometryCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D687FF212F8D53F001716EA /* SGGeometryCollection.m */; };
 		5D7674B712909AAB006B7D51 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674B612909AAB006B7D51 /* SystemConfiguration.framework */; };
-		5D7674BB12909ABA006B7D51 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674BA12909ABA006B7D51 /* libz.dylib */; };
 		5D7674BD12909ACB006B7D51 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674BC12909ACB006B7D51 /* CoreServices.framework */; };
 		5D7676161290EAE1006B7D51 /* SimpleGeo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D7676131290EAE1006B7D51 /* SimpleGeo.m */; };
 		5D7676171290EAE1006B7D51 /* SimpleGeo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7676141290EAE1006B7D51 /* SimpleGeo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,7 +75,6 @@
 		5DF0866D12ADCA9B007A8A60 /* SGGeometry+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0866C12ADCA9B007A8A60 /* SGGeometry+Private.h */; };
 		5DF0867B12ADCB21007A8A60 /* SGPolygon+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0867A12ADCB21007A8A60 /* SGPolygon+Private.h */; };
 		5DF0868912ADCBC5007A8A60 /* SGPoint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0868812ADCBC5007A8A60 /* SGPoint+Private.h */; };
-		5DF08A3812AF3DDE007A8A60 /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		5DF08A5812AF3EAE007A8A60 /* YAJL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		5DF08A9D12AF644F007A8A60 /* SGMultiPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF08A9B12AF644F007A8A60 /* SGMultiPolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5DF08A9E12AF644F007A8A60 /* SGMultiPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF08A9C12AF644F007A8A60 /* SGMultiPolygon.m */; };
@@ -95,6 +93,7 @@
 		9426DD6613C4122500C82030 /* GHUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
 		9426DD6713C4125200C82030 /* GHUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD6413C411C700C82030 /* GHUnitTestMain.m */; };
 		9426DD6A13C413B200C82030 /* GHUnit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
+		9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		EA29A52D1313109D00979D1A /* NSArray+SGGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */; };
 		EA29A52E1313109D00979D1A /* NSArray+SGGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = EA29A52B1313109D00979D1A /* NSArray+SGGeometry.h */; };
 		EA29A52F1313109D00979D1A /* NSArray+SGGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */; };
@@ -234,6 +233,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */,
 				5D4A7BA612F2172900A2C443 /* AppKit.framework in Frameworks */,
 				5D4A7BAD12F2174A00A2C443 /* SystemConfiguration.framework in Frameworks */,
 				5D4A7BA212F2170C00A2C443 /* libz.dylib in Frameworks */,
@@ -245,10 +245,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D7674B712909AAB006B7D51 /* SystemConfiguration.framework in Frameworks */,
-				5D7674BB12909ABA006B7D51 /* libz.dylib in Frameworks */,
 				5D7674BD12909ACB006B7D51 /* CoreServices.framework in Frameworks */,
 				5D8C15E7129DE86E002F8C01 /* AppKit.framework in Frameworks */,
-				5DF08A3812AF3DDE007A8A60 /* YAJL.framework in Frameworks */,
 				5D4A7BEE12F2196700A2C443 /* SimpleGeo.framework in Frameworks */,
 				9426DD6613C4122500C82030 /* GHUnit.framework in Frameworks */,
 			);
@@ -406,14 +404,14 @@
 			name = Tests;
 			sourceTree = "<group>";
 		};
-		5DE3488C12A9B477004E320D /* Optional */ = {
+		5DE3488C12A9B477004E320D /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				5DEC2F4C130457A5001A59C5 /* Context */,
 				5DEC2F4E130457AD001A59C5 /* Places */,
 				5DEC2F4F130457B2001A59C5 /* Storage */,
 			);
-			name = Optional;
+			name = Services;
 			sourceTree = "<group>";
 		};
 		5DEC2F4C130457A5001A59C5 /* Context */ = {
@@ -455,7 +453,7 @@
 			isa = PBXGroup;
 			children = (
 				9426DD5913C4082600C82030 /* Query Object */,
-				5DE3488C12A9B477004E320D /* Optional */,
+				5DE3488C12A9B477004E320D /* Services */,
 				5D7676141290EAE1006B7D51 /* SimpleGeo.h */,
 				5D7676131290EAE1006B7D51 /* SimpleGeo.m */,
 				5D39921A12A48F3F00EB7B20 /* SimpleGeo+Internal.h */,
@@ -487,14 +485,14 @@
 		9426DD5913C4082600C82030 /* Query Object */ = {
 			isa = PBXGroup;
 			children = (
-				9426DD4413C4082000C82030 /* SGNearbyQuery.h */,
-				9426DD4513C4082000C82030 /* SGNearbyQuery.m */,
-				9426DD4613C4082000C82030 /* SGPlacesQuery.h */,
-				9426DD4713C4082000C82030 /* SGPlacesQuery.m */,
 				9426DD4813C4082000C82030 /* SGQuery.h */,
 				9426DD4913C4082000C82030 /* SGQuery.m */,
 				9426DD4A13C4082000C82030 /* SGQuery+Private.h */,
 				9426DD4B13C4082000C82030 /* SGQuery+Private.m */,
+				9426DD4413C4082000C82030 /* SGNearbyQuery.h */,
+				9426DD4513C4082000C82030 /* SGNearbyQuery.m */,
+				9426DD4613C4082000C82030 /* SGPlacesQuery.h */,
+				9426DD4713C4082000C82030 /* SGPlacesQuery.m */,
 				9426DD4C13C4082000C82030 /* SGStorageQuery.h */,
 				9426DD4D13C4082000C82030 /* SGStorageQuery.m */,
 			);
@@ -737,8 +735,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/ext\"",
-					"\"/Volumes/Macintosh SSD/Users/Ryan/Dropbox/SimpleGeo/Repos/SimpleGeo.framework/ext\"",
-					"\"/Volumes/Macintosh SSD/Users/Ryan/Dropbox/SimpleGeo/Repos/SimpleGeo.framework/test\"",
+					"$(inherited)",
+					"\"$(SRCROOT)/test\"",
 				);
 			};
 			name = Debug;
@@ -750,8 +748,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/ext\"",
-					"\"/Volumes/Macintosh SSD/Users/Ryan/Dropbox/SimpleGeo/Repos/SimpleGeo.framework/ext\"",
-					"\"/Volumes/Macintosh SSD/Users/Ryan/Dropbox/SimpleGeo/Repos/SimpleGeo.framework/test\"",
+					"$(inherited)",
+					"\"$(SRCROOT)/test\"",
 				);
 			};
 			name = Release;

@@ -10,10 +10,44 @@
 
 @implementation SGQuery (Private)
 
++ (id)queryWithDictionary:(NSDictionary *)dictionary
+{
+    return [[[self alloc] initWithDictionary:dictionary] autorelease];
+}
+
+- (id)initWithDictionary:(NSDictionary *)dictionary
+{
+    self = [super init];
+    if (self) {
+        query = [dictionary retain];
+    }
+    return self;
+}
+
 - (void)setQuery:(NSDictionary *)newQuery
 {
     [self.query release];
     self.query = [NSMutableDictionary dictionaryWithDictionary:newQuery];
+}
+
+- (NSObject *)target
+{
+    return [self.query objectForKey:@"target"];
+}
+
+- (void)setTarget:(NSObject *)target
+{
+    [self.query setObject:target forKey:@"target"];
+}
+
+- (SEL)action
+{
+    return NSSelectorFromString([self.query objectForKey:@"action"]);
+}
+
+- (void)setAction:(SEL)action
+{
+    [self.query setObject:NSStringFromSelector(action) forKey:@"action"];
 }
 
 @end

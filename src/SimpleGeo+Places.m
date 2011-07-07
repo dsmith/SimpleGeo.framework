@@ -33,6 +33,7 @@
 #import "SimpleGeo+Internal.h"
 #import "SGFeatureCollection+Private.h"
 #import "SGPlacesQuery.h"
+#import "SGQuery+Private.h"
 
 @implementation SimpleGeo (Places)
 
@@ -96,6 +97,125 @@
                           handle, @"handle",
                           nil]];
     [request startAsynchronous];
+}
+
+#pragma mark Standard Request Method
+
+- (void)getPlacesForQuery:(SGPlacesQuery *)query
+{
+    NSMutableArray *queryParams = [NSMutableArray array];
+    
+    NSMutableString *endpoint;
+    if ([query point]) {
+        endpoint = [NSMutableString stringWithFormat:@"/%@/places/%f,%f.json",
+                    SIMPLEGEO_API_VERSION, [[query point] latitude], [[query point] longitude]];
+        
+    } else {
+        endpoint = [NSMutableString stringWithFormat:@"/%@/places/address.json",
+                    SIMPLEGEO_API_VERSION];
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@",@"address",
+                                [self URLEncodedString:[query address]]]];
+    }
+    
+    if ([query searchQuery] && ![[query searchQuery] isEqual:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"q",
+                                [self URLEncodedString:[query searchQuery]]]];
+    }
+    
+    if ([query categories] && [[query categories] count] > 0) {
+        for (NSString* category in [query categories]) {
+            if (![category isEqual:@""]) {
+                [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"category",
+                                        [self URLEncodedString:category]]];
+            }
+        }
+    }
+    
+    if ([query radius] > 0.0) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", [query radius]]];
+    }
+    
+	if ([query limit] > 0) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"num", [query limit]]];
+	}
+    
+    if ([queryParams count] > 0) {
+        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
+    }
+    
+    [query setAction:@selector(didReceivePlaces:)];
+    
+    NSURL *endpointURL = [self endpointForString:endpoint];
+    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
+    [request setUserInfo:[query asDictionary]];
+    [request startAsynchronous];
+}
+
+#pragma mark Dispatcher Methods
+
+- (void)didReceivePlaces:(ASIHTTPRequest *)request
+{
+    if ([delegate respondsToSelector:@selector(didLoadPlaces:forSGQuery:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        SGFeatureCollection *places = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
+        SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithDictionary:[request userInfo]];
+        
+        [delegate didLoadPlaces:places
+                     forSGQuery:placesQuery];
+        
+    /* TODO: remove (deprecated) */
+    } else if ([delegate respondsToSelector:@selector(didLoadPlaces:forQuery:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        SGFeatureCollection *places = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
+        
+        [delegate didLoadPlaces:places
+                       forQuery:[request userInfo]];
+        
+    } else {
+        NSLog(@"Delegate does not implement didLoadPlaces:forSGQuery:");
+    }
+}
+
+- (void)didAddPlace:(ASIHTTPRequest *)request
+{
+    if ([delegate respondsToSelector:@selector(didAddPlace:handle:URL:token:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        NSURL *placeURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@",
+                                                SIMPLEGEO_HOSTNAME,
+                                                [jsonResponse objectForKey:@"uri"]]];
+        
+        [delegate didAddPlace:[[[[request userInfo] objectForKey:@"feature"] retain] autorelease]
+                       handle:[[[jsonResponse objectForKey:@"id"] retain] autorelease]
+                          URL:placeURL
+                        token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
+    } else {
+        NSLog(@"Delegate does not implement didAddPlace:handle:URL:token:");
+    }
+}
+
+- (void)didUpdatePlace:(ASIHTTPRequest *)request
+{
+    if ([delegate respondsToSelector:@selector(didUpdatePlace:handle:token:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        
+        [delegate didUpdatePlace:[[[[request userInfo] objectForKey:@"feature"] retain] autorelease]
+                          handle:[[[[request userInfo] objectForKey:@"handle"] retain] autorelease]
+                           token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
+    } else {
+        NSLog(@"Delegate does not implement didUpdatePlace:handle:token:");
+    }
+}
+
+- (void)didDeletePlace:(ASIHTTPRequest *)request
+{
+    if ([delegate respondsToSelector:@selector(didDeletePlace:token:)]) {
+        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
+        
+        [delegate didDeletePlace:[[[[request userInfo] objectForKey:@"handle"] retain] autorelease]
+                           token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
+    } else {
+        NSLog(@"Delegate does not implement didDeletePlace:token:");
+    }
 }
 
 #pragma mark Deprecated Convenience Methods
@@ -338,118 +458,6 @@
     [placesQuery setRadius:radius];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
-}
-
-#pragma mark Standard Request Method
-
-- (void)getPlacesForQuery:(SGPlacesQuery *)query
-{
-    NSMutableArray *queryParams = [NSMutableArray array];
-    
-    NSMutableString *endpoint;
-    if ([query point]) {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/places/%f,%f.json",
-                    SIMPLEGEO_API_VERSION, [[query point] latitude], [[query point] longitude]];
-        
-    } else {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/places/address.json",
-                    SIMPLEGEO_API_VERSION];
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@",@"address",
-                                [self URLEncodedString:[query address]]]];
-    }
-    
-    if ([query searchQuery] && ![[query searchQuery] isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"q",
-                                [self URLEncodedString:[query searchQuery]]]];
-    }
-    
-    if ([query categories] && [[query categories] count] > 0) {
-        for (NSString* category in [query categories]) {
-            if (![category isEqual:@""]) {
-                [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"category",
-                                        [self URLEncodedString:category]]];
-            }
-        }
-    }
-    
-    if ([query radius] > 0.0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", [query radius]]];
-    }
-    
-	if ([query limit] > 0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"num", [query limit]]];
-	}
-    
-    if ([queryParams count] > 0) {
-        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
-    }
-         
-    if (![query action]) [query setAction:@selector(didRequestPlaces:)];
-    
-    NSURL *endpointURL = [self endpointForString:endpoint];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[query userInfo]];
-    [request startAsynchronous];
-}
-
-#pragma mark Dispatcher Methods
-
-- (void)didRequestPlaces:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadPlaces:forQuery:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        SGFeatureCollection *places = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
-        
-        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
-        [query removeObjectForKey:@"targetSelector"];
-        
-        [delegate didLoadPlaces:places
-                       forQuery:query];
-    } else {
-        NSLog(@"Delegate does not implement didLoadPlaces:forQuery:");
-    }
-}
-
-- (void)didAddPlace:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didAddPlace:handle:URL:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        NSURL *placeURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@",
-                                                SIMPLEGEO_HOSTNAME,
-                                                [jsonResponse objectForKey:@"uri"]]];
-
-        [delegate didAddPlace:[[[[request userInfo] objectForKey:@"feature"] retain] autorelease]
-                       handle:[[[jsonResponse objectForKey:@"id"] retain] autorelease]
-                          URL:placeURL
-                        token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
-    } else {
-        NSLog(@"Delegate does not implement didAddPlace:handle:URL:token:");
-    }
-}
-
-- (void)didUpdatePlace:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didUpdatePlace:handle:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        
-        [delegate didUpdatePlace:[[[[request userInfo] objectForKey:@"feature"] retain] autorelease]
-                          handle:[[[[request userInfo] objectForKey:@"handle"] retain] autorelease]
-                           token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
-    } else {
-        NSLog(@"Delegate does not implement didUpdatePlace:handle:token:");
-    }
-}
-
-- (void)didDeletePlace:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didDeletePlace:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-
-        [delegate didDeletePlace:[[[[request userInfo] objectForKey:@"handle"] retain] autorelease]
-                           token:[[[jsonResponse objectForKey:@"token"] retain] autorelease]];
-    } else {
-        NSLog(@"Delegate does not implement didDeletePlace:token:");
-    }
 }
 
 @end

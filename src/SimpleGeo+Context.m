@@ -31,9 +31,11 @@
 #import <YAJL/YAJL.h>
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Internal.h"
-#import "SGQuery.h"
+#import "SGQuery+Private.h"
 
 @implementation SimpleGeo (Context)
+
+#pragma mark Request Methods
 
 - (void)getContextForPoint:(SGPoint *)point
 {
@@ -56,27 +58,30 @@
                           SIMPLEGEO_API_VERSION, [self URLEncodedString:[query address]]];
     }
     
-    if (![query action]) [query setAction:@selector(didRequestContext:)];
+    [query setAction:@selector(didReceiveContext:)];
     
     NSURL *endpoint = [self endpointForString:endpointString];
     ASIHTTPRequest *request = [self requestWithURL:endpoint];
-    [request setUserInfo:[query userInfo]];
+    [request setUserInfo:[query asDictionary]];
     [request startAsynchronous];
 }
 
-
 #pragma mark Dispatcher Methods
 
-- (void)didRequestContext:(ASIHTTPRequest *)request
+- (void)didReceiveContext:(ASIHTTPRequest *)request
 {
-    if ([delegate respondsToSelector:@selector(didLoadContext:forQuery:)]) {
-        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
-        [query removeObjectForKey:@"targetSelector"];
-
+    if ([delegate respondsToSelector:@selector(didLoadContext:forSGQuery:)]) {
+        SGQuery *contextQuery = [SGQuery queryWithDictionary:[request userInfo]];
         [delegate didLoadContext:[[request responseData] yajl_JSON]
-                        forQuery:query];
+                      forSGQuery:contextQuery];
+    
+    /* TODO: remove (deprecated) */
+    } else if ([delegate respondsToSelector:@selector(didLoadContext:forQuery:)]) {
+        [delegate didLoadContext:[[request responseData] yajl_JSON]
+                        forQuery:[request userInfo]];
+        
     } else {
-        NSLog(@"Delegate does not implement didLoadContext:forQuery:");
+        NSLog(@"Delegate does not implement didLoadContext:forSGQuery:");
     }
 }
 

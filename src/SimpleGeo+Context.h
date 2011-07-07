@@ -42,10 +42,17 @@
  * @param query   Query information.
  */
 - (void)didLoadContext:(NSDictionary *)context
-              forQuery:(NSDictionary *)query;
+              forQuery:(NSDictionary *)query __attribute__((deprecated));
+
+/*!
+ * Called when Context information has been loaded.
+ * @param context Context response.
+ * @param query   Relevant SGQuery object.
+ */
+- (void)didLoadContext:(NSDictionary *)context
+            forSGQuery:(SGQuery *)query;
 
 @end
-
 
 /*!
  * Client support for the Places API.
