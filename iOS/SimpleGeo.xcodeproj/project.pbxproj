@@ -80,6 +80,16 @@
 		948E205B1381A188006C089B /* SimpleGeo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF1FBC112C2C6F50097CF47 /* SimpleGeo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		949A6BC913958A2B00FAFC34 /* SGPoint+Mapkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 949A6BC713958A2B00FAFC34 /* SGPoint+Mapkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		949A6BCA13958A2B00FAFC34 /* SGPoint+Mapkit.m in Sources */ = {isa = PBXBuildFile; fileRef = 949A6BC813958A2B00FAFC34 /* SGPoint+Mapkit.m */; };
+		94AD783E13C632240045902A /* SGNearbyQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AD783413C632240045902A /* SGNearbyQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94AD783F13C632240045902A /* SGNearbyQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AD783513C632240045902A /* SGNearbyQuery.m */; };
+		94AD784013C632240045902A /* SGPlacesQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AD783613C632240045902A /* SGPlacesQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94AD784113C632240045902A /* SGPlacesQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AD783713C632240045902A /* SGPlacesQuery.m */; };
+		94AD784213C632240045902A /* SGQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AD783813C632240045902A /* SGQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94AD784313C632240045902A /* SGQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AD783913C632240045902A /* SGQuery.m */; };
+		94AD784413C632240045902A /* SGQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AD783A13C632240045902A /* SGQuery+Private.h */; };
+		94AD784513C632240045902A /* SGQuery+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AD783B13C632240045902A /* SGQuery+Private.m */; };
+		94AD784613C632240045902A /* SGStorageQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94AD783C13C632240045902A /* SGStorageQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94AD784713C632240045902A /* SGStorageQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94AD783D13C632240045902A /* SGStorageQuery.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -163,6 +173,16 @@
 		948E201213819BC1006C089B /* SGMultiPolygon+Mapkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SGMultiPolygon+Mapkit.m"; path = "src/SGMultiPolygon+Mapkit.m"; sourceTree = "<group>"; };
 		949A6BC713958A2B00FAFC34 /* SGPoint+Mapkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SGPoint+Mapkit.h"; sourceTree = "<group>"; };
 		949A6BC813958A2B00FAFC34 /* SGPoint+Mapkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SGPoint+Mapkit.m"; sourceTree = "<group>"; };
+		94AD783413C632240045902A /* SGNearbyQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGNearbyQuery.h; path = ../src/SGNearbyQuery.h; sourceTree = "<group>"; };
+		94AD783513C632240045902A /* SGNearbyQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGNearbyQuery.m; path = ../src/SGNearbyQuery.m; sourceTree = "<group>"; };
+		94AD783613C632240045902A /* SGPlacesQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGPlacesQuery.h; path = ../src/SGPlacesQuery.h; sourceTree = "<group>"; };
+		94AD783713C632240045902A /* SGPlacesQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGPlacesQuery.m; path = ../src/SGPlacesQuery.m; sourceTree = "<group>"; };
+		94AD783813C632240045902A /* SGQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGQuery.h; path = ../src/SGQuery.h; sourceTree = "<group>"; };
+		94AD783913C632240045902A /* SGQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGQuery.m; path = ../src/SGQuery.m; sourceTree = "<group>"; };
+		94AD783A13C632240045902A /* SGQuery+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGQuery+Private.h"; path = "../src/SGQuery+Private.h"; sourceTree = "<group>"; };
+		94AD783B13C632240045902A /* SGQuery+Private.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SGQuery+Private.m"; path = "../src/SGQuery+Private.m"; sourceTree = "<group>"; };
+		94AD783C13C632240045902A /* SGStorageQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGStorageQuery.h; path = ../src/SGStorageQuery.h; sourceTree = "<group>"; };
+		94AD783D13C632240045902A /* SGStorageQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGStorageQuery.m; path = ../src/SGStorageQuery.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,7 +229,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				5DF1FBD912C2C7100097CF47 /* Optional */,
+				94AD783313C631EF0045902A /* Query Object */,
+				5DF1FBD912C2C7100097CF47 /* Services */,
 				948E1FE313818BC2006C089B /* Private */,
 				948E1FDA13818AE3006C089B /* Mapkit */,
 				5DF1FBA512C2C6F50097CF47 /* NSArray+SGFeature.h */,
@@ -326,14 +347,14 @@
 			path = ../ext/TouchFoundation;
 			sourceTree = "<group>";
 		};
-		5DF1FBD912C2C7100097CF47 /* Optional */ = {
+		5DF1FBD912C2C7100097CF47 /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				5DEC2F4913045788001A59C5 /* Context */,
 				5DEC2F4A1304578F001A59C5 /* Places */,
 				5DEC2F4B1304579A001A59C5 /* Storage */,
 			);
-			name = Optional;
+			name = Services;
 			sourceTree = "<group>";
 		};
 		5DF1FBF112C2C7A30097CF47 /* External Frameworks and Libraries */ = {
@@ -386,6 +407,23 @@
 			name = Private;
 			sourceTree = "<group>";
 		};
+		94AD783313C631EF0045902A /* Query Object */ = {
+			isa = PBXGroup;
+			children = (
+				94AD783813C632240045902A /* SGQuery.h */,
+				94AD783913C632240045902A /* SGQuery.m */,
+				94AD783A13C632240045902A /* SGQuery+Private.h */,
+				94AD783B13C632240045902A /* SGQuery+Private.m */,
+				94AD783413C632240045902A /* SGNearbyQuery.h */,
+				94AD783513C632240045902A /* SGNearbyQuery.m */,
+				94AD783613C632240045902A /* SGPlacesQuery.h */,
+				94AD783713C632240045902A /* SGPlacesQuery.m */,
+				94AD783C13C632240045902A /* SGStorageQuery.h */,
+				94AD783D13C632240045902A /* SGStorageQuery.m */,
+			);
+			name = "Query Object";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -424,6 +462,10 @@
 				5DF1FBEC12C2C7890097CF47 /* SGPolygon+Private.h in Headers */,
 				5DF1FBE912C2C7890097CF47 /* SGMultiPolygon.h in Headers */,
 				5DEC2F1713045743001A59C5 /* SGGeometryCollection.h in Headers */,
+				94AD783E13C632240045902A /* SGNearbyQuery.h in Headers */,
+				94AD784013C632240045902A /* SGPlacesQuery.h in Headers */,
+				94AD784213C632240045902A /* SGQuery.h in Headers */,
+				94AD784613C632240045902A /* SGStorageQuery.h in Headers */,
 				5DF1FBED12C2C7890097CF47 /* SGPolygon.h in Headers */,
 				5DF1FBEE12C2C7890097CF47 /* SimpleGeo+Internal.h in Headers */,
 				5DF1FCB312C2C9C90097CF47 /* Reachability.h in Headers */,
@@ -436,6 +478,7 @@
 				5D1408D5131599480001417A /* NSArray+SGGeometry.h in Headers */,
 				5D30FFA0131F0A360089F563 /* SGStoredRecord.h in Headers */,
 				5D30FFA2131F0A360089F563 /* SGStoredRecord+Private.h in Headers */,
+				94AD784413C632240045902A /* SGQuery+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +573,11 @@
 				5D1408D6131599480001417A /* NSArray+SGGeometry.m in Sources */,
 				5D30FFA1131F0A360089F563 /* SGStoredRecord.m in Sources */,
 				949A6BCA13958A2B00FAFC34 /* SGPoint+Mapkit.m in Sources */,
+				94AD783F13C632240045902A /* SGNearbyQuery.m in Sources */,
+				94AD784113C632240045902A /* SGPlacesQuery.m in Sources */,
+				94AD784313C632240045902A /* SGQuery.m in Sources */,
+				94AD784513C632240045902A /* SGQuery+Private.m in Sources */,
+				94AD784713C632240045902A /* SGStorageQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
