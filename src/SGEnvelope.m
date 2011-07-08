@@ -1,5 +1,5 @@
 //
-//  SGQuery+Nearby.m
+//  SGEnvelope.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -28,28 +28,49 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGNearbyQuery.h"
+#import "SGEnvelope.h"
 
-@implementation SGNearbyQuery
+@implementation SGEnvelope
 
-- (float)radius
+@synthesize north;
+@synthesize south;
+@synthesize east;
+@synthesize west;
+
++ (SGEnvelope *)envelopeWithNorth:(double)northernLat
+                            south:(double)southernLat
+                             west:(double)westernLon
+                             east:(double)easternLon
 {
-    return [[self.query objectForKey:@"radius"] floatValue];
+    return [[[SGEnvelope alloc] initWithWithNorth:northernLat
+                                            south:southernLat
+                                             west:westernLon
+                                             east:easternLon] autorelease];
 }
 
-- (void)setRadius:(float)radius
+- (id)init
 {
-    [self.query setObject:[NSNumber numberWithFloat:radius] forKey:@"radius"];
+    return [self initWithWithNorth:0.0
+                             south:0.0
+                              west:0.0
+                              east:0.0];
 }
 
-- (int)limit
+- (id)initWithWithNorth:(double)northernLat
+                  south:(double)southernLat
+                   west:(double)westernLon
+                   east:(double)easternLon
 {
-    return [[self.query objectForKey:@"limit"] intValue];
-}
-
-- (void)setLimit:(int)limit
-{
-    [self.query setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
+    self = [super init];
+    
+    if (self) {
+        north = northernLat;
+        south = southernLat;
+        west = westernLon;
+        east = easternLon;
+    }
+    
+    return self;
 }
 
 @end

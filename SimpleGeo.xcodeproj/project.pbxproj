@@ -93,6 +93,13 @@
 		9426DD6613C4122500C82030 /* GHUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
 		9426DD6713C4125200C82030 /* GHUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD6413C411C700C82030 /* GHUnitTestMain.m */; };
 		9426DD6A13C413B200C82030 /* GHUnit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
+		945DA1EC13C68C2E00D3984A /* SGTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 945DA1EB13C68C2E00D3984A /* SGTypes.h */; };
+		945DA1F013C68C3A00D3984A /* SGContextQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 945DA1EE13C68C3A00D3984A /* SGContextQuery.h */; };
+		945DA1F113C68C3A00D3984A /* SGContextQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 945DA1EF13C68C3A00D3984A /* SGContextQuery.m */; };
+		945DA1F413C68C4700D3984A /* SGEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = 945DA1F213C68C4700D3984A /* SGEnvelope.h */; };
+		945DA1F513C68C4700D3984A /* SGEnvelope.m in Sources */ = {isa = PBXBuildFile; fileRef = 945DA1F313C68C4700D3984A /* SGEnvelope.m */; };
+		9475C3BE13C6806B002E0308 /* SGQuery+Envelope.h in Headers */ = {isa = PBXBuildFile; fileRef = 9475C3BC13C6806B002E0308 /* SGQuery+Envelope.h */; };
+		9475C3BF13C6806B002E0308 /* SGQuery+Envelope.m in Sources */ = {isa = PBXBuildFile; fileRef = 9475C3BD13C6806B002E0308 /* SGQuery+Envelope.m */; };
 		9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		EA29A52D1313109D00979D1A /* NSArray+SGGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */; };
 		EA29A52E1313109D00979D1A /* NSArray+SGGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = EA29A52B1313109D00979D1A /* NSArray+SGGeometry.h */; };
@@ -222,6 +229,13 @@
 		9426DD4D13C4082000C82030 /* SGStorageQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGStorageQuery.m; path = src/SGStorageQuery.m; sourceTree = "<group>"; };
 		9426DD6213C40B0300C82030 /* GHUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnit.framework; path = ext/GHUnit.framework; sourceTree = "<group>"; };
 		9426DD6413C411C700C82030 /* GHUnitTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GHUnitTestMain.m; path = test/GHUnitTestMain.m; sourceTree = "<group>"; };
+		945DA1EB13C68C2E00D3984A /* SGTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGTypes.h; path = src/SGTypes.h; sourceTree = "<group>"; };
+		945DA1EE13C68C3A00D3984A /* SGContextQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGContextQuery.h; path = src/SGContextQuery.h; sourceTree = "<group>"; };
+		945DA1EF13C68C3A00D3984A /* SGContextQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGContextQuery.m; path = src/SGContextQuery.m; sourceTree = "<group>"; };
+		945DA1F213C68C4700D3984A /* SGEnvelope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGEnvelope.h; path = src/SGEnvelope.h; sourceTree = "<group>"; };
+		945DA1F313C68C4700D3984A /* SGEnvelope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGEnvelope.m; path = src/SGEnvelope.m; sourceTree = "<group>"; };
+		9475C3BC13C6806B002E0308 /* SGQuery+Envelope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGQuery+Envelope.h"; path = "src/SGQuery+Envelope.h"; sourceTree = "<group>"; };
+		9475C3BD13C6806B002E0308 /* SGQuery+Envelope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SGQuery+Envelope.m"; path = "src/SGQuery+Envelope.m"; sourceTree = "<group>"; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		EA29A52B1313109D00979D1A /* NSArray+SGGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+SGGeometry.h"; path = "src/NSArray+SGGeometry.h"; sourceTree = "<group>"; };
 		EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+SGGeometry.m"; path = "src/NSArray+SGGeometry.m"; sourceTree = "<group>"; };
@@ -452,6 +466,7 @@
 		5DF0867212ADCAF5007A8A60 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				945DA1EB13C68C2E00D3984A /* SGTypes.h */,
 				9426DD5913C4082600C82030 /* Query Object */,
 				5DE3488C12A9B477004E320D /* Services */,
 				5D7676141290EAE1006B7D51 /* SimpleGeo.h */,
@@ -470,6 +485,8 @@
 				5DA3C343128E427C00E128DC /* SGPoint.h */,
 				5DF0868812ADCBC5007A8A60 /* SGPoint+Private.h */,
 				5DA3C344128E427C00E128DC /* SGPoint.m */,
+				945DA1F213C68C4700D3984A /* SGEnvelope.h */,
+				945DA1F313C68C4700D3984A /* SGEnvelope.m */,
 				5D3994EC12A8AB4300EB7B20 /* SGPolygon.h */,
 				5DF0867A12ADCB21007A8A60 /* SGPolygon+Private.h */,
 				5D3994ED12A8AB4300EB7B20 /* SGPolygon.m */,
@@ -487,8 +504,12 @@
 			children = (
 				9426DD4813C4082000C82030 /* SGQuery.h */,
 				9426DD4913C4082000C82030 /* SGQuery.m */,
+				9475C3BC13C6806B002E0308 /* SGQuery+Envelope.h */,
+				9475C3BD13C6806B002E0308 /* SGQuery+Envelope.m */,
 				9426DD4A13C4082000C82030 /* SGQuery+Private.h */,
 				9426DD4B13C4082000C82030 /* SGQuery+Private.m */,
+				945DA1EE13C68C3A00D3984A /* SGContextQuery.h */,
+				945DA1EF13C68C3A00D3984A /* SGContextQuery.m */,
 				9426DD4413C4082000C82030 /* SGNearbyQuery.h */,
 				9426DD4513C4082000C82030 /* SGNearbyQuery.m */,
 				9426DD4613C4082000C82030 /* SGPlacesQuery.h */,
@@ -547,6 +568,10 @@
 				EA29A52E1313109D00979D1A /* NSArray+SGGeometry.h in Headers */,
 				5D1408C1131586BB0001417A /* SGGeometryCollection+Private.h in Headers */,
 				9426DD5413C4082000C82030 /* SGQuery+Private.h in Headers */,
+				9475C3BE13C6806B002E0308 /* SGQuery+Envelope.h in Headers */,
+				945DA1EC13C68C2E00D3984A /* SGTypes.h in Headers */,
+				945DA1F013C68C3A00D3984A /* SGContextQuery.h in Headers */,
+				945DA1F413C68C4700D3984A /* SGEnvelope.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +728,9 @@
 				9426DD5313C4082000C82030 /* SGQuery.m in Sources */,
 				9426DD5513C4082000C82030 /* SGQuery+Private.m in Sources */,
 				9426DD5713C4082000C82030 /* SGStorageQuery.m in Sources */,
+				9475C3BF13C6806B002E0308 /* SGQuery+Envelope.m in Sources */,
+				945DA1F113C68C3A00D3984A /* SGContextQuery.m in Sources */,
+				945DA1F513C68C4700D3984A /* SGEnvelope.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

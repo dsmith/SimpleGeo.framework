@@ -31,6 +31,7 @@
 #import <YAJL/YAJL.h>
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Internal.h"
+#import "SGContextQuery.h"
 #import "SGQuery+Private.h"
 
 @implementation SimpleGeo (Context)
@@ -39,29 +40,44 @@
 
 - (void)getContextForPoint:(SGPoint *)point
 {
-    [self getContextForQuery:[SGQuery queryWithPoint:point]];
+    [self getContextForQuery:[SGContextQuery queryWithPoint:point]];
 }
 
 - (void)getContextForAddress:(NSString *)address
 {
-    [self getContextForQuery:[SGQuery queryWithAddress:address]];
+    [self getContextForQuery:[SGContextQuery queryWithAddress:address]];
 }
 
-- (void)getContextForQuery:(SGQuery *)query
+- (void)getContextForQuery:(SGContextQuery *)query
 {
-    NSString *endpointString;
+   NSMutableArray *queryParams = [NSMutableArray array];
+    
+    NSMutableString *endpoint;
     if ([query point]) {
-        endpointString = [NSString stringWithFormat:@"/%@/context/%f,%f.json",
-                          SIMPLEGEO_API_VERSION, [[query point] latitude], [[query point] longitude]];
+        endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f.json", SIMPLEGEO_API_VERSION,
+                          [[query point] latitude], [[query point] longitude]];
+    } else if ([query envelope]) {
+        endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f,%f,%f.json", SIMPLEGEO_API_VERSION,
+                          [[query envelope] north], [[query envelope] west], [[query envelope] south], [[query envelope] east]];
     } else {
-        endpointString = [NSString stringWithFormat:@"/%@/context/address.json?address=%@",
-                          SIMPLEGEO_API_VERSION, [self URLEncodedString:[query address]]];
+        endpoint = [NSMutableString stringWithFormat:@"/%@/context/address.json?address=%@", SIMPLEGEO_API_VERSION,
+                          [self URLEncodedString:[query address]]];
     }
     
-    [query setAction:@selector(didReceiveContext:)];
+    if ([query filter] && ![[query filter] isEqual:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"filter", [query filter]]];
+    }
     
-    NSURL *endpoint = [self endpointForString:endpointString];
-    ASIHTTPRequest *request = [self requestWithURL:endpoint];
+    if ([query featureCategory] && ![[query featureCategory] isEqual:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [query featureCategory]]];
+    }
+    
+    if ([queryParams count] > 0) {
+        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
+    }
+    
+    NSURL *endpointURL = [self endpointForString:endpoint];
+    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setUserInfo:[query asDictionary]];
     [request startAsynchronous];
 }
@@ -71,7 +87,7 @@
 - (void)didReceiveContext:(ASIHTTPRequest *)request
 {
     if ([delegate respondsToSelector:@selector(didLoadContext:forSGQuery:)]) {
-        SGQuery *contextQuery = [SGQuery queryWithDictionary:[request userInfo]];
+        SGContextQuery *contextQuery = [SGContextQuery queryWithDictionary:[request userInfo]];
         [delegate didLoadContext:[[request responseData] yajl_JSON]
                       forSGQuery:contextQuery];
     

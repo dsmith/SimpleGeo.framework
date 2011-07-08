@@ -1,5 +1,5 @@
 //
-//  SGQuery+Nearby.m
+//  SGEnvelope.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -28,28 +28,50 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGNearbyQuery.h"
+#import <SimpleGeo/SimpleGeo.h>
 
-@implementation SGNearbyQuery
-
-- (float)radius
+@interface SGEnvelope : SGGeometry
 {
-    return [[self.query objectForKey:@"radius"] floatValue];
+    double north;
+    double south;
+    double west;
+    double east;
 }
 
-- (void)setRadius:(float)radius
-{
-    [self.query setObject:[NSNumber numberWithFloat:radius] forKey:@"radius"];
-}
+//! Northern latitude (top coordinate).
+@property (nonatomic, assign) double north;
 
-- (int)limit
-{
-    return [[self.query objectForKey:@"limit"] intValue];
-}
+//! Southern latitude (bottom coordinate).
+@property (nonatomic, assign) double south;
 
-- (void)setLimit:(int)limit
-{
-    [self.query setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
-}
+//! Western longitude (left coordinate).
+@property (nonatomic, assign) double west;
+
+//! Eastern longitude (right coordinate).
+@property (nonatomic, assign) double east;
+
+/*!
+ * Create a bounding box from edge coordinates.
+ * @param north Northern latitude.
+ * @param south Southern latitude.
+ * @param west Western longitude.
+ * @param east Eastern longitude.
+ */
++ (SGEnvelope *)envelopeWithNorth:(double)northernLat
+                            south:(double)southernLat
+                             west:(double)westernLon
+                             east:(double)easternLon;
+
+/*!
+ * Construct a bounding box from edge coordinates.
+ * @param north Northern latitude.
+ * @param south Southern latitude.
+ * @param west Western longitude.
+ * @param east Eastern longitude.
+ */
+- (id)initWithWithNorth:(double)northernLat
+                  south:(double)southernLat
+                   west:(double)westernLon
+                   east:(double)easternLon;
 
 @end

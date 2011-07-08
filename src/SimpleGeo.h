@@ -36,6 +36,7 @@
 #import "SGGeometry.h"
 #import "SGGeometryCollection.h"
 #import "SGPoint.h"
+#import "SGEnvelope.h"
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
 
@@ -49,6 +50,8 @@
 #import "SGQuery.h"
 #import "SGPlacesQuery.h"
 #import "SGStorageQuery.h"
+
+#import "SGTypes.h"
 
 /*!
  * \mainpage
