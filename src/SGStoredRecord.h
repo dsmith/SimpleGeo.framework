@@ -43,7 +43,7 @@
 }
 
 //! Created at timestamp (Unix epoch)
-@property (readonly)        NSTimeInterval created;
+@property (readonly) NSTimeInterval created;
 
 //! Layer name
 @property (retain,readonly) NSString *layer;

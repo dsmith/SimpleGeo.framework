@@ -71,6 +71,7 @@
 		5DF1FCB712C2C9DA0097CF47 /* ASIAuthenticationDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF1FCB512C2C9DA0097CF47 /* ASIAuthenticationDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5DF1FCB812C2C9DA0097CF47 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1FCB612C2C9DA0097CF47 /* ASIAuthenticationDialog.m */; };
 		5DF1FD7A12C2CD9C0097CF47 /* SimpleGeo_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5DF1FD7912C2CD9C0097CF47 /* SimpleGeo_Prefix.pch */; };
+		942AAF7513CE4EBA0053A9DC /* YAJLiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942AAF7413CE4EBA0053A9DC /* YAJLiOS.framework */; };
 		948E20451381A011006C089B /* SGPolygon+Mapkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9434A199137EEEED0007C9C3 /* SGPolygon+Mapkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		948E20461381A012006C089B /* SGGeometry+Mapkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 948E1FDF13818BAD006C089B /* SGGeometry+Mapkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		948E20471381A013006C089B /* SGMultiPolygon+Mapkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 948E201113819BC1006C089B /* SGMultiPolygon+Mapkit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -169,7 +170,7 @@
 		5DF1FCB512C2C9DA0097CF47 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		5DF1FCB612C2C9DA0097CF47 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		5DF1FD7912C2CD9C0097CF47 /* SimpleGeo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleGeo_Prefix.pch; sourceTree = "<group>"; };
-		5DF1FDA112C2D1070097CF47 /* YAJL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAJL.framework; path = ../ext/YAJL.framework; sourceTree = SOURCE_ROOT; };
+		942AAF7413CE4EBA0053A9DC /* YAJLiOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAJLiOS.framework; path = ext/YAJLiOS.framework; sourceTree = "<group>"; };
 		9434A199137EEEED0007C9C3 /* SGPolygon+Mapkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGPolygon+Mapkit.h"; path = "src/SGPolygon+Mapkit.h"; sourceTree = "<group>"; };
 		9434A19A137EEEED0007C9C3 /* SGPolygon+Mapkit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SGPolygon+Mapkit.m"; path = "src/SGPolygon+Mapkit.m"; sourceTree = "<group>"; };
 		948E1FDF13818BAD006C089B /* SGGeometry+Mapkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGGeometry+Mapkit.h"; path = "src/SGGeometry+Mapkit.h"; sourceTree = "<group>"; };
@@ -200,6 +201,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				942AAF7513CE4EBA0053A9DC /* YAJLiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,17 +223,10 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				94E6A16513CE0365004F0E45 /* Resources */,
-				5DF1FBF112C2C7A30097CF47 /* External Frameworks and Libraries */,
+				5DF1FBF112C2C7A30097CF47 /* Frameworks & Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = SimpleGeo;
-			sourceTree = "<group>";
-		};
-		0867D69AFE84028FC02AAC07 /* Linked Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Linked Frameworks";
 			sourceTree = "<group>";
 		};
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
@@ -293,9 +288,7 @@
 				5DEC2F451304576F001A59C5 /* SimpleGeo+Storage.m */,
 				5D30FF9D131F0A360089F563 /* SGStoredRecord.h */,
 				5D30FF9E131F0A360089F563 /* SGStoredRecord.m */,
-				5D30FF9F131F0A360089F563 /* SGStoredRecord+Private.h */,
 				5DEC2F1513045743001A59C5 /* SGGeometryCollection.h */,
-				5D1408CF131599360001417A /* SGGeometryCollection+Private.h */,
 				5DEC2F1613045743001A59C5 /* SGGeometryCollection.m */,
 				5D1408D1131599480001417A /* NSArray+SGGeometry.h */,
 				5D1408D2131599480001417A /* NSArray+SGGeometry.m */,
@@ -353,13 +346,13 @@
 			name = Services;
 			sourceTree = "<group>";
 		};
-		5DF1FBF112C2C7A30097CF47 /* External Frameworks and Libraries */ = {
+		5DF1FBF112C2C7A30097CF47 /* Frameworks & Libraries */ = {
 			isa = PBXGroup;
 			children = (
 				94E6A16613CE0391004F0E45 /* Imported Libraries */,
-				0867D69AFE84028FC02AAC07 /* Linked Frameworks */,
+				942AAF7613CE4F1B0053A9DC /* External Frameworks */,
 			);
-			name = "External Frameworks and Libraries";
+			name = "Frameworks & Libraries";
 			sourceTree = "<group>";
 		};
 		5DF1FCB012C2C9C90097CF47 /* Reachability */ = {
@@ -371,6 +364,14 @@
 			name = Reachability;
 			path = ../ext/Reachability;
 			sourceTree = SOURCE_ROOT;
+		};
+		942AAF7613CE4F1B0053A9DC /* External Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				942AAF7413CE4EBA0053A9DC /* YAJLiOS.framework */,
+			);
+			name = "External Frameworks";
+			sourceTree = "<group>";
 		};
 		948E1FDA13818AE3006C089B /* Mapkit */ = {
 			isa = PBXGroup;
@@ -390,6 +391,8 @@
 		948E1FE313818BC2006C089B /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				5D30FF9F131F0A360089F563 /* SGStoredRecord+Private.h */,
+				5D1408CF131599360001417A /* SGGeometryCollection+Private.h */,
 				5DF1FBBD12C2C6F50097CF47 /* SimpleGeo+Internal.h */,
 				5DF1FBBE12C2C6F50097CF47 /* SimpleGeo+Internal.m */,
 				5DF1FBA912C2C6F50097CF47 /* SGFeature+Private.h */,
@@ -458,7 +461,6 @@
 				5DF1FB8B12C2C6F50097CF47 /* ASIHTTPRequest */,
 				5DF1FB9E12C2C6F50097CF47 /* TouchFoundation */,
 				5DF1FCB012C2C9C90097CF47 /* Reachability */,
-				5DF1FDA112C2D1070097CF47 /* YAJL.framework */,
 			);
 			name = "Imported Libraries";
 			sourceTree = "<group>";
@@ -659,6 +661,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5D79622B12E1164D00B33631 /* Debug-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/ext\"",
+				);
 			};
 			name = Debug;
 		};
@@ -666,6 +672,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5D79623312E1167500B33631 /* Release-iOS.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/ext\"",
+				);
 			};
 			name = Release;
 		};

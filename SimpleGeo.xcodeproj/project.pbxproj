@@ -75,7 +75,6 @@
 		5DF0866D12ADCA9B007A8A60 /* SGGeometry+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0866C12ADCA9B007A8A60 /* SGGeometry+Private.h */; };
 		5DF0867B12ADCB21007A8A60 /* SGPolygon+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0867A12ADCB21007A8A60 /* SGPolygon+Private.h */; };
 		5DF0868912ADCBC5007A8A60 /* SGPoint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0868812ADCBC5007A8A60 /* SGPoint+Private.h */; };
-		5DF08A5812AF3EAE007A8A60 /* YAJL.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		5DF08A9D12AF644F007A8A60 /* SGMultiPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF08A9B12AF644F007A8A60 /* SGMultiPolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5DF08A9E12AF644F007A8A60 /* SGMultiPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF08A9C12AF644F007A8A60 /* SGMultiPolygon.m */; };
 		5DF08AA112AF6544007A8A60 /* SGMultiPolygon+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF08AA012AF6544007A8A60 /* SGMultiPolygon+Private.h */; };
@@ -122,7 +121,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5DF08A5812AF3EAE007A8A60 /* YAJL.framework in CopyFiles */,
 				940F840013CCF849004B2419 /* GHUnit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -241,10 +239,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */,
 				5D4A7BA612F2172900A2C443 /* AppKit.framework in Frameworks */,
 				5D4A7BAD12F2174A00A2C443 /* SystemConfiguration.framework in Frameworks */,
 				5D4A7BA212F2170C00A2C443 /* libz.dylib in Frameworks */,
+				9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,20 +278,20 @@
 				5DF0867212ADCAF5007A8A60 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				0867D69AFE84028FC02AAC07 /* Frameworks & Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = SimpleGeo;
 			sourceTree = "<group>";
 		};
-		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+		0867D69AFE84028FC02AAC07 /* Frameworks & Libraries */ = {
 			isa = PBXGroup;
 			children = (
 				5D76748812909A15006B7D51 /* Imported Libraries */,
 				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
-				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* External Frameworks */,
 			);
-			name = "External Frameworks and Libraries";
+			name = "Frameworks & Libraries";
 			sourceTree = "<group>";
 		};
 		089C1665FE841158C02AAC07 /* Resources */ = {
@@ -321,12 +319,13 @@
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
 		};
-		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+		1058C7B2FEA5585E11CA2CBB /* External Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5DF08A3712AF3DDE007A8A60 /* YAJL.framework */,
 				9426DD6213C40B0300C82030 /* GHUnit.framework */,
 			);
-			name = "Other Frameworks";
+			name = "External Frameworks";
 			sourceTree = "<group>";
 		};
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
@@ -342,7 +341,6 @@
 			children = (
 				5D7674AC12909A5C006B7D51 /* ASIHTTPRequest */,
 				5D8C1562129DE17B002F8C01 /* TouchFoundation */,
-				5DF08A3712AF3DDE007A8A60 /* YAJL.framework */,
 			);
 			name = "Imported Libraries";
 			sourceTree = "<group>";
@@ -445,9 +443,7 @@
 				5D12248012F246AA00CB2CC2 /* SimpleGeo+Storage.m */,
 				5D30FF8C131F0A180089F563 /* SGStoredRecord.h */,
 				5D30FF8D131F0A180089F563 /* SGStoredRecord.m */,
-				5D30FF8E131F0A180089F563 /* SGStoredRecord+Private.h */,
 				5D687FF112F8D53F001716EA /* SGGeometryCollection.h */,
-				5D1408C0131586BB0001417A /* SGGeometryCollection+Private.h */,
 				5D687FF212F8D53F001716EA /* SGGeometryCollection.m */,
 				EA29A52B1313109D00979D1A /* NSArray+SGGeometry.h */,
 				EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */,
@@ -493,6 +489,8 @@
 			children = (
 				5D39921A12A48F3F00EB7B20 /* SimpleGeo+Internal.h */,
 				5D39921B12A48F3F00EB7B20 /* SimpleGeo+Internal.m */,
+				5D30FF8E131F0A180089F563 /* SGStoredRecord+Private.h */,
+				5D1408C0131586BB0001417A /* SGGeometryCollection+Private.h */,
 				5DF0864912ADC878007A8A60 /* SGFeature+Private.h */,
 				5DF0865A12ADC94E007A8A60 /* SGFeatureCollection+Private.h */,
 				5DF0866C12ADCA9B007A8A60 /* SGGeometry+Private.h */,

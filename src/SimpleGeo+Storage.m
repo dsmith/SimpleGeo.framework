@@ -28,8 +28,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SimpleGeo+Storage.h"
 #import <YAJL/YAJL.h>
+#import "SimpleGeo+Storage.h"
 #import "SimpleGeo+Internal.h"
 #import "SGFeatureCollection+Private.h"
 #import "SGGeometryCollection+Private.h"
