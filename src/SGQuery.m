@@ -53,15 +53,9 @@
     return [[[self alloc] initWithDictionary:dictionary] autorelease];
 }
 
-- (id)init
-{
-    return [self initWithPoint:[SGPoint pointWithLatitude:0
-                                                longitude:0]];
-}
-
 - (id)initWithPoint:(SGPoint *)aPoint
 {
-    self = [super init];
+    self = [self init];
     if (self) {
         point = [aPoint retain];
     }
@@ -70,7 +64,7 @@
 
 - (id)initWithAddress:(NSString *)anAddress
 {
-    self = [super init];
+    self = [self init];
     if (self) {
         address = [anAddress retain];
     }
@@ -95,7 +89,7 @@
     if (userInfo) [dictionary setObject:userInfo forKey:@"userInfo"];
     if (target) [dictionary setObject:target forKey:@"target"];
     if (action) [dictionary setObject:NSStringFromSelector(action) forKey:@"action"];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 @end

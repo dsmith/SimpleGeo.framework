@@ -85,14 +85,16 @@
 - (void)didLoadContext:(NSDictionary *)context
             forSGQuery:(SGContextQuery *)query
 {
+    NSLog(@"%@",[query asDictionary]);
     GHTestLog(@"Did load context for query: %@", [query asDictionary]);
     GHTestLog(@"With results: %@", context);
     
     SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
     [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
     
-    if ([query filter]) GHAssertEquals([context count], 1, @"Filter used. Context dictionary should contain a single part.");
-    else GHAssertGreaterThan([context count], 1, @"No filter used. Context dictionary should contain multiple parts.");
+    int numParts = [context count];
+    if (query.filter) GHAssertEquals(numParts, 1, @"Filter used. Context dictionary should contain a single part.");
+    else GHAssertGreaterThan(numParts, 1, @"No filter used. Context dictionary should contain multiple parts.");
 }
 
 @end

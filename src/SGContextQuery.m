@@ -14,10 +14,10 @@
 
 - (NSDictionary *)asDictionary
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     if (featureCategory) [dictionary setObject:featureCategory forKey:@"featureCategory"];
     if (filter) [dictionary setObject:filter forKey:@"filter"];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 - (void)dealloc

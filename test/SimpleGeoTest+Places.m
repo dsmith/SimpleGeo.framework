@@ -57,8 +57,7 @@
     SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
     [testQuery setRadius:5.0];
     [testQuery setLimit:3];
-    [testQuery setCategories:[NSArray arrayWithObject:@"test cat"]];
-    [testQuery addCategory:@"another cat"];
+    [testQuery setCategories:[NSArray arrayWithObjects:@"test cat",@"another cat",nil]];
     [testQuery setSearchString:@"coffee"];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getPlacesForQuery:testQuery];

@@ -241,7 +241,7 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 - (void)didRequestFeature:(ASIHTTPRequest *)request
 {
     if ([delegate respondsToSelector:@selector(didLoadFeature:handle:)]) {
-        NSString *handle = [[[[request userInfo] objectForKey:@"handle"] retain] autorelease];
+        NSString *handle = [[request userInfo] objectForKey:@"handle"];
 
         if ([request responseStatusCode] == 404) {
             [delegate didLoadFeature:nil

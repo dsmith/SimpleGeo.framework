@@ -1600,7 +1600,7 @@ static NSOperationQueue *sharedQueue = nil;
 - (id)uploadProgressDelegate
 {
 	[[self cancelledLock] lock];
-	id d = [[uploadProgressDelegate retain] autorelease];
+	id d = uploadProgressDelegate;
 	[[self cancelledLock] unlock];
 	return d;
 }
@@ -1621,7 +1621,7 @@ static NSOperationQueue *sharedQueue = nil;
 - (id)downloadProgressDelegate
 {
 	[[self cancelledLock] lock];
-	id d = [[downloadProgressDelegate retain] autorelease];
+	id d = downloadProgressDelegate;
 	[[self cancelledLock] unlock];
 	return d;
 }
@@ -4175,7 +4175,7 @@ static NSOperationQueue *sharedQueue = nil;
 // Returns the shared queue
 + (NSOperationQueue *)sharedQueue
 {
-    return [[sharedQueue retain] autorelease];
+    return sharedQueue;
 }
 
 #pragma mark cache

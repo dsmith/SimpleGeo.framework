@@ -66,10 +66,10 @@
 
 - (NSDictionary *)asDictionary
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     if (layer) [dictionary setObject:layer forKey:@"layer"];
     if (cursor) [dictionary setObject:cursor forKey:@"cursor"];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 - (void)dealloc

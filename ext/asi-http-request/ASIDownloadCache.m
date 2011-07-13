@@ -50,7 +50,7 @@ static NSString *permanentCacheFolder = @"PermanentStore";
 - (NSString *)storagePath
 {
 	[[self accessLock] lock];
-	NSString *p = [[storagePath retain] autorelease];
+	NSString *p = storagePath;
 	[[self accessLock] unlock];
 	return p;
 }

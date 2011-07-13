@@ -119,36 +119,36 @@
 - (void)getRecordsForQuery:(SGStorageQuery *)query
 {
     NSMutableString *endpoint;
-    if ([query point]) {
+    if (query.point) {
         endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/%f,%f.json",
                     SIMPLEGEO_API_VERSION_FOR_STORAGE,
-                    [query layer],
-                    [[query point] latitude],
-                    [[query point] longitude]];
+                    query.layer,
+                    query.point.latitude,
+                    query.point.longitude];
     } else {
         endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/%@.json",
-                    SIMPLEGEO_API_VERSION_FOR_STORAGE, [query layer], [query address]];
+                    SIMPLEGEO_API_VERSION_FOR_STORAGE, query.layer, query.address];
     }
     
     NSMutableArray *queryParams = [NSMutableArray array];
     
-    if ([query radius] > 0.0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", [query radius]]];
+    if (query.radius > 0.0) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", query.radius]];
     }
     
-    if ([query limit] > 0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"limit", [query limit]]];
+    if (query.limit > 0) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"limit", query.limit]];
     }
     
-    if ([query cursor] && ![[query cursor] isEqualToString:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"cursor", [query cursor]]];
+    if (query.cursor && ![query.cursor isEqualToString:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"cursor", query.cursor]];
     }
     
     if ([queryParams count] > 0) {
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    if (![query target] || ![query action]) {
+    if (!query.target || !query.action) {
         [query setTarget:self];
         [query setAction:@selector(didReceiveRecords:)];
     }
@@ -333,7 +333,7 @@
         if ([request responseStatusCode] == 404) {
             NSLog(@"Response code = 404");
         } else {
-            NSMutableDictionary *layerDict = [[[[request userInfo] objectForKey:@"layerInfo"] retain] autorelease];
+            NSMutableDictionary *layerDict = [[request userInfo] objectForKey:@"layerInfo"];
             [delegate didAddOrUpdateLayer:[layerDict objectForKey:@"name"]];
         }
     } else {
@@ -347,7 +347,7 @@
         if ([request responseStatusCode] == 404) {
             NSLog(@"Response code = 404");
         } else {
-            [delegate didDeleteLayer:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]];
+            [delegate didDeleteLayer:[[request userInfo] objectForKey:@"layer"]];
         }
     } else {
         NSLog(@"Delegate does not implement didDeleteLayer:");
@@ -361,8 +361,8 @@
             NSLog(@"Response code = 404");
         } else {
             NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadLayer:[[jsonResponse retain] autorelease]
-                          withName:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]];
+            [delegate didLoadLayer:jsonResponse
+                          withName:[[request userInfo] objectForKey:@"layer"]];
         }
     } else {
         NSLog(@"Delegate does not implement didLoadLayer:withName:");
@@ -376,8 +376,8 @@
             NSLog(@"Response code = 404");
         } else {
             NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadLayers:[[[jsonResponse objectForKey:@"layers"] retain] autorelease] 
-                         withCursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
+            [delegate didLoadLayers:[jsonResponse objectForKey:@"layers"] 
+                         withCursor:[[request userInfo] objectForKey:@"cursor"]];
         }
     } else {
         NSLog(@"Delegate does not implement didLoadLayers:withCursor:");
@@ -390,8 +390,8 @@
         if ([request responseStatusCode] == 404) {
             NSLog(@"Response code = 404");
         } else {
-            [delegate didAddOrUpdateRecord:[[[[request userInfo] objectForKey:@"record"] retain] autorelease]
-                                   inLayer:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]];
+            [delegate didAddOrUpdateRecord:[[request userInfo] objectForKey:@"record"]
+                                   inLayer:[[request userInfo] objectForKey:@"layer"]];
         }
     } else {
         NSLog(@"Delegate does not implement didAddOrUpdateRecord:inLayer:");
@@ -401,8 +401,8 @@
 - (void)didAddOrUpdateRecords:(ASIHTTPRequest *)request
 {
     if ([delegate respondsToSelector:@selector(didAddOrUpdateRecords:inLayer:)]) {
-        [delegate didAddOrUpdateRecords:[[[[request userInfo] objectForKey:@"records"] retain] autorelease]
-                                inLayer:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]];
+        [delegate didAddOrUpdateRecords:[[request userInfo] objectForKey:@"records"]
+                                inLayer:[[request userInfo] objectForKey:@"layer"]];
     } else {
         NSLog(@"Delegate does not implement didAddOrUpdateRecords:inLayer:");
     }
@@ -411,8 +411,8 @@
 - (void)didDeleteRecordInLayer:(ASIHTTPRequest *)request
 {
     if ([delegate respondsToSelector:@selector(didDeleteRecordInLayer:withId:)]) {
-        [delegate didDeleteRecordInLayer:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]
-                                  withId:[[[[request userInfo] objectForKey:@"id"] retain] autorelease]];
+        [delegate didDeleteRecordInLayer:[[request userInfo] objectForKey:@"layer"]
+                                  withId:[[request userInfo] objectForKey:@"id"]];
     } else {
         NSLog(@"Delegate does not implement didDeleteRecordInLayer:withId:");
     }
@@ -428,9 +428,9 @@
         
         SGGeometryCollection *history = [SGGeometryCollection geometryCollectionWithDictionary:jsonResponse];
         [delegate didLoadHistory:history
-                     forRecordId:[[[[request userInfo] objectForKey:@"recordId"] retain] autorelease]
+                     forRecordId:[[request userInfo] objectForKey:@"recordId"]
                         forQuery:query
-                          cursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
+                          cursor:[[request userInfo] objectForKey:@"cursor"]];
         
     } else {
         NSLog(@"Delegate does not implement didLoadHistory:forRecordId:inLayer:cursor:");
@@ -444,9 +444,9 @@
             NSLog(@"Response code = 404");
         } else {
             NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadRecord:[[jsonResponse retain] autorelease]
-                          fromLayer:[[[[request userInfo] objectForKey:@"layer"] retain] autorelease]
-                             withId:[[[[request userInfo] objectForKey:@"id"] retain] autorelease]];
+            [delegate didLoadRecord:jsonResponse
+                          fromLayer:[[request userInfo] objectForKey:@"layer"]
+                             withId:[[request userInfo] objectForKey:@"id"]];
         }
     } else {
         NSLog(@"Delegate does not implement didLoadRecord:fromLayer:withId:");

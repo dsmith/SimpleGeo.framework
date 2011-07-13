@@ -41,7 +41,7 @@
 
 - (id)initWithEnvelope:(SGEnvelope *)anEnvelope
 {
-    self = [super init];
+    self = [self init];
     if (self) {
         envelope = [anEnvelope retain];
     }
@@ -50,7 +50,7 @@
 
 - (NSDictionary *)asDictionary
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     if (envelope) [dictionary setObject:envelope forKey:@"envelope"];
     return dictionary;
 }

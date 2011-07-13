@@ -29,17 +29,28 @@
 //
 
 #import "SGNearbyQuery.h"
+#import "SGTypes.h"
 
 @implementation SGNearbyQuery
 
 @synthesize radius, limit;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        radius = SGDefaultRadius;
+        limit = SGDefaultLimit;
+    }
+    return self;
+}
+
 - (NSDictionary *)asDictionary
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     if (radius > 0) [dictionary setObject:[NSNumber numberWithDouble:radius] forKey:@"radius"];
     if (limit > 0) [dictionary setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 @end

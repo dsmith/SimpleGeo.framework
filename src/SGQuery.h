@@ -39,7 +39,7 @@
     SGPoint *point;
     NSString *address;
     NSDictionary *userInfo;
-    NSObject *target;
+    id target;
     SEL action;
 }
 
@@ -53,7 +53,7 @@
 @property (nonatomic, retain) NSDictionary *userInfo;
 
 //! Delegate object
-@property (nonatomic, retain) NSObject *target;
+@property (nonatomic, retain) id target;
 
 //! Delegate action
 @property (nonatomic, assign) SEL action;

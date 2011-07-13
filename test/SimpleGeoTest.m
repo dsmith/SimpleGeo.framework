@@ -56,7 +56,7 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
 
 - (SGEnvelope *)envelope
 {
-    return [SGEnvelope envelopeWithNorth:37.75 south:37.50 west:-122.25 east:-122.50];
+    return [SGEnvelope envelopeWithNorth:37.750 south:37.751 west:-122.250 east:-122.251];
 }
 
 #pragma mark Client Tests

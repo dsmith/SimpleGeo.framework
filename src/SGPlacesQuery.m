@@ -34,21 +34,12 @@
 
 @synthesize searchString, categories;
 
-- (void)addCategory:(NSString *)category
-{
-    NSMutableArray *newCategories = [NSMutableArray arrayWithObject:category];
-    if (categories) {
-        [newCategories addObjectsFromArray:categories];
-    }
-    [self setCategories:newCategories];
-}
-
 - (NSDictionary *)asDictionary
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     if (searchString) [dictionary setObject:searchString forKey:@"searchString"];
     if (categories) [dictionary setObject:categories forKey:@"categories"];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 - (void)dealloc

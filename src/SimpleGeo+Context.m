@@ -52,30 +52,30 @@
     NSMutableArray *queryParams = [NSMutableArray array];
     
     NSMutableString *endpoint;
-    if ([query point]) {
+    if (query.point) {
         endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f.json", SIMPLEGEO_API_VERSION,
-                          [[query point] latitude], [[query point] longitude]];
-    } else if ([query envelope]) {
+                          query.point.latitude, query.point.longitude];
+    } else if (query.envelope) {
         endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f,%f,%f.json", SIMPLEGEO_API_VERSION,
-                          [[query envelope] north], [[query envelope] west], [[query envelope] south], [[query envelope] east]];
+                          query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
     } else {
         endpoint = [NSMutableString stringWithFormat:@"/%@/context/address.json?address=%@", SIMPLEGEO_API_VERSION,
-                          [self URLEncodedString:[query address]]];
+                          [self URLEncodedString:query.address]];
     }
     
-    if ([query filter] && ![[query filter] isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"filter", [query filter]]];
+    if (query.filter && ![query.filter isEqual:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"filter", query.filter]];
     }
     
-    if ([query featureCategory] && ![[query featureCategory] isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [self URLEncodedString:[query featureCategory]]]];
+    if (query.featureCategory && ![query.featureCategory isEqual:@""]) {
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [self URLEncodedString:query.featureCategory]]];
     }
     
     if ([queryParams count] > 0) {
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    if (![query target] || ![query action]) {
+    if (!query.target || !query.action) {
         [query setTarget:self];
         [query setAction:@selector(didReceiveContext:)];
     }
@@ -89,7 +89,7 @@
 #pragma mark Dispatcher Methods
 
 - (void)didReceiveContext:(NSDictionary *)request
-{    
+{
     if ([delegate respondsToSelector:@selector(didLoadContext:forSGQuery:)]) {
         [delegate didLoadContext:[request objectForKey:@"response"]
                       forSGQuery:[request objectForKey:@"query"]];

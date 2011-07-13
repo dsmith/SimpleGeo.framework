@@ -28,6 +28,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#pragma mark Default Limits
+
+#define SGDefaultLimit 25
+#define SGDefaultRadius 10.0
+
 #pragma mark Context Filters
 
 #define SGContextFilterQuery @"query"
