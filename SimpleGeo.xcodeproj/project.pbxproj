@@ -81,11 +81,11 @@
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		940F840013CCF849004B2419 /* GHUnit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
 		940F840113CCF84D004B2419 /* GHUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9426DD6213C40B0300C82030 /* GHUnit.framework */; };
-		9426DD4E13C4082000C82030 /* SGNearbyQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4413C4082000C82030 /* SGNearbyQuery.h */; settings = {ATTRIBUTES = (); }; };
+		9426DD4E13C4082000C82030 /* SGNearbyQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4413C4082000C82030 /* SGNearbyQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9426DD4F13C4082000C82030 /* SGNearbyQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4513C4082000C82030 /* SGNearbyQuery.m */; };
 		9426DD5013C4082000C82030 /* SGPlacesQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4613C4082000C82030 /* SGPlacesQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9426DD5113C4082000C82030 /* SGPlacesQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4713C4082000C82030 /* SGPlacesQuery.m */; };
-		9426DD5213C4082000C82030 /* SGQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4813C4082000C82030 /* SGQuery.h */; settings = {ATTRIBUTES = (); }; };
+		9426DD5213C4082000C82030 /* SGQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4813C4082000C82030 /* SGQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9426DD5313C4082000C82030 /* SGQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4913C4082000C82030 /* SGQuery.m */; };
 		9426DD5613C4082000C82030 /* SGStorageQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4C13C4082000C82030 /* SGStorageQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9426DD5713C4082000C82030 /* SGStorageQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4D13C4082000C82030 /* SGStorageQuery.m */; };
@@ -95,7 +95,7 @@
 		945DA1F113C68C3A00D3984A /* SGContextQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 945DA1EF13C68C3A00D3984A /* SGContextQuery.m */; };
 		945DA1F413C68C4700D3984A /* SGEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = 945DA1F213C68C4700D3984A /* SGEnvelope.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		945DA1F513C68C4700D3984A /* SGEnvelope.m in Sources */ = {isa = PBXBuildFile; fileRef = 945DA1F313C68C4700D3984A /* SGEnvelope.m */; };
-		9475C3BE13C6806B002E0308 /* SGEnvelopeQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9475C3BC13C6806B002E0308 /* SGEnvelopeQuery.h */; settings = {ATTRIBUTES = (); }; };
+		9475C3BE13C6806B002E0308 /* SGEnvelopeQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9475C3BC13C6806B002E0308 /* SGEnvelopeQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9475C3BF13C6806B002E0308 /* SGEnvelopeQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9475C3BD13C6806B002E0308 /* SGEnvelopeQuery.m */; };
 		9498E4F013C49DDC0082FEBB /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DF08A3712AF3DDE007A8A60 /* YAJL.framework */; };
 		EA29A52D1313109D00979D1A /* NSArray+SGGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = EA29A52C1313109D00979D1A /* NSArray+SGGeometry.m */; };
