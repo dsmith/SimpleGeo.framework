@@ -33,4 +33,50 @@
 
 @implementation SimpleGeoTest (Storage)
 
+- (void)testGetRecordsForPoint
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point]];
+    [testQuery setLayer:SGTestLayer];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetRecordsForAddress
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:SGTestLayer];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetRecordsWithComplexQuery
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:SGTestLayer];
+    [testQuery setRadius:5.0];
+    [testQuery setLimit:3];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+#pragma mark SimpleGeoStorageDelegate Methods
+
+- (void)didLoadRecords:(SGFeatureCollection *)records
+            forSGQuery:(SGStorageQuery *)query
+{
+    GHTestLog(@"Did load records for query: %@", [query asDictionary]);
+    GHTestLog(@"With results: %@", [records asDictionary]);
+    
+    SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
+    [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
+    
+    int numParts = [records.features count];
+    if (query.limit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
+    else GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
+}
+
 @end

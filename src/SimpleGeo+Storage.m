@@ -33,7 +33,7 @@
 #import "SimpleGeo+Internal.h"
 #import "SGFeatureCollection+Private.h"
 #import "SGGeometryCollection+Private.h"
-#import "SGStoredRecord.h"
+#import "SGStoredRecord+Private.h"
 #import "SGStorageQuery.h"
 
 #define SIMPLEGEO_API_VERSION_FOR_STORAGE @"0.1"
@@ -444,7 +444,8 @@
             NSLog(@"Response code = 404");
         } else {
             NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadRecord:jsonResponse
+            SGStoredRecord *record = [SGStoredRecord recordWithDictionary:jsonResponse];
+            [delegate didLoadRecord:record
                           fromLayer:[[request userInfo] objectForKey:@"layer"]
                              withId:[[request userInfo] objectForKey:@"id"]];
         }
@@ -455,7 +456,7 @@
 
 - (void)didReceiveRecords:(NSDictionary *)request
 {
-    if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:cursor:)]) {
+    if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:)]) {
         [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
                       forSGQuery:[request objectForKey:@"query"]];
     
