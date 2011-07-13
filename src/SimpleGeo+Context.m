@@ -32,7 +32,6 @@
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Internal.h"
 #import "SGContextQuery.h"
-#import "SGQuery+Private.h"
 
 @implementation SimpleGeo (Context)
 
@@ -50,7 +49,7 @@
 
 - (void)getContextForQuery:(SGContextQuery *)query
 {
-   NSMutableArray *queryParams = [NSMutableArray array];
+    NSMutableArray *queryParams = [NSMutableArray array];
     
     NSMutableString *endpoint;
     if ([query point]) {
@@ -69,32 +68,36 @@
     }
     
     if ([query featureCategory] && ![[query featureCategory] isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [query featureCategory]]];
+        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [self URLEncodedString:[query featureCategory]]]];
     }
     
     if ([queryParams count] > 0) {
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
+    if (![query action]) {
+        [query setTarget:self];
+        [query setAction:@selector(didReceiveContext:)];
+    }
+    
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[query asDictionary]];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];
 }
 
 #pragma mark Dispatcher Methods
 
-- (void)didReceiveContext:(ASIHTTPRequest *)request
-{
+- (void)didReceiveContext:(NSDictionary *)request
+{    
     if ([delegate respondsToSelector:@selector(didLoadContext:forSGQuery:)]) {
-        SGContextQuery *contextQuery = [SGContextQuery queryWithDictionary:[request userInfo]];
-        [delegate didLoadContext:[[request responseData] yajl_JSON]
-                      forSGQuery:contextQuery];
+        [delegate didLoadContext:[request objectForKey:@"response"]
+                      forSGQuery:[request objectForKey:@"query"]];
     
     /* TODO: remove (deprecated) */
     } else if ([delegate respondsToSelector:@selector(didLoadContext:forQuery:)]) {
-        [delegate didLoadContext:[[request responseData] yajl_JSON]
-                        forQuery:[request userInfo]];
+        [delegate didLoadContext:[request objectForKey:@"response"]
+                        forQuery:[[request objectForKey:@"query"] asDictionary]];
         
     } else {
         NSLog(@"Delegate does not implement didLoadContext:forSGQuery:");

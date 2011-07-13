@@ -34,28 +34,16 @@
  * Places query object.
  */
 @interface SGPlacesQuery : SGNearbyQuery
+{
+    NSString *searchString;
+    NSArray *categories;
+}
 
-/*!
- * Return the associated search string for this query
- */
-- (NSString *)searchQuery;
+//! Seach string for the query
+@property (nonatomic, retain) NSString *searchString;
 
-/*!
- * Set a search string for this query
- * @param seachQuery Search string
- */
-- (void)setSearchQuery:(NSString *)searchQuery;
-
-/*!
- * Return the associated categories for this query
- */
-- (NSArray *)categories;
-
-/*!
- * Set a list of categories for this query
- * @param categories Category array
- */
-- (void)setCategories:(NSArray *)categories;
+//! Categories filter for the query
+@property (nonatomic, retain) NSArray *categories;
 
 /*!
  * Add a category to this query

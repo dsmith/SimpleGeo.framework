@@ -127,10 +127,10 @@
 #pragma mark Dispatcher Methods
 
 /*!
- * Called when a places fetch request returns
- * @param request The manufactured request.
+ * Called when a Places request returns if no callback is set
+ * @param request The request query and response
  */
-- (void)didReceivePlaces:(ASIHTTPRequest *)request;
+- (void)didReceivePlaces:(NSDictionary *)request;
 
 /*!
  * Called when a places add request returns

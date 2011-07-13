@@ -33,7 +33,6 @@
 #import "SimpleGeo+Internal.h"
 #import "SGFeatureCollection+Private.h"
 #import "SGPlacesQuery.h"
-#import "SGQuery+Private.h"
 
 @implementation SimpleGeo (Places)
 
@@ -117,9 +116,9 @@
                                 [self URLEncodedString:[query address]]]];
     }
     
-    if ([query searchQuery] && ![[query searchQuery] isEqual:@""]) {
+    if ([query searchString] && ![[query searchString] isEqual:@""]) {
         [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"q",
-                                [self URLEncodedString:[query searchQuery]]]];
+                                [self URLEncodedString:[query searchString]]]];
     }
     
     if ([query categories] && [[query categories] count] > 0) {
@@ -143,33 +142,27 @@
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
+    [query setTarget:self];
     [query setAction:@selector(didReceivePlaces:)];
     
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[query asDictionary]];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];
 }
 
 #pragma mark Dispatcher Methods
 
-- (void)didReceivePlaces:(ASIHTTPRequest *)request
-{
+- (void)didReceivePlaces:(NSDictionary *)request
+{    
     if ([delegate respondsToSelector:@selector(didLoadPlaces:forSGQuery:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        SGFeatureCollection *places = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
-        SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithDictionary:[request userInfo]];
-        
-        [delegate didLoadPlaces:places
-                     forSGQuery:placesQuery];
+        [delegate didLoadPlaces:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
+                     forSGQuery:[request objectForKey:@"query"]];
         
     /* TODO: remove (deprecated) */
     } else if ([delegate respondsToSelector:@selector(didLoadPlaces:forQuery:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        SGFeatureCollection *places = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
-        
-        [delegate didLoadPlaces:places
-                       forQuery:[request userInfo]];
+        [delegate didLoadPlaces:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
+                       forQuery:[[request objectForKey:@"query"] asDictionary]];
         
     } else {
         NSLog(@"Delegate does not implement didLoadPlaces:forSGQuery:");
@@ -288,7 +281,7 @@
              matching:(NSString *)query
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [self getPlacesForQuery:placesQuery];
 }
 
@@ -296,7 +289,7 @@
                     matching:(NSString *)query
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [self getPlacesForQuery:placesQuery];
 }
 
@@ -305,7 +298,7 @@
                 count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
 }
@@ -315,7 +308,7 @@
                        count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
 }
@@ -325,7 +318,7 @@
                within:(double)radius
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setRadius:radius];
     [self getPlacesForQuery:placesQuery];
 }
@@ -335,7 +328,7 @@
                       within:(double)radius
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setRadius:radius];
     [self getPlacesForQuery:placesQuery];
 }
@@ -346,7 +339,7 @@
                 count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setRadius:radius];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
@@ -358,7 +351,7 @@
                        count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery setRadius:radius];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
@@ -369,7 +362,7 @@
            inCategory:(NSString *)category
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [self getPlacesForQuery:placesQuery];
 }
@@ -379,7 +372,7 @@
                   inCategory:(NSString *)category
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [self getPlacesForQuery:placesQuery];
 }
@@ -390,7 +383,7 @@
                 count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
@@ -402,7 +395,7 @@
                        count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setLimit:limit];
     [self getPlacesForQuery:placesQuery];
@@ -414,7 +407,7 @@
                within:(double)radius
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setRadius:radius];
     [self getPlacesForQuery:placesQuery];
@@ -426,7 +419,7 @@
                       within:(double)radius
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setRadius:radius];
     [self getPlacesForQuery:placesQuery];
@@ -439,7 +432,7 @@
                 count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setRadius:radius];
     [placesQuery setLimit:limit];
@@ -453,7 +446,7 @@
                        count:(int)limit
 {
     SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchQuery:query];
+    [placesQuery setSearchString:query];
     [placesQuery addCategory:category];
     [placesQuery setRadius:radius];
     [placesQuery setLimit:limit];

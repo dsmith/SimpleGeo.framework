@@ -6,33 +6,21 @@
 //  Copyright 2011 AppThat. All rights reserved.
 //
 
-#import "SGQuery+Envelope.h"
+#import "SGEnvelopeQuery.h"
 
 /*!
  * Context query object.
  */
-@interface SGContextQuery : SGQuery
+@interface SGContextQuery : SGEnvelopeQuery
+{
+    NSString *featureCategory;
+    NSString *filter;
+}
 
-/*!
- * Return the associated feature category for this query
- */
-- (NSString *)featureCategory;
+//! Feature category for this query
+@property (nonatomic, retain) NSString *featureCategory;
 
-/*!
- * Set a feature category for this query
- * @param category Feature category
- */
-- (void)setFeatureCategory:(NSString *)featureCategory;
-
-/*!
- * Return the associated filter for this query
- */
-- (NSString *)filter;
-
-/*!
- * Set a filter for this query
- * @param filter Filter
- */
-- (void)setFilter:(NSString *)filter;
+//! Filter for this query
+@property (nonatomic, retain) NSString *filter;
 
 @end

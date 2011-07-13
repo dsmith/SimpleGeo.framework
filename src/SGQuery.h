@@ -36,12 +36,27 @@
  */
 @interface SGQuery : NSObject
 {
-  @private
-    NSMutableDictionary *query;
+    SGPoint *point;
+    NSString *address;
+    NSDictionary *userInfo;
+    NSObject *target;
+    SEL action;
 }
 
-//! Query dictionary
-@property (nonatomic, readonly) NSMutableDictionary *query;
+//! Point for a point-based query
+@property (nonatomic, readonly) SGPoint *point;
+
+//! Address for an address-based query
+@property (nonatomic, readonly) NSString *address;
+
+//! Attached user info
+@property (nonatomic, retain) NSDictionary *userInfo;
+
+//! Delegate object
+@property (nonatomic, retain) NSObject *target;
+
+//! Delegate action
+@property (nonatomic, assign) SEL action;
 
 /*!
  * Create a point-based query
@@ -66,27 +81,6 @@
  * @param address address
  */
 - (id)initWithAddress:(NSString *)address;
-
-/*!
- * Return the associated point for this query
- */
-- (SGPoint *)point;
-
-/*!
- * Return the associated address for this query
- */
-- (NSString *)address;
-
-/*!
- * Return the associated user info for this query
- */
-- (NSDictionary *)userInfo;
-
-/*!
- * Set associated user info for this query
- * @param userInfo user info
- */
-- (void)setUserInfo:(NSDictionary*)userInfo;
 
 /*!
  * Return an NSDictionary representation of this query

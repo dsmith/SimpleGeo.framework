@@ -34,7 +34,7 @@
 
 @implementation SGQuery
 
-@synthesize query;
+@synthesize point, address, userInfo, target, action;
 
 #pragma mark Instantiation Methods
 
@@ -48,66 +48,54 @@
     return [[[self alloc] initWithAddress:address] autorelease];
 }
 
++ (id)queryWithDictionary:(NSDictionary *)dictionary
+{
+    return [[[self alloc] initWithDictionary:dictionary] autorelease];
+}
+
 - (id)init
 {
     return [self initWithPoint:[SGPoint pointWithLatitude:0
                                                 longitude:0]];
 }
 
-- (id)initWithPoint:(SGPoint *)point
+- (id)initWithPoint:(SGPoint *)aPoint
 {
     self = [super init];
     if (self) {
-        query = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[point retain],
-                 @"point",
-                 nil];
+        point = [aPoint retain];
     }
     return self;
 }
 
-- (id)initWithAddress:(NSString *)address
+- (id)initWithAddress:(NSString *)anAddress
 {
     self = [super init];
     if (self) {
-        query = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[address retain],
-                 @"address",
-                 nil];
+        address = [anAddress retain];
     }
     return self;
 }
 
 - (void)dealloc {
-    [query release];
+    [point release];
+    [address release];
+    [userInfo release];
+    [target release];
     [super dealloc];
-}
-
-#pragma mark Key Methods
-
-- (SGPoint *)point
-{
-    return [self.query objectForKey:@"point"];
-}
-
-- (NSString *)address
-{
-    return [self.query objectForKey:@"address"];
-}
-
-- (NSDictionary *)userInfo
-{
-    return [self.query objectForKey:@"userInfo"];
-}
-
-- (void)setUserInfo:(NSDictionary*)userInfo
-{
-    [self.query setObject:[userInfo retain] forKey:@"userInfo"];
 }
 
 #pragma mark Conversion Methods
 
 - (NSDictionary *)asDictionary
 {
-    return [NSDictionary dictionaryWithDictionary:query];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    if (point) [dictionary setObject:point forKey:@"point"];
+    if (address) [dictionary setObject:address forKey:@"address"];
+    if (userInfo) [dictionary setObject:userInfo forKey:@"userInfo"];
+    if (target) [dictionary setObject:target forKey:@"target"];
+    if (action) [dictionary setObject:NSStringFromSelector(action) forKey:@"action"];
+    return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
 @end

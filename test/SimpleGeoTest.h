@@ -31,10 +31,13 @@
 #import <GHUnit/GHUnit.h>
 #import "SimpleGeo.h"
 
+#define SGTestTimeout 1.5
 
 @interface SimpleGeoTest : GHAsyncTestCase
 
-- (SimpleGeo *)createClient;
+- (SimpleGeo *)client;
 - (SGPoint *)point;
+- (NSString *)address;
+- (SGEnvelope *)envelope;
 
 @end

@@ -1,5 +1,5 @@
 //
-//  SGQuery+Nearby.h
+//  SGNearbyQuery.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -35,27 +35,15 @@
  * supporting nearby-specific parameters.
  */
 @interface SGNearbyQuery : SGQuery
+{
+    double radius;
+    int limit;
+}
 
-/*!
- * Return the associated radius for this query
- */
-- (float)radius;
+//! Radius for the nearby query
+@property (nonatomic, assign) double radius;
 
-/*!
- * Set a radius for this query
- * @param radius Radius
- */
-- (void)setRadius:(float)radius;
-
-/*!
- * Return the associated limit for this query
- */
-- (int)limit;
-
-/*!
- * Set a limit for this query
- * @param limit Limit
- */
-- (void)setLimit:(int)limit;
+//! Limit for the nearby query
+@property (nonatomic, assign) int limit;
 
 @end

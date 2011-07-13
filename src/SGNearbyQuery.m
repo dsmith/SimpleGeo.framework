@@ -1,5 +1,5 @@
 //
-//  SGQuery+Nearby.m
+//  SGNearbyQuery.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -32,24 +32,14 @@
 
 @implementation SGNearbyQuery
 
-- (float)radius
-{
-    return [[self.query objectForKey:@"radius"] floatValue];
-}
+@synthesize radius, limit;
 
-- (void)setRadius:(float)radius
+- (NSDictionary *)asDictionary
 {
-    [self.query setObject:[NSNumber numberWithFloat:radius] forKey:@"radius"];
-}
-
-- (int)limit
-{
-    return [[self.query objectForKey:@"limit"] intValue];
-}
-
-- (void)setLimit:(int)limit
-{
-    [self.query setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    if (radius > 0) [dictionary setObject:[NSNumber numberWithDouble:radius] forKey:@"radius"];
+    if (limit > 0) [dictionary setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
+    return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
 @end

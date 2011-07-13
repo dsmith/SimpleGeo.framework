@@ -47,7 +47,7 @@
     #import "SGMultiPolygon+Mapkit.h"    
 #endif
 
-#import "SGQuery.h"
+#import "SGContextQuery.h"
 #import "SGPlacesQuery.h"
 #import "SGStorageQuery.h"
 

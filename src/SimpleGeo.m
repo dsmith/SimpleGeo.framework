@@ -202,27 +202,25 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    if (([request responseStatusCode] >= 200 && [request responseStatusCode] < 400) ||
-        [request responseStatusCode] == 404) {
-
+    SGQuery *query = [[request userInfo] objectForKey:@"query"];    
+    if (([request responseStatusCode] >= 200 && [request responseStatusCode] < 400) || [request responseStatusCode] == 404) {
         // call requestDidFinish first
         if ([delegate respondsToSelector:@selector(requestDidFinish:)]) {
             [delegate requestDidFinish:request];
         }
-
-        // assume that "targetSelector" was set on the request and use that to dispatch appropriately
-        SEL targetSelector = NSSelectorFromString([[request userInfo] objectForKey:@"targetSelector"]);
-        [self performSelector:targetSelector withObject:request];
+        // make the target/action delegate call
+        [[query target] performSelector:[query action]
+                             withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                         query, @"query",
+                                         [[request responseData] yajl_JSON], @"response",
+                                         nil]];
     } else {
         // consider non-2xx, 3xx, or 404s to be failures
-
         if ([request responseStatusCode] == 400) {
             NSLog(@"Bad request. Please double-check your OAuth key and secret.");
         }
-
         [self requestFailed:request];
     }
-    
     [request setDelegate:nil];
 }
 

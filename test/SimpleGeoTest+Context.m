@@ -31,52 +31,68 @@
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Context.h"
 
-
-NSString * const EXAMPLE_ADDRESS = @"123 Fake St., Springfield, MA";
-
-
 @implementation SimpleGeoTest (Context)
 
 - (void)testGetContextForPoint
 {
     [self prepare];
-
-    [[self createClient] getContextForPoint:[self point]];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
+    SGContextQuery *testQuery = [SGContextQuery queryWithPoint:[self point]];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getContextForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetContextForAddress
 {
     [self prepare];
+    SGContextQuery *testQuery = [SGContextQuery queryWithAddress:[self address]];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getContextForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
 
-    [[self createClient] getContextForAddress:EXAMPLE_ADDRESS];
+- (void)testGetContextForEnvelope
+{
+    [self prepare];
+    SGContextQuery *testQuery = [SGContextQuery queryWithEnvelope:[self envelope]];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getContextForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
 
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
+- (void)testGetContextWithFilter
+{
+    [self prepare];
+    SGContextQuery *testQuery = [SGContextQuery queryWithPoint:[self point]];
+    [testQuery setFilter:SGContextFilterIntersections];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getContextForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetContextWithFeaturesCategory
+{
+    [self prepare];
+    SGContextQuery *testQuery = [SGContextQuery queryWithPoint:[self point]];
+    [testQuery setFeatureCategory:SGFeatureCategoryPostalCode];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getContextForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 #pragma mark SimpleGeoContextDelegate Methods
 
 - (void)didLoadContext:(NSDictionary *)context
-              forQuery:(NSDictionary *)query
+            forSGQuery:(SGContextQuery *)query
 {
-    if ([[query objectForKey:@"point"] isEqual:[self point]]) {
-        GHAssertNotNil([context objectForKey:@"demographics"], nil);
-        GHAssertNotNil([context objectForKey:@"weather"], nil);
-        GHAssertTrue([[context objectForKey:@"features"] isKindOfClass:[NSArray class]], nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetContextForPoint)];
-    } else if ([[query objectForKey:@"address"] isEqual:EXAMPLE_ADDRESS]) {
-        NSDictionary *queryRsp = [context objectForKey:@"query"];
-        GHAssertEquals([[queryRsp objectForKey:@"latitude"] doubleValue], 40.01753, nil);
-        GHAssertEquals([[queryRsp objectForKey:@"longitude"] doubleValue], -105.27741, nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetContextForAddress)];
-    }
+    GHTestLog(@"Did load context for query: %@", [query asDictionary]);
+    GHTestLog(@"With results: %@", context);
+    
+    SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
+    [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
+    
+    if ([query filter]) GHAssertEquals([context count], 1, @"Filter used. Context dictionary should contain a single entry.");
+    else GHAssertGreaterThan([context count], 1, @"No filter used. Context dictionary should contain multiple entries.");
 }
 
 @end

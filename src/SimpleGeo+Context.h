@@ -63,19 +63,25 @@
  * Get Context information for a specific point. (SimpleGeo+Context.h)
  * @param point Query point.
  */
-- (void)getContextForPoint:(SGPoint *)point;
+- (void)getContextForPoint:(SGPoint *)point __attribute__((deprecated));
 
 /*!
  * Get Context information for an address. SimpleGeo will geocode the address
  * for you. (SimpleGeo+Context.h)
  * @param address Query address.
  */
-- (void)getContextForAddress:(NSString *)address;
+- (void)getContextForAddress:(NSString *)address __attribute__((deprecated));
 
 /*!
  * Get Context information for a SGQuery object (SimpleGeo+Context.h)
  * @param query Query object.
  */
 - (void)getContextForQuery:(SGContextQuery *)query;
+
+/*!
+ * Called when a Context request returns if no callback is set
+ * @param request The request query and response
+ */
+- (void)didReceiveContext:(NSDictionary *)request;
 
 @end

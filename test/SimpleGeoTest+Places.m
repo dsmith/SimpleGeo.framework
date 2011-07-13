@@ -33,374 +33,47 @@
 
 @implementation SimpleGeoTest (Places)
 
-- (void)testAddPlace
+- (void)testGetPlacesForPoint
 {
     [self prepare];
-
-    SGPoint *geometry = [self point];
-    NSDictionary *properties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                @"Mike's Burger Shack", @"name",
-                                nil];
-    SGFeature *feature = [SGFeature featureWithGeometry:geometry
-                                             properties:properties];
-
-    [[self createClient] addPlace:feature
-                          private:NO];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testAddPlacePrivately
-{
-    [self prepare];
-
-    SGPoint *geometry = [self point];
-    NSDictionary *properties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                @"Mike's Bike Shed", @"name",
-                                nil];
-    SGFeature *feature = [SGFeature featureWithGeometry:geometry
-                                             properties:properties];
-
-    [[self createClient] addPlace:feature
-                          private:YES];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testDeletePlace
-{
-    [self prepare];
-
-    [[self createClient] deletePlace:@"SG_4CsrE4oNy1gl8hCLdwu0F0_47.046962_-122.937467@1290636830"];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testGetPlacesNearWithMultipleResults
-{
-    [self prepare];
-
     SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [[self createClient] getPlacesForQuery:testQuery];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getPlacesForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetPlacesNearWithMultipleResultsAndCount
+- (void)testGetPlacesForAddress
 {
     [self prepare];
-	
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setLimit:2];
-    [[self createClient] getPlacesForQuery:testQuery];
-	
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:[self address]];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getPlacesForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetPlacesNearWithRadiusAndMultipleResults
+- (void)testGetPlacesWithComplexQuery
 {
     [self prepare];
-
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setRadius:1.5];
-    [[self createClient] getPlacesForQuery:testQuery];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.5];
-}
-
-- (void)testGetPlacesNearWithRadiusAndMultipleResultsAndCount
-{
-    [self prepare];
-	
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setLimit:2];
-    [testQuery setRadius:1.5];
-    [[self createClient] getPlacesForQuery:testQuery];
-    
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.5];
-}
-
-- (void)testGetPlacesNearMatchingWithASingleResult
-{
-    [self prepare];
-
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setSearchQuery:@"öne"];
-    [[self createClient] getPlacesForQuery:testQuery];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testGetPlacesNearMatchingWithASingleResultAndCount
-{
-    [self prepare];
-	
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setSearchQuery:@"öne"];
-    [testQuery setLimit:2];
-    [[self createClient] getPlacesForQuery:testQuery];
-    
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testGetPlacesNearMatchingInCategory
-{
-    [self prepare];
-
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setSearchQuery:@"burgers"];
-    [testQuery setCategories:[NSArray arrayWithObject:@"Restaurants & Bars"]];
-    [[self createClient] getPlacesForQuery:testQuery];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testGetPlacesNearMatchingInCategoryWithCount
-{
-    [self prepare];
-    
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setSearchQuery:@"burgers"];
-    [testQuery setCategories:[NSArray arrayWithObject:@"Restaurants & Bars"]];
-    [testQuery setLimit:2];
-    [[self createClient] getPlacesForQuery:testQuery];
-	
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testGetPlacesNearAddress
-{
-    [self prepare];
-    
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:@"41 Decatur St., San Francisco, CA"];
-    [[self createClient] getPlacesForQuery:testQuery];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                 timeout:0.25];
-}
-
-- (void)testGetPlacesNearAddressWithCount
-{
-    [self prepare];
-    
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:@"41 Decatur St., San Francisco, CA"];
-    [testQuery setLimit:2];
-    [[self createClient] getPlacesForQuery:testQuery];
-	
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-				timeout:0.25];
-}
-
-- (void)testUpdatePlace
-{
-    [self prepare];
-
-    NSString *handle = @"SG_4CsrE4oNy1gl8hCLdwu0F0_47.046962_-122.937467@1290636830";
-
-    SGFeature *feature = [SGFeature featureWithId:handle
-                                       properties:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                   @"Mike's Burger Shack", @"name",
-                                                   nil]];
-
-    [[self createClient] updatePlace:handle
-                                with:feature
-                             private:NO];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
-}
-
-- (void)testUpdatePlacePrivately
-{
-    [self prepare];
-
-    NSString *handle = @"SG_4CsrE4oNy1gl8hCLdwu0F0_47.046962_-122.937467@1290636830";
-
-    SGFeature *feature = [SGFeature featureWithId:handle
-                                       properties:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                   @"Mike's Bike Shed", @"name",
-                                                   nil]];
-
-    [[self createClient] updatePlace:handle
-                                with:feature
-                             private:YES];
-
-    [self waitForStatus:kGHUnitWaitStatusSuccess
-                timeout:0.25];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:[self address]];
+    [testQuery setRadius:50.0];
+    [testQuery setLimit:5];
+    [testQuery setCategories:[NSArray arrayWithObject:@"test cat"]];
+    [testQuery addCategory:@"another cat"];
+    [testQuery setSearchString:@"coffee"];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getPlacesForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 #pragma mark SimpleGeoPlaceDelegate Methods
 
-- (void)didAddPlace:(SGFeature *)feature
-             handle:(NSString *)handle
-                URL:(NSURL *)url
-              token:(NSString *)token
-{
-    if ([[[feature properties] objectForKey:@"name"] isEqual:@"Mike's Burger Shack"]) {
-        NSArray *handleComponents = [handle componentsSeparatedByString:@"@"];
-        GHAssertEqualObjects([handleComponents objectAtIndex:0],
-                             @"SG_07624b34159916851f3df2a0657f6ab5b9af962a_40_-105", nil);
-        GHAssertEqualObjects(token, @"596499b4fc2a11dfa39058b035fcf1e5", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testAddPlace)];
-    } else if ([[[feature properties] objectForKey:@"name"] isEqual:@"Mike's Bike Shed"]) {
-        GHAssertEqualObjects(token, @"0ff119100e1811e0b72e58b035fcf1e5", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testAddPlacePrivately)];
-    }
-}
-
-- (void)didDeletePlace:(NSString *)handle
-                 token:(NSString *)token
-{
-    GHAssertEqualObjects(handle, @"SG_4CsrE4oNy1gl8hCLdwu0F0_47.046962_-122.937467@1290636830", nil);
-    GHAssertEqualObjects(token, @"8fa0d1c4fc2911dfa39058b035fcf1e5", nil);
-
-    [self notify:kGHUnitWaitStatusSuccess
-     forSelector:@selector(testDeletePlace)];
-}
-
 - (void)didLoadPlaces:(SGFeatureCollection *)places
-             forQuery:(NSDictionary *)query
+           forSGQuery:(SGPlacesQuery *)query
 {
-    SGPoint *point = [query objectForKey:@"point"];
-    NSString *address = [query objectForKey:@"address"];
-    NSString *matching = [query objectForKey:@"matching"];
-    NSString *category = [query objectForKey:@"category"];
-    double radius = [[query objectForKey:@"radius"] doubleValue];
-    int count = [[query objectForKey:@"limit"] intValue];
-	
-	
-    if (radius > 0.0f && count == 0) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Mountain Sun Pub & Brewery", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearWithRadiusAndMultipleResults)];
-    } else if (!address && !matching && !category && count == 0) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEquals([places count], (NSUInteger) 7, @"Should have been 7 places.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-        GHAssertEqualObjects([[[[places features] objectAtIndex:1] properties] objectForKey:@"name"],
-                             @"Red Robin Gourmet Burgers", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearWithMultipleResults)];
-    } else if ([matching isEqual:@"öne"] && count == 0) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEqualObjects(matching, @"öne", nil);
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        NSArray *features = [places features];
-        GHAssertEqualObjects([[[features objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearMatchingWithASingleResult)];
-    } else if ([matching isEqual:@"burgers"] && count == 0) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEqualObjects(matching, @"burgers", nil);
-        GHAssertEqualObjects(category, @"Restaurants & Bars", nil);
-        GHAssertEquals([places count], (NSUInteger) 7, @"Should have been 7 places.");
-        NSArray *features = [places features];
-        GHAssertEqualObjects([[[features objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-        GHAssertEqualObjects([[[[places features] objectAtIndex:1] properties] objectForKey:@"name"],
-                             @"Red Robin Gourmet Burgers", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearMatchingInCategory)];
-    } else if (address && count == 0) {
-        GHAssertEqualObjects(address, @"41 Decatur St., San Francisco, CA", @"Reference address didn't match");
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Mountain Sun Pub & Brewery", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearAddress)];
-    } else if (radius > 0.0f && count == 2) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Mountain Sun Pub & Brewery", nil);
-		
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearWithRadiusAndMultipleResultsAndCount)];
-    } else if (!address && !matching && !category && count == 2) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEquals([places count], (NSUInteger) 7, @"Should have been 7 places.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-        GHAssertEqualObjects([[[[places features] objectAtIndex:1] properties] objectForKey:@"name"],
-                             @"Red Robin Gourmet Burgers", nil);
-		
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearWithMultipleResultsAndCount)];
-    } else if ([matching isEqual:@"öne"] && count == 2) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEqualObjects(matching, @"öne", nil);
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        NSArray *features = [places features];
-        GHAssertEqualObjects([[[features objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-		
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearMatchingWithASingleResultAndCount)];
-    } else if ([matching isEqual:@"burgers"] && count == 2) {
-        GHAssertEqualObjects(point, [self point], @"Reference point didn't match");
-        GHAssertEqualObjects(matching, @"burgers", nil);
-        GHAssertEqualObjects(category, @"Restaurants & Bars", nil);
-        GHAssertEquals([places count], (NSUInteger) 7, @"Should have been 7 places.");
-        NSArray *features = [places features];
-        GHAssertEqualObjects([[[features objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Burger Master West Olympia", nil);
-        GHAssertEqualObjects([[[[places features] objectAtIndex:1] properties] objectForKey:@"name"],
-                             @"Red Robin Gourmet Burgers", nil);
-		
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearMatchingInCategoryWithCount)];
-    } else if (address && count == 2) {
-        GHAssertEqualObjects(address, @"41 Decatur St., San Francisco, CA", @"Reference address didn't match");
-        GHAssertEquals([places count], (NSUInteger) 1, @"Should have been 1 place.");
-        GHAssertEqualObjects([[[[places features] objectAtIndex:0] properties] objectForKey:@"name"],
-                             @"Mountain Sun Pub & Brewery", nil);
-		
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testGetPlacesNearAddressWithCount)];
-    }
-}
-
-- (void)didUpdatePlace:(SGFeature *)feature
-                handle:(NSString *)handle
-                 token:(NSString *)token
-{
-    if ([[[feature properties] objectForKey:@"name"] isEqual:@"Mike's Burger Shack"]) {
-        GHAssertEqualObjects(handle, @"SG_4CsrE4oNy1gl8hCLdwu0F0_47.046962_-122.937467@1290636830", nil);
-        GHAssertEqualObjects(token, @"79ea18ccfc2911dfa39058b035fcf1e5", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testUpdatePlace)];
-    } else if ([[[feature properties] objectForKey:@"name"] isEqual:@"Mike's Bike Shed"]) {
-        GHAssertEqualObjects(token, @"3489de320e1911e0b72e58b035fcf1e5", nil);
-
-        [self notify:kGHUnitWaitStatusSuccess
-         forSelector:@selector(testUpdatePlacePrivately)];
-    }
+    GHTestLog(@"Did load places for query: %@", [query asDictionary]);
+    GHTestLog(@"With results: %@", [places asDictionary]);
+    SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
+    [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
 }
 
 @end

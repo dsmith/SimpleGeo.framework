@@ -35,7 +35,6 @@
 #import "SGGeometryCollection+Private.h"
 #import "SGStoredRecord.h"
 #import "SGStorageQuery.h"
-#import "SGQuery+Private.h"
 
 #define SIMPLEGEO_API_VERSION_FOR_STORAGE @"0.1"
 
@@ -149,11 +148,12 @@
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    [query setAction:@selector(didLoadRecords:)];
+    [query setTarget:self];
+    [query setAction:@selector(didReceiveRecords:)];
     
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[query asDictionary]];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];
 }
 
@@ -451,23 +451,17 @@
     }
 }
 
-- (void)didLoadRecords:(ASIHTTPRequest *)request
+- (void)didReceiveRecords:(NSDictionary *)request
 {
     if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:cursor:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        SGFeatureCollection *records = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
-        SGStorageQuery *storageQuery = [SGStorageQuery queryWithDictionary:[request userInfo]];
-        [delegate didLoadRecords:records
-                      forSGQuery:storageQuery
-                          cursor:[storageQuery cursor]];
+        [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
+                      forSGQuery:[request objectForKey:@"query"]];
     
     /* TODO: remove (deprecated) */
     } else if ([delegate respondsToSelector:@selector(didLoadRecords:forQuery:cursor:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        SGFeatureCollection *records = [SGFeatureCollection featureCollectionWithDictionary:jsonResponse];
-        [delegate didLoadRecords:records
-                        forQuery:[request userInfo]
-                          cursor:[[[[request userInfo] objectForKey:@"cursor"] retain] autorelease]];
+        [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
+                        forQuery:[[request objectForKey:@"query"] asDictionary]
+                          cursor:[[request objectForKey:@"query"] cursor]];
         
     } else {
         NSLog(@"Delegate does not implement didLoadRecords:forSGQuery:cursor:");

@@ -34,6 +34,16 @@
  * Storage query object.
  */
 @interface SGStorageQuery : SGNearbyQuery
+{
+    NSString *layer;
+    NSString *cursor;
+}
+
+//! The associated layer for this query
+@property (nonatomic, retain) NSString *layer;
+
+//! The cursor for this query
+@property (nonatomic, retain) NSString *cursor;
 
 /*!
  * Create a point-based query targeting a specific layer
@@ -65,28 +75,6 @@
  * @param layer layer
  */
 - (id)initWithAddress:(NSString *)address
-               inLayer:(NSString *)layer;
-
-/*!
- * Return the associated layer for this query
- */
-- (NSString *)layer;
-
-/*!
- * Set a target layer for this query
- * @param layer Layer
- */
-- (void)setLayer:(NSString *)layer;
-
-/*!
- * Return the associated cursor for this query
- */
-- (NSString *)cursor;
-
-/*!
- * Set a cursor for this query
- * @param cursor Cursor
- */
-- (void)setCursor:(NSString *)cursor;
+              inLayer:(NSString *)layer;
 
 @end

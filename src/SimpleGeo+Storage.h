@@ -131,8 +131,7 @@
  * @param cursor  Cursor string to retrieve the next set of records.
  */
 - (void)didLoadRecords:(SGFeatureCollection *)records
-            forSGQuery:(SGStorageQuery *)query
-                cursor:(NSString *)cursor;
+            forSGQuery:(SGStorageQuery *)query;
 
 @end
 
@@ -274,6 +273,14 @@
  * @param name Layer name.
  */
 - (void)deleteLayer:(NSString *)name;
+
+#pragma mark Distribution Methods
+
+/*!
+ * Called when a Storage request returns if no callback is set
+ * @param request The request query and response
+ */
+- (void)didReceiveRecords:(NSDictionary *)request;
 
 #pragma mark Deprecated Convenience Request Methods
 

@@ -32,39 +32,30 @@
 
 @implementation SGPlacesQuery
 
-- (NSString *)searchQuery
-{
-    return [self.query objectForKey:@"searchQuery"];
-}
-
-- (void)setSearchQuery:(NSString *)searchQuery
-{
-    [self.query setObject:[searchQuery retain] forKey:@"searchQuery"];
-}
-
-- (NSArray *)categories
-{
-    return [self.query objectForKey:@"categories"];
-}
-
-- (void)setCategories:(NSArray *)categories
-{
-    NSMutableArray *catArray = [NSMutableArray array];
-    for (NSObject *object in categories) {
-        if ([object isKindOfClass:[NSString class]]) {
-            [catArray addObject:object];
-        }
-    }
-    [self.query setObject:catArray forKey:@"categories"];
-}
+@synthesize searchString, categories;
 
 - (void)addCategory:(NSString *)category
 {
-    if ([self.query objectForKey:@"categories"]) {
-        [[self.query objectForKey:@"categories"] addObject:[category retain]];
-    } else {
-        [self.query setObject:[NSMutableArray arrayWithObject:[category retain]] forKey:@"categories"];
+    NSMutableArray *newCategories = [NSMutableArray arrayWithObject:category];
+    if (categories) {
+        [newCategories addObjectsFromArray:categories];
     }
+    [self setCategories:newCategories];
+}
+
+- (NSDictionary *)asDictionary
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    if (searchString) [dictionary setObject:searchString forKey:@"searchString"];
+    if (categories) [dictionary setObject:categories forKey:@"categories"];
+    return [NSDictionary dictionaryWithDictionary:dictionary];
+}
+
+- (void)dealloc
+{
+    [searchString release];
+    [categories release];
+    [super dealloc];
 }
 
 @end

@@ -10,24 +10,21 @@
 
 @implementation SGContextQuery
 
-- (NSString *)featureCategory
+@synthesize featureCategory, filter;
+
+- (NSDictionary *)asDictionary
 {
-    return [self.query objectForKey:@"featureCategory"];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    if (featureCategory) [dictionary setObject:featureCategory forKey:@"featureCategory"];
+    if (filter) [dictionary setObject:filter forKey:@"filter"];
+    return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
-- (void)setFeatureCategory:(NSString *)featureCategory
+- (void)dealloc
 {
-    [self.query setObject:[featureCategory retain] forKey:@"featureCategory"];
-}
-
-- (NSString *)filter
-{
-    return [self.query objectForKey:@"filter"];
-}
-
-- (void)setFilter:(NSString *)filter
-{
-    [self.query setObject:[filter retain] forKey:@"filter"];
+    [featureCategory release];
+    [filter release];
+    [super dealloc];
 }
 
 @end

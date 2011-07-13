@@ -32,6 +32,8 @@
 
 @implementation SGStorageQuery
 
+@synthesize layer, cursor;
+
 + (id)queryWithPoint:(SGPoint *)point
              inLayer:(NSString *)layer
 {
@@ -46,40 +48,35 @@
                                             inLayer:layer] autorelease];
 }
 
-- (id)initWithPoint:(SGPoint *)point
-            inLayer:(NSString *)layer
+- (id)initWithPoint:(SGPoint *)aPoint
+            inLayer:(NSString *)aLayer
 {
     SGStorageQuery *query = [super initWithPoint:point];
     [query setLayer:layer];
     return query;
 }
 
-- (id)initWithAddress:(NSString *)address
-              inLayer:(NSString *)layer
+- (id)initWithAddress:(NSString *)anAddress
+              inLayer:(NSString *)aLayer
 {
     SGStorageQuery *query = [super initWithAddress:address];
     [query setLayer:layer];
     return query;
 }
 
-- (NSString *)layer
+- (NSDictionary *)asDictionary
 {
-    return [self.query objectForKey:@"layer"];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
+    if (layer) [dictionary setObject:layer forKey:@"layer"];
+    if (cursor) [dictionary setObject:cursor forKey:@"cursor"];
+    return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
-- (void)setLayer:(NSString *)layer
+- (void)dealloc
 {
-    [self.query setObject:layer forKey:@"layer"];
-}
-
-- (NSString *)cursor
-{
-    return [self.query objectForKey:@"cursor"];
-}
-
-- (void)setCursor:(NSString *)cursor
-{
-    [self.query setObject:cursor forKey:@"cursor"];
+    [layer release];
+    [cursor release];
+    [super dealloc];
 }
 
 @end
