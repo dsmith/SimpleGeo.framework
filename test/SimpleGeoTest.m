@@ -45,18 +45,13 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
 - (SimpleGeo *)client
 {
     return [SimpleGeo clientWithDelegate:self
-                             consumerKey:@""
-                          consumerSecret:@""];
+                             consumerKey:SGTestKey
+                          consumerSecret:SGTestSecret];
 }
 
 - (SGPoint *)point
 {
     return [SGPoint pointWithLatitude:37.772487 longitude:-122.40572];
-}
-
-- (NSString *)address
-{
-    return @"42 Decatur Street, San Francisco, CA 94103";
 }
 
 - (SGEnvelope *)envelope

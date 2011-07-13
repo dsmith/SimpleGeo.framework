@@ -34,7 +34,6 @@
 @interface SGPointTest : GHTestCase { }
 @end
 
-
 @implementation SGPointTest
 
 - (BOOL)shouldRunOnMainThread

@@ -45,7 +45,7 @@
 - (void)testGetContextForAddress
 {
     [self prepare];
-    SGContextQuery *testQuery = [SGContextQuery queryWithAddress:[self address]];
+    SGContextQuery *testQuery = [SGContextQuery queryWithAddress:SGTestAddress];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getContextForQuery:testQuery];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
@@ -91,8 +91,8 @@
     SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
     [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
     
-    if ([query filter]) GHAssertEquals([context count], 1, @"Filter used. Context dictionary should contain a single entry.");
-    else GHAssertGreaterThan([context count], 1, @"No filter used. Context dictionary should contain multiple entries.");
+    if ([query filter]) GHAssertEquals([context count], 1, @"Filter used. Context dictionary should contain a single part.");
+    else GHAssertGreaterThan([context count], 1, @"No filter used. Context dictionary should contain multiple parts.");
 }
 
 @end

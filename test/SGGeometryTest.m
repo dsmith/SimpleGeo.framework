@@ -35,10 +35,8 @@
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
 
-
 @interface SGGeometryTest : GHTestCase { }
 @end
-
 
 @implementation SGGeometryTest
 

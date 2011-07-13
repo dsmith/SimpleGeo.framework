@@ -45,7 +45,7 @@
 - (void)testGetPlacesForAddress
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:[self address]];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:SGTestAddress];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getPlacesForQuery:testQuery];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
@@ -54,9 +54,9 @@
 - (void)testGetPlacesWithComplexQuery
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:[self address]];
-    [testQuery setRadius:50.0];
-    [testQuery setLimit:5];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setRadius:5.0];
+    [testQuery setLimit:3];
     [testQuery setCategories:[NSArray arrayWithObject:@"test cat"]];
     [testQuery addCategory:@"another cat"];
     [testQuery setSearchString:@"coffee"];
@@ -72,6 +72,10 @@
 {
     GHTestLog(@"Did load places for query: %@", [query asDictionary]);
     GHTestLog(@"With results: %@", [places asDictionary]);
+    
+    // make sure we get at least one result!
+    // if limit, assert that number of results <= limit
+    
     SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
     [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
 }

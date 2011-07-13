@@ -37,7 +37,6 @@
 @interface SGFeatureTest : GHTestCase { }
 @end
 
-
 @implementation SGFeatureTest
 
 - (BOOL)shouldRunOnMainThread
