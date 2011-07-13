@@ -75,7 +75,7 @@
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    if (![query action]) {
+    if (![query target] || ![query action]) {
         [query setTarget:self];
         [query setAction:@selector(didReceiveContext:)];
     }

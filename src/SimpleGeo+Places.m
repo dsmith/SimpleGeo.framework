@@ -142,8 +142,10 @@
         [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
     }
     
-    [query setTarget:self];
-    [query setAction:@selector(didReceivePlaces:)];
+    if (![query target] || ![query action]) {
+        [query setTarget:self];
+        [query setAction:@selector(didReceivePlaces:)];
+    }
     
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
