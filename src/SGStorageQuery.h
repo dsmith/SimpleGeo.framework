@@ -29,6 +29,7 @@
 //
 
 #import "SGNearbyQuery.h"
+#import "SGTypes.h"
 
 /*!
  * Storage query object.
@@ -37,6 +38,16 @@
 {
     NSString *layer;
     NSString *cursor;
+    SGSortType sortType;
+    
+    NSDate *startDate;
+    NSDate *endDate;
+    
+    SGStoredPropertyType propertyType;
+    NSString *propertyName;
+    NSObject *propertyValue;
+    NSObject *propertyStartValue;
+    NSObject *propertyEndValue;
 }
 
 //! The associated layer for this query
@@ -45,13 +56,37 @@
 //! The cursor for this query
 @property (nonatomic, retain) NSString *cursor;
 
+//! The cursor for this query
+@property (nonatomic, retain) SGSortType sortType;
+
+//! The start date for this query
+@property (nonatomic, retain) NSDate *startDate;
+
+//! The end date for this query
+@property (nonatomic, retain) NSDate *endDate;
+
+//! The property type for a property-based query
+@property (nonatomic, readonly) SGStoredPropertyType propertyType;
+
+//! The property name for a property-based query
+@property (nonatomic, readonly) NSString *propertyName;
+
+//! The property value for a property-based query
+@property (nonatomic, readonly) NSObject *propertyValue;
+
+//! The property start value for a property-based range query
+@property (nonatomic, retain) NSObject *propertyStartValue;
+
+//! The property end value for a property-based range query
+@property (nonatomic, retain) NSObject *propertyEndValue;
+
 /*!
  * Create a point-based query targeting a specific layer
  * @param point point
  * @param layer layer
  */
 + (id)queryWithPoint:(SGPoint *)point
-             inLayer:(NSString *)layer;
+               layer:(NSString *)layer;
 
 /*!
  * Create an address-based query targeting a specific layer
@@ -59,7 +94,7 @@
  * @param layer layer
  */
 + (id)queryWithAddress:(NSString *)address
-               inLayer:(NSString *)layer;
+                 layer:(NSString *)layer;
 
 /*!
  * Construct a point-based query targeting a specific layer
@@ -67,7 +102,7 @@
  * @param layer layer
  */
 - (id)initWithPoint:(SGPoint *)point
-             inLayer:(NSString *)layer;
+              layer:(NSString *)layer;
 
 /*!
  * Construct an address-based query targeting a specific layer
@@ -75,6 +110,24 @@
  * @param layer layer
  */
 - (id)initWithAddress:(NSString *)address
-              inLayer:(NSString *)layer;
+                layer:(NSString *)layer;
+
+/*!
+ * Set a property by which to query
+ * @param property property name
+ * @param type property type
+ */
+- (void)setProperty:(NSString *)property
+             ofType:(SGStoredPropertyType)type;
+
+/*!
+ * Set a property value by which to query
+ * @param property property name
+ * @param type property type
+ * @param value property value
+ */
+- (void)setProperty:(NSString *)property
+             ofType:(SGStoredPropertyType)type
+             equals:(NSObject *)value;
 
 @end

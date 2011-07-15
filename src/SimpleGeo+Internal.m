@@ -96,4 +96,26 @@
     return [result autorelease];
 }
 
+
+- (NSString *)normalizeRequestParameters:(NSDictionary *)parameters
+{
+    NSLog(@"%@",parameters);
+    NSMutableArray *paramPairs = [NSMutableArray array];
+    NSArray *paramNames = [parameters allKeys];
+    for (NSString *paramName in paramNames) {
+        NSObject *paramObject = [parameters objectForKey:paramName];
+        NSArray *paramValues;
+        if (paramObject && [paramObject isKindOfClass:[NSString class]]) {
+            paramValues = [NSArray arrayWithObject:paramObject];
+        } else if (paramObject && [paramObject isKindOfClass:[NSArray class]]) {
+            paramValues = (NSArray *)paramObject;
+        }
+        for (NSString *paramValue in paramValues) {
+            [paramPairs addObject:[NSString stringWithFormat:@"%@=%@", paramName, [self URLEncodedString:paramValue]]];
+        }
+    }
+    if ([paramPairs count] > 0) return [paramPairs componentsJoinedByString:@"&"];
+    return nil;
+}
+
 @end

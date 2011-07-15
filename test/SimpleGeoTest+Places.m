@@ -51,13 +51,22 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
+- (void)testGetPlacesWithLimit
+{
+    [self prepare];
+    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
+    [testQuery setLimit:3];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getPlacesForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 - (void)testGetPlacesWithComplexQuery
 {
     [self prepare];
     SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
     [testQuery setRadius:5.0];
-    [testQuery setLimit:3];
-    [testQuery setCategories:[NSArray arrayWithObjects:SGPlacesCategoryRestaurant, SGFeatureTypeFoodAndDrink, nil]];
+    [testQuery setCategories:[NSArray arrayWithObject:SGPlacesCategoryRestaurant]];
     [testQuery setSearchString:@"Sparky"];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getPlacesForQuery:testQuery];
@@ -72,12 +81,13 @@
     GHTestLog(@"Did load places for query: %@", [query asDictionary]);
     GHTestLog(@"With results: %@", [places asDictionary]);
     
+    /* Check features count */
+    int numParts = [places.features count];
+    GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
+    if (query.limit != SGDefaultLimit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
+    
     SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
     [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
-    
-    int numParts = [places.features count];
-    if (query.limit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
-    else GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
 }
 
 @end

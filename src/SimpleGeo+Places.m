@@ -98,56 +98,31 @@
     [request startAsynchronous];
 }
 
-#pragma mark Standard Request Method
+#pragma mark Request Methods
 
 - (void)getPlacesForQuery:(SGPlacesQuery *)query
 {
-    NSMutableArray *queryParams = [NSMutableArray array];
-    
-    NSMutableString *endpoint;
-    if (query.point) {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/places/%f,%f.json",
-                    SIMPLEGEO_API_VERSION, query.point.latitude, query.point.longitude];
-        
-    } else {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/places/address.json",
-                    SIMPLEGEO_API_VERSION];
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@",@"address",
-                                [self URLEncodedString:query.address]]];
-    }
-    
-    if (query.searchString && ![query.searchString isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"q",
-                                [self URLEncodedString:query.searchString]]];
-    }
-    
-    if (query.categories && [query.categories count] > 0) {
-        for (NSObject* category in query.categories) {
-            if ([category isKindOfClass:[NSString class]] && ![category isEqual:@""]) {
-                [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"category",
-                                        [self URLEncodedString:(NSString *)category]]];
-            }
-        }
-    }
-    
-    if (query.radius > 0.0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", query.radius]];
-    }
-    
-	if (query.limit > 0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"num", query.limit]];
-	}
-    
-    if ([queryParams count] > 0) {
-        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
-    }
-    
     if (!query.target || !query.action) {
         [query setTarget:self];
         [query setAction:@selector(didReceivePlaces:)];
     }
     
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/places/", SIMPLEGEO_API_VERSION];
+    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
+    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
+    else [endpoint appendFormat:@"address.json"];
+    
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:query.address forKey:@"address"];
+    [parameters setValue:query.searchString forKey:@"q"];
+    [parameters setValue:query.categories forKey:@"category"];
+    [parameters setValue:[NSString stringWithFormat:@"%f", query.radius] forKey:@"radius"];
+    [parameters setValue:[NSString stringWithFormat:@"%d", query.limit] forKey:@"num"];
+    NSString *paramPairs = [self normalizeRequestParameters:parameters];
+    
+    [endpoint appendFormat:@"?%@", paramPairs];
     NSURL *endpointURL = [self endpointForString:endpoint];
+    
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];

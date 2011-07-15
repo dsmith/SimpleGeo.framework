@@ -10,20 +10,24 @@
 
 @implementation SGContextQuery
 
-@synthesize featureCategory, filter;
+@synthesize featureCategories, featureSubcategories, filters, acsTableIDs;
 
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    if (featureCategory) [dictionary setObject:featureCategory forKey:@"featureCategory"];
-    if (filter) [dictionary setObject:filter forKey:@"filter"];
+    [dictionary setValue:featureCategories forKey:@"featureCategories"];
+    [dictionary setValue:featureSubcategories forKey:@"featureSubcategories"];
+    [dictionary setValue:filters forKey:@"filters"];
+    [dictionary setValue:acsTableIDs forKey:@"acsTableIDs"];
     return dictionary;
 }
 
 - (void)dealloc
 {
-    [featureCategory release];
-    [filter release];
+    [featureCategories release];
+    [featureSubcategories release];
+    [filters release];
+    [acsTableIDs release];
     [super dealloc];
 }
 

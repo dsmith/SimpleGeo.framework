@@ -31,11 +31,12 @@
 #import <GHUnit/GHUnit.h>
 #import "SimpleGeo.h"
 
-#define SGTestKey @""
-#define SGTestSecret @""
+#define SGTestKey @"SQBJDhg3zB7MdZyrhs7aKvg6ekEMweCZ"
+#define SGTestSecret @"X3pLbpXrU9Y5bYS4tAsmfWy7X7mSPUXv"
 #define SGTestTimeout 2.5
-#define SGTestLayer @""
 #define SGTestAddress @"41 Decatur Street, San Francisco, CA 94103"
+#define SGTestLayer @"no.yr.cities"
+#define SGTestProperty @"place_type"
 
 @interface SimpleGeoTest : GHAsyncTestCase
 

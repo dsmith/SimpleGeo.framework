@@ -32,43 +32,67 @@
 
 @implementation SGStorageQuery
 
-@synthesize layer, cursor;
+@synthesize layer, cursor, sortType, startDate, endDate, propertyType, propertyName, propertyValue, propertyStartValue, propertyEndValue;
 
 + (id)queryWithPoint:(SGPoint *)point
-             inLayer:(NSString *)layer
+               layer:(NSString *)layer
 {
     return [[[SGStorageQuery alloc] initWithPoint:point
-                                          inLayer:layer] autorelease];
+                                            layer:layer] autorelease];
 }
     
 + (id)queryWithAddress:(NSString *)address
-               inLayer:(NSString *)layer
+                 layer:(NSString *)layer
 {
     return [[[SGStorageQuery alloc] initWithAddress:address
-                                            inLayer:layer] autorelease];
+                                              layer:layer] autorelease];
 }
 
 - (id)initWithPoint:(SGPoint *)aPoint
-            inLayer:(NSString *)aLayer
+              layer:(NSString *)aLayer
 {
-    SGStorageQuery *query = [super initWithPoint:point];
-    [query setLayer:layer];
-    return query;
+    self = [self initWithPoint:aPoint];
+    if (self) {
+        layer = [aLayer retain];
+    }
+    return self;
 }
 
 - (id)initWithAddress:(NSString *)anAddress
-              inLayer:(NSString *)aLayer
+                layer:(NSString *)aLayer
 {
-    SGStorageQuery *query = [super initWithAddress:address];
-    [query setLayer:layer];
-    return query;
+    self = [self initWithAddress:anAddress];
+    if (self) {
+        layer = [aLayer retain];
+    }
+    return self;
+}
+
+- (void)setProperty:(NSString *)property
+             ofType:(SGStoredPropertyType)type
+{
+    [self setProperty:property
+               ofType:type
+               equals:nil];
+}
+
+- (void)setProperty:(NSString *)property
+             ofType:(SGStoredPropertyType)type
+             equals:(NSObject *)value
+{
+    [propertyType release];
+    [propertyName release];
+    [propertyValue release];
+    propertyType = [type retain];
+    propertyName = [property retain];
+    propertyValue = [value retain];
 }
 
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    if (layer) [dictionary setObject:layer forKey:@"layer"];
-    if (cursor) [dictionary setObject:cursor forKey:@"cursor"];
+    [dictionary setValue:layer forKey:@"layer"];
+    [dictionary setValue:cursor forKey:@"cursor"];
     return dictionary;
 }
 

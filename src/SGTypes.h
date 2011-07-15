@@ -42,6 +42,19 @@
 #define SGContextFilterDemographics @"demographics"
 #define SGContextFilterIntersections @"intersections"
 
+#pragma mark Storage Queries
+
+typedef NSString* SGStoredPropertyType;
+#define SGStoredPropertyTypeBoolean @"boolean"
+#define SGStoredPropertyTypeNumber @"number"
+#define SGStoredPropertyTypeString @"string"
+typedef NSString* SGSortType;
+#define SGSortTypeDistance @""
+#define SGSortTypeCreatedAscending @"created"
+#define SGSortTypeCreatedDescending @"-created"
+#define SGSortTypePropertyAscending @"property"
+#define SGSortTypePropertyDescending @"-property"
+
 #pragma mark Feature Types
 
 #define SGFeatureTypeRegion @"Region"

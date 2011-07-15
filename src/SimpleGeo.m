@@ -101,13 +101,6 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 
 #pragma mark Generic Instance Methods
 
-- (id)init
-{
-    return [self initWithDelegate:nil
-                      consumerKey:nil
-                   consumerSecret:nil];
-}
-
 - (id)initWithDelegate:(id)aDelegate
            consumerKey:(NSString *)key
         consumerSecret:(NSString *)secret

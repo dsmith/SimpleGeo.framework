@@ -37,50 +37,29 @@
 
 #pragma mark Request Methods
 
-- (void)getContextForPoint:(SGPoint *)point
-{
-    [self getContextForQuery:[SGContextQuery queryWithPoint:point]];
-}
-
-- (void)getContextForAddress:(NSString *)address
-{
-    [self getContextForQuery:[SGContextQuery queryWithAddress:address]];
-}
-
 - (void)getContextForQuery:(SGContextQuery *)query
 {
-    NSMutableArray *queryParams = [NSMutableArray array];
-    
-    NSMutableString *endpoint;
-    if (query.point) {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f.json", SIMPLEGEO_API_VERSION,
-                          query.point.latitude, query.point.longitude];
-    } else if (query.envelope) {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/context/%f,%f,%f,%f.json", SIMPLEGEO_API_VERSION,
-                          query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
-    } else {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/context/address.json?address=%@", SIMPLEGEO_API_VERSION,
-                          [self URLEncodedString:query.address]];
-    }
-    
-    if (query.filter && ![query.filter isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"filter", query.filter]];
-    }
-    
-    if (query.featureCategory && ![query.featureCategory isEqual:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"features__category", [self URLEncodedString:query.featureCategory]]];
-    }
-    
-    if ([queryParams count] > 0) {
-        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
-    }
-    
     if (!query.target || !query.action) {
         [query setTarget:self];
         [query setAction:@selector(didReceiveContext:)];
     }
     
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/context/", SIMPLEGEO_API_VERSION];
+    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
+    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
+    else [endpoint appendFormat:@"address.json"];
+    
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:query.address forKey:@"address"];
+    [parameters setValue:query.filters forKey:@"filter"];
+    [parameters setValue:query.featureCategories forKey:@"features__category"];
+    [parameters setValue:query.featureSubcategories forKey:@"features__subcategory"];
+    [parameters setValue:query.acsTableIDs forKey:@"demographics.acs__table"];
+    NSString *paramPairs = [self normalizeRequestParameters:parameters];
+    
+    if (paramPairs) [endpoint appendFormat:@"?%@", paramPairs];
     NSURL *endpointURL = [self endpointForString:endpoint];
+    
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];
@@ -102,6 +81,18 @@
     } else {
         NSLog(@"Delegate does not implement didLoadContext:forSGQuery:");
     }
+}
+
+#pragma mark Deprecated Request Methods
+
+- (void)getContextForPoint:(SGPoint *)point
+{
+    [self getContextForQuery:[SGContextQuery queryWithPoint:point]];
+}
+
+- (void)getContextForAddress:(NSString *)address
+{
+    [self getContextForQuery:[SGContextQuery queryWithAddress:address]];
 }
 
 @end

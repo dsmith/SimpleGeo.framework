@@ -37,8 +37,8 @@
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    if (searchString) [dictionary setObject:searchString forKey:@"searchString"];
-    if (categories) [dictionary setObject:categories forKey:@"categories"];
+    [dictionary setValue:searchString forKey:@"searchString"];
+    [dictionary setValue:categories forKey:@"categories"];
     return dictionary;
 }
 

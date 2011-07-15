@@ -40,4 +40,6 @@
 - (NSString *)URLEncodedString:(NSString *)string;
 - (NSString *)URLDecodedString:(NSString *)string;
 
+- (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
+
 @end

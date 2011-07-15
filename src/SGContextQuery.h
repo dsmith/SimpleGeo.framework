@@ -6,21 +6,29 @@
 //  Copyright 2011 AppThat. All rights reserved.
 //
 
-#import "SGEnvelopeQuery.h"
+#import "SGQuery.h"
 
 /*!
  * Context query object.
  */
-@interface SGContextQuery : SGEnvelopeQuery
+@interface SGContextQuery : SGQuery
 {
-    NSString *featureCategory;
-    NSString *filter;
+    NSMutableArray *featureCategories;
+    NSMutableArray *featureSubcategories;
+    NSMutableArray *filters;
+    NSMutableArray *acsTableIDs;
 }
 
-//! Feature category for this query
-@property (nonatomic, retain) NSString *featureCategory;
+//! Feature categories for this query
+@property (nonatomic, retain) NSMutableArray *featureCategories;
 
-//! Filter for this query
-@property (nonatomic, retain) NSString *filter;
+//! Feature subcategories for this query
+@property (nonatomic, retain) NSMutableArray *featureSubcategories;
+
+//! Filters for this query
+@property (nonatomic, retain) NSMutableArray *filters;
+
+//! List of ACS table IDs to include
+@property (nonatomic, retain) NSMutableArray *acsTableIDs;
 
 @end

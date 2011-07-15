@@ -48,8 +48,8 @@
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    if (radius > 0) [dictionary setObject:[NSNumber numberWithDouble:radius] forKey:@"radius"];
-    if (limit > 0) [dictionary setObject:[NSNumber numberWithInt:limit] forKey:@"limit"];
+    [dictionary setValue:[NSNumber numberWithDouble:radius] forKey:@"radius"];
+    [dictionary setValue:[NSNumber numberWithInt:limit] forKey:@"limit"];
     return dictionary;
 }
 

@@ -38,6 +38,7 @@
 {
     SGPoint *point;
     NSString *address;
+    SGEnvelope *envelope;
     NSDictionary *userInfo;
     id target;
     SEL action;
@@ -48,6 +49,9 @@
 
 //! Address for an address-based query
 @property (nonatomic, readonly) NSString *address;
+
+//! Envelope for a bounding box query
+@property (nonatomic, readonly) SGEnvelope *envelope;
 
 //! Attached user info
 @property (nonatomic, retain) NSDictionary *userInfo;
@@ -71,6 +75,12 @@
 + (id)queryWithAddress:(NSString *)address;
 
 /*!
+ * Create an overlap query with a bounding box
+ * @param bounds bounding box
+ */
++ (id)queryWithEnvelope:(SGEnvelope *)envelope;
+
+/*!
  * Construct a point-based query
  * @param point point
  */
@@ -81,6 +91,12 @@
  * @param address address
  */
 - (id)initWithAddress:(NSString *)address;
+
+/*!
+ * Construct an overlap query with a bounding box
+ * @param bounds bounding box
+ */
+- (id)initWithEnvelope:(SGEnvelope *)envelope;
 
 /*!
  * Return an NSDictionary representation of this query

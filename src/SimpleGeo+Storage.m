@@ -118,42 +118,34 @@
 
 - (void)getRecordsForQuery:(SGStorageQuery *)query
 {
-    NSMutableString *endpoint;
-    if (query.point) {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/%f,%f.json",
-                    SIMPLEGEO_API_VERSION_FOR_STORAGE,
-                    query.layer,
-                    query.point.latitude,
-                    query.point.longitude];
-    } else {
-        endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/%@.json",
-                    SIMPLEGEO_API_VERSION_FOR_STORAGE, query.layer, query.address];
-    }
-    
-    NSMutableArray *queryParams = [NSMutableArray array];
-    
-    if (query.radius > 0.0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%f", @"radius", query.radius]];
-    }
-    
-    if (query.limit > 0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"limit", query.limit]];
-    }
-    
-    if (query.cursor && ![query.cursor isEqualToString:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"cursor", query.cursor]];
-    }
-    
-    if ([queryParams count] > 0) {
-        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
-    }
-    
     if (!query.target || !query.action) {
         [query setTarget:self];
         [query setAction:@selector(didReceiveRecords:)];
     }
     
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/", SIMPLEGEO_API_VERSION_FOR_STORAGE, query.layer];
+    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
+    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
+    else [endpoint appendFormat:@"address.json"];
+    
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:query.address forKey:@"address"];
+    [parameters setValue:query.cursor forKey:@"cursor"];
+    [parameters setValue:query.sortType forKey:@"order"];
+    [parameters setValue:[NSString stringWithFormat:@"%f", query.radius] forKey:@"radius"];
+    [parameters setValue:[NSString stringWithFormat:@"%d", query.limit] forKey:@"limit"];
+    if (query.startDate) [parameters setValue:[NSString stringWithFormat:@"%f", [query.startDate timeIntervalSince1970]] forKey:@"start"];
+    if (query.endDate) [parameters setValue:[NSString stringWithFormat:@"%f", [query.endDate timeIntervalSince1970]] forKey:@"end"];
+    [parameters setValue:query.propertyType forKey:@"prop.type"];
+    [parameters setValue:query.propertyName forKey:@"prop.name"];
+    [parameters setValue:query.propertyValue forKey:@"prop.equals"];
+    [parameters setValue:query.propertyStartValue forKey:@"prop.start"];
+    [parameters setValue:query.propertyEndValue forKey:@"prop.end"];
+    NSString *paramPairs = [self normalizeRequestParameters:parameters];
+    
+    [endpoint appendFormat:@"?%@", paramPairs];
     NSURL *endpointURL = [self endpointForString:endpoint];
+    
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
     [request startAsynchronous];
@@ -456,6 +448,7 @@
 
 - (void)didReceiveRecords:(NSDictionary *)request
 {
+    NSLog(@"%@",[request objectForKey:@"response"]);
     if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:)]) {
         [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
                       forSGQuery:[request objectForKey:@"query"]];

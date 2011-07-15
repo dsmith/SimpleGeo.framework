@@ -34,7 +34,7 @@
 
 @implementation SGQuery
 
-@synthesize point, address, userInfo, target, action;
+@synthesize point, address, envelope, userInfo, target, action;
 
 #pragma mark Instantiation Methods
 
@@ -48,9 +48,9 @@
     return [[[self alloc] initWithAddress:address] autorelease];
 }
 
-+ (id)queryWithDictionary:(NSDictionary *)dictionary
++ (id)queryWithEnvelope:(SGEnvelope *)envelope
 {
-    return [[[self alloc] initWithDictionary:dictionary] autorelease];
+    return [[[self alloc] initWithEnvelope:envelope] autorelease];
 }
 
 - (id)initWithPoint:(SGPoint *)aPoint
@@ -71,25 +71,34 @@
     return self;
 }
 
-- (void)dealloc {
-    [point release];
-    [address release];
-    [userInfo release];
-    [target release];
-    [super dealloc];
+- (id)initWithEnvelope:(SGEnvelope *)anEnvelope
+{
+    self = [self init];
+    if (self) {
+        envelope = [anEnvelope retain];
+    }
+    return self;
 }
-
-#pragma mark Conversion Methods
 
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    if (point) [dictionary setObject:point forKey:@"point"];
-    if (address) [dictionary setObject:address forKey:@"address"];
-    if (userInfo) [dictionary setObject:userInfo forKey:@"userInfo"];
-    if (target) [dictionary setObject:target forKey:@"target"];
-    if (action) [dictionary setObject:NSStringFromSelector(action) forKey:@"action"];
+    [dictionary setValue:point forKey:@"point"];
+    [dictionary setValue:address forKey:@"address"];
+    [dictionary setValue:envelope forKey:@"envelope"];
+    [dictionary setValue:userInfo forKey:@"userInfo"];
+    [dictionary setValue:target forKey:@"target"];
+    [dictionary setValue:NSStringFromSelector(action) forKey:@"action"];
     return dictionary;
+}
+
+- (void)dealloc {
+    [point release];
+    [address release];
+    [envelope release];
+    [userInfo release];
+    [target release];
+    [super dealloc];
 }
 
 @end

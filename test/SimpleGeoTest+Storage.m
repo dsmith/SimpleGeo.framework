@@ -46,7 +46,17 @@
 - (void)testGetRecordsForAddress
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:SGTestLayer];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestLayer];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetRecordsWithLimit
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [testQuery setLimit:3];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getRecordsForQuery:testQuery];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
@@ -55,9 +65,34 @@
 - (void)testGetRecordsWithComplexQuery
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] inLayer:SGTestLayer];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
     [testQuery setRadius:5.0];
-    [testQuery setLimit:3];
+    [testQuery setStartDate:[NSDate dateWithTimeIntervalSince1970:0]];
+    [testQuery setEndDate:[NSDate date]];
+    [testQuery setSortType:SGSortTypeCreatedDescending];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetRecordsWithProperty
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [testQuery setProperty:SGTestProperty ofType:SGStoredPropertyTypeString equals:@"Airport"];
+    [testQuery setSortType:SGSortTypePropertyDescending];
+    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
+    [[self client] getRecordsForQuery:testQuery];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetRecordsWithPropertyRange
+{
+    [self prepare];
+    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [testQuery setProperty:SGTestProperty ofType:SGStoredPropertyTypeString];
+    [testQuery setPropertyStartValue:@"a"];
+    [testQuery setPropertyEndValue:@"c"];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getRecordsForQuery:testQuery];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
@@ -71,12 +106,13 @@
     GHTestLog(@"Did load records for query: %@", [query asDictionary]);
     GHTestLog(@"With results: %@", [records asDictionary]);
     
+    /* Check records count */    
+    int numParts = [records.features count];
+    GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
+    if (query.limit != SGDefaultLimit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
+    
     SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
     [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
-    
-    int numParts = [records.features count];
-    if (query.limit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
-    else GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
 }
 
 @end
