@@ -91,8 +91,8 @@
     [self prepare];
     SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
     [testQuery setProperty:SGTestProperty ofType:SGStoredPropertyTypeString];
-    [testQuery setPropertyStartValue:@"a"];
-    [testQuery setPropertyEndValue:@"c"];
+    [testQuery setPropertyStartValue:@"A"];
+    [testQuery setPropertyEndValue:@"C"];
     [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
     [[self client] getRecordsForQuery:testQuery];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];

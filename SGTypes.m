@@ -30,11 +30,6 @@
 
 #import "SGTypes.h"
 
-#pragma mark Default Limits
-
-int const SGDefaultLimit = 25;
-double const SGDefaultRadius = 10.0;
-
 #pragma mark Context Filters
 
 SGContextFilter const SGContextFilterQuery = @"query";

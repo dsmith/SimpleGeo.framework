@@ -1,0 +1,39 @@
+# Download Mac dependencies
+
+curl -s http://cloud.github.com/downloads/gabriel/yajl-objc/YAJL-0.2.26.zip > YAJL.zip
+unzip YAJL -d ../ext/
+rm YAJL.zip
+
+curl -s http://cloud.github.com/downloads/gabriel/gh-unit/GHUnit-0.4.30.zip > GHUnit.zip
+unzip GHUnit -d ../ext/
+rm GHUnit.zip
+
+rm -r ../ext/__MACOSX/
+
+# Download iOS dependencies
+
+curl -s http://cloud.github.com/downloads/gabriel/yajl-objc/YAJLiOS-0.2.26.zip > YAJLiOS.zip
+unzip YAJLiOS -d ../iOS/ext/
+rm YAJLiOS.zip
+
+#curl -s http://cloud.github.com/downloads/gabriel/gh-unit/GHUnitIOS-0.4.30.zip > GHUnitIOS.zip
+#unzip GHUnitIOS -d ../iOS/ext/
+#rm GHUnitIOS.zip
+
+rm -r ../iOS/ext/__MACOSX/
+
+# Download & update git submodules
+
+cd ../
+command -v git >/dev/null && git submodule update --init & exit
+cd scripts
+
+# If git not installed, just download the repos
+
+curl -s https://download.github.com/pokeb-asi-http-request-v1.8.1-0-g404bbfe.zip > asi-http-request.zip
+unzip asi-http-request -d ../ext/
+rm asi-http-request.zip
+
+curl -s https://download.github.com/AlterTap-asi-http-request-oauth-3179c3a.zip > asi-http-request-oauth.zip
+unzip asi-http-request-oauth -d ../ext/
+rm asi-http-request-oauth.zip

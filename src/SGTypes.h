@@ -30,8 +30,8 @@
 
 #pragma mark Default Limits
 
-extern int const SGDefaultLimit;
-extern double const SGDefaultRadius;
+#define SGDefaultLimit 25
+#define SGDefaultRadius 10.0
 
 #pragma mark Context Filters
 
