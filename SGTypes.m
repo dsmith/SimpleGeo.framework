@@ -1,8 +1,8 @@
 //
-//  SGStoredRecord+Private.h
+//  SGTypes.m
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,12 +28,30 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGStoredRecord.h"
+#import "SGTypes.h"
 
-@interface SGStoredRecord (Private)
+#pragma mark Default Limits
 
-+ (SGStoredRecord *)recordWithDictionary:(NSDictionary *)data;
-- (id)initWithId:(NSString *)id
-      dictionary:(NSDictionary *)data;
+int const SGDefaultLimit = 25;
+double const SGDefaultRadius = 10.0;
 
-@end
+#pragma mark Context Filters
+
+SGContextFilter const SGContextFilterQuery = @"query";
+SGContextFilter const SGContextFilterFeatures = @"features";
+SGContextFilter const SGContextFilterWeather = @"weather";
+SGContextFilter const SGContextFilterAddress = @"address";
+SGContextFilter const SGContextFilterDemographics = @"demographics";
+SGContextFilter const SGContextFilterIntersections = @"intersections";
+
+#pragma mark Storage Queries
+
+SGStoredPropertyType const SGStoredPropertyTypeBoolean = @"boolean";
+SGStoredPropertyType const SGStoredPropertyTypeNumber = @"number";
+SGStoredPropertyType const SGStoredPropertyTypeString = @"string";
+
+SGSortType const SGSortTypeDistance = @"";
+SGSortType const SGSortTypeCreatedAscending = @"created";
+SGSortType const SGSortTypeCreatedDescending = @"-created";
+SGSortType const SGSortTypePropertyAscending = @"property";
+SGSortType const SGSortTypePropertyDescending = @"-property";

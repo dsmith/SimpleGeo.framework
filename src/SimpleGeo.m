@@ -34,24 +34,18 @@
 #import "SimpleGeo+Internal.h"
 #import "SGFeature+Private.h"
 
-NSString * const SIMPLEGEO_API_VERSION = @"1.0";
-NSString * const SIMPLEGEO_URL_PREFIX = @"http://api.simplegeo.com";
-NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
+NSString * const SG_API_VERSION = @"1.0";
+NSString * const SG_HOSTNAME = @"api.simplegeo.com";
+NSString * const SG_URL_PREFIX = @"http://api.simplegeo.com";
 
 @interface SimpleGeo ()
-
 - (void)requestFailed:(ASIHTTPRequest *)request;
-
 @end
 
 @implementation SimpleGeo
 
-@synthesize consumerKey;
-@synthesize consumerSecret;
-@synthesize delegate;
-@synthesize url;
-@synthesize userAgent;
-@dynamic    sslEnabled;
+@synthesize consumerKey, consumerSecret, delegate, url, userAgent;
+@dynamic sslEnabled;
 
 #pragma mark Class Methods
 
@@ -80,7 +74,7 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@",
                                        scheme,
-                                       SIMPLEGEO_HOSTNAME]];
+                                       SG_HOSTNAME]];
 
     return [SimpleGeo clientWithDelegate:delegate
                              consumerKey:consumerKey
@@ -108,7 +102,7 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
     return [self initWithDelegate:aDelegate
                       consumerKey:key
                    consumerSecret:secret
-                              URL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@",SIMPLEGEO_HOSTNAME]]];
+                              URL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@",SG_HOSTNAME]]];
 }
 
 - (id)initWithDelegate:(id)aDelegate
@@ -156,7 +150,7 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 {
     // TODO extract shared boilerplate w/ SimpleGeo+Places.m
     NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/features/%@.json",
-                                 SIMPLEGEO_API_VERSION, handle];
+                                 SG_API_VERSION, handle];
 
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                      @"didRequestFeature:", @"targetSelector",
@@ -179,7 +173,7 @@ NSString * const SIMPLEGEO_HOSTNAME = @"api.simplegeo.com";
 - (void)getCategories
 {
     NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/features/categories.json",
-                                 SIMPLEGEO_API_VERSION];
+                                 SG_API_VERSION];
 
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                      @"didRequestCategories:", @"targetSelector",

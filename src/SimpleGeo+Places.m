@@ -42,7 +42,7 @@
          private:(BOOL)private
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/places",
-                                                  SIMPLEGEO_API_VERSION]];
+                                                  SG_API_VERSION]];
 
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
 
@@ -65,7 +65,7 @@
             private:(BOOL)private
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/features/%@.json",
-                                                  SIMPLEGEO_API_VERSION, handle]];
+                                                  SG_API_VERSION, handle]];
     
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     
@@ -87,7 +87,7 @@
 - (void)deletePlace:(NSString *)handle
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/features/%@.json",
-                                                  SIMPLEGEO_API_VERSION, handle]];
+                                                  SG_API_VERSION, handle]];
 
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setRequestMethod:@"DELETE"];
@@ -107,7 +107,7 @@
         [query setAction:@selector(didReceivePlaces:)];
     }
     
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/places/", SIMPLEGEO_API_VERSION];
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/places/", SG_API_VERSION];
     if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
     else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
     else [endpoint appendFormat:@"address.json"];
@@ -151,7 +151,7 @@
     if ([delegate respondsToSelector:@selector(didAddPlace:handle:URL:token:)]) {
         NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
         NSURL *placeURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@",
-                                                SIMPLEGEO_HOSTNAME,
+                                                SG_HOSTNAME,
                                                 [jsonResponse objectForKey:@"uri"]]];
         
         [delegate didAddPlace:[[request userInfo] objectForKey:@"feature"]

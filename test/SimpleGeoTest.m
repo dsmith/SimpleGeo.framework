@@ -63,7 +63,7 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
 
 - (void)testCreateClientWithDefaultURL
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", SIMPLEGEO_HOSTNAME]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", SG_HOSTNAME]];
     GHTestLog(@"SimpleGeo URL: %@", url);
     SimpleGeo *client = [SimpleGeo clientWithDelegate:self
                                           consumerKey:@"" 
@@ -87,7 +87,7 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
 
 - (void)testCreateClientUsingSSL
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", SIMPLEGEO_HOSTNAME]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", SG_HOSTNAME]];
 
     SimpleGeo *client = [SimpleGeo clientWithDelegate:self
                                           consumerKey:@"" 

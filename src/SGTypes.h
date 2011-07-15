@@ -30,33 +30,36 @@
 
 #pragma mark Default Limits
 
-#define SGDefaultLimit 25
-#define SGDefaultRadius 10.0
+extern int const SGDefaultLimit;
+extern double const SGDefaultRadius;
 
 #pragma mark Context Filters
 
-#define SGContextFilterQuery @"query"
-#define SGContextFilterFeatures @"features"
-#define SGContextFilterWeather @"weather"
-#define SGContextFilterAddress @"address"
-#define SGContextFilterDemographics @"demographics"
-#define SGContextFilterIntersections @"intersections"
+typedef NSString * SGContextFilter;
+extern SGContextFilter const SGContextFilterQuery;
+extern SGContextFilter const SGContextFilterFeatures;
+extern SGContextFilter const SGContextFilterWeather;
+extern SGContextFilter const SGContextFilterAddress;
+extern SGContextFilter const SGContextFilterDemographics;
+extern SGContextFilter const SGContextFilterIntersections;
 
 #pragma mark Storage Queries
 
-typedef NSString* SGStoredPropertyType;
-#define SGStoredPropertyTypeBoolean @"boolean"
-#define SGStoredPropertyTypeNumber @"number"
-#define SGStoredPropertyTypeString @"string"
-typedef NSString* SGSortType;
-#define SGSortTypeDistance @""
-#define SGSortTypeCreatedAscending @"created"
-#define SGSortTypeCreatedDescending @"-created"
-#define SGSortTypePropertyAscending @"property"
-#define SGSortTypePropertyDescending @"-property"
+typedef NSString * SGStoredPropertyType;
+extern SGStoredPropertyType const SGStoredPropertyTypeBoolean;
+extern SGStoredPropertyType const SGStoredPropertyTypeNumber;
+extern SGStoredPropertyType const SGStoredPropertyTypeString;
+
+typedef NSString * SGSortType;
+extern SGSortType const SGSortTypeDistance;
+extern SGSortType const SGSortTypeCreatedAscending;
+extern SGSortType const SGSortTypeCreatedDescending;
+extern SGSortType const SGSortTypePropertyAscending;
+extern SGSortType const SGSortTypePropertyDescending;
 
 #pragma mark Feature Types
 
+typedef NSString* SGFeatureType;
 #define SGFeatureTypeRegion @"Region"
 #define SGFeatureTypeEntertainment @"Entertainment"
 #define SGFeatureTypeFoodAndDrink @"Food & Drink"
@@ -69,6 +72,7 @@ typedef NSString* SGSortType;
 
 #pragma mark Feature Categories (Context)
 
+typedef NSString* SGFeatureCategory;
 #define SGFeatureCategoryAdministrative @"Administrative"
 #define SGFeatureCategoryCommercialArea @"Commercial Area"
 #define SGFeatureCategoryDMA @"DMA"
@@ -85,6 +89,8 @@ typedef NSString* SGSortType;
 #define SGFeatureCategorySubnational @"Subnational"
 #define SGFeatureCategoryTimeZone @"Time Zone"
 #define SGFeatureCategoryUSCensus @"US Census"
+
+typedef NSString* SGFeatureSubcategory;
 #define SGFeatureSubcategoryConsolidatedCity @"Consolidated City"
 #define SGFeatureSubcategoryCounty @"County"
 #define SGFeatureSubcategoryParish @"Parish"
@@ -117,6 +123,7 @@ typedef NSString* SGSortType;
 
 #pragma mark Feature Categories (Places)
 
+typedef NSString* SGPlacesCategory;
 #define SGPlacesCategoryArena @"Arena"
 #define SGPlacesCategoryAutoRacetrack @"Auto Racetrack"
 #define SGPlacesCategoryBullRing @"Bull Ring"

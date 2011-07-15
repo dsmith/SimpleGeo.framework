@@ -34,6 +34,8 @@
 @class SGStoredRecord;
 @class SGStorageQuery;
 
+extern NSString * const SG_API_VERSION_STORAGE = @"0.1";
+
 /*!
  * Informal delegate protocol for Storage functionality.
  */

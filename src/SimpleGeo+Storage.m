@@ -36,7 +36,7 @@
 #import "SGStoredRecord+Private.h"
 #import "SGStorageQuery.h"
 
-#define SIMPLEGEO_API_VERSION_FOR_STORAGE @"0.1"
+NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
 @implementation SimpleGeo (Storage)
 
@@ -46,7 +46,7 @@
                     withId:(NSString *)id
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE,
+                                                  SG_API_VERSION_STORAGE,
                                                   layer,
                                                   id]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
@@ -63,7 +63,7 @@
                   inLayer:(NSString *)layer
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE,
+                                                  SG_API_VERSION_STORAGE,
                                                   layer,
                                                   [record featureId]]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
@@ -83,7 +83,7 @@
                    inLayer:(NSString *)layer
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE,
+                                                  SG_API_VERSION_STORAGE,
                                                   layer]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     SGFeatureCollection *featureCollection = [SGFeatureCollection featureCollectionWithRecords:records];
@@ -103,7 +103,7 @@
                      withId:(NSString *)id
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE,
+                                                  SG_API_VERSION_STORAGE,
                                                   layer,
                                                   id]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
@@ -123,7 +123,7 @@
         [query setAction:@selector(didReceiveRecords:)];
     }
     
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/", SIMPLEGEO_API_VERSION_FOR_STORAGE, query.layer];
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/", SG_API_VERSION_STORAGE, query.layer];
     if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
     else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
     else [endpoint appendFormat:@"address.json"];
@@ -187,7 +187,7 @@
                         count:(int)count
 {
     NSMutableString *endpoint  = [NSMutableString stringWithFormat:@"/%@/records/%@/%@/history.json",
-                                  SIMPLEGEO_API_VERSION_FOR_STORAGE, layer,recordId];
+                                  SG_API_VERSION_STORAGE, layer,recordId];
     NSMutableArray *queryParams = [NSMutableArray array];
     
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -237,7 +237,7 @@
             callbackURLs:(NSArray *)callbackURLs
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/layers/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE, name]];
+                                                  SG_API_VERSION_STORAGE, name]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     
     NSMutableDictionary *layerDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -272,7 +272,7 @@
 - (void)getLayersWithCursor:(NSString *)cursor
 {
     NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/layers.json",
-                                 SIMPLEGEO_API_VERSION_FOR_STORAGE];
+                                 SG_API_VERSION_STORAGE];
     if (cursor) {
         [endpoint appendFormat:@"?%@", [NSString stringWithFormat:@"%@=%@",
                                         @"cursor", cursor]];
@@ -291,7 +291,7 @@
 - (void)getLayer:(NSString *)layer
 {
     NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/layers/%@.json",
-                                 SIMPLEGEO_API_VERSION_FOR_STORAGE, layer];
+                                 SG_API_VERSION_STORAGE, layer];
     NSURL *endpointURL = [self endpointForString:endpoint];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setRequestMethod:@"GET"];
@@ -306,7 +306,7 @@
 - (void)deleteLayer:(NSString *)name
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/layers/%@.json",
-                                                  SIMPLEGEO_API_VERSION_FOR_STORAGE, name]];
+                                                  SG_API_VERSION_STORAGE, name]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setRequestMethod:@"DELETE"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];

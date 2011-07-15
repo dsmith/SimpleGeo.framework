@@ -30,7 +30,6 @@
 
 #import "SGFeature.h"
 
-
 /*!
  * Representation of a record as exposed by the SimpleGeo Storage API.
  */
@@ -43,33 +42,29 @@
 }
 
 //! Created at timestamp (Unix epoch)
-@property (readonly) NSTimeInterval created;
+@property (nonatomic, assign) NSTimeInterval created;
 
 //! Layer name
-@property (retain,readonly) NSString *layer;
+@property (nonatomic, retain) NSString *layer;
 
 //! Distance (in meters) from the query point. This is only present if the
 //  feature was generated from a nearby request.
-@property (retain, readonly) NSNumber *distance;
-
+@property (nonatomic, readonly) NSNumber *distance;
 
 /*!
  * Create a record with a created timestamp.
- *
  * @param created Created timestamp.
  */
 + (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created;
 
 /*!
  * Create a record associated with a layer.
- *
  * @param layer Associated layer.
  */
 + (SGStoredRecord *)recordWithLayer:(NSString *)layer;
 
 /*!
  * Create a record with a created timestamp and an associated layer.
- *
  * @param created Created timestamp.
  * @param layer   Associated layer.
  */
@@ -78,7 +73,6 @@
 
 /*!
  * Create a record from a Feature with a created timestamp.
- *
  * @param feature Feature.
  * @param created Created timestamp.
  */
@@ -87,7 +81,6 @@
 
 /*!
  * Create a record from a Feature with an associated layer.
- *
  * @param feature Feature.
  * @param layer  Associated layer.
  */
@@ -97,7 +90,6 @@
 /*!
  * Create a record from a Feature with a created timestamp and an associated
  * layer.
- *
  * @param feature Feature.
  * @param created Created timestamp.
  * @param layer   Associated layer.
@@ -108,21 +100,18 @@
 
 /*!
  * Construct a record with a created timestamp.
- *
  * @param created Created timestamp.
  */
 - (id)initWithCreatedTimestamp:(NSTimeInterval)created;
 
 /*!
  * Construct a record with an associated layer.
- *
  * @param layer Associated layer.
  */
 - (id)initWithLayer:(NSString *)layer;
 
 /*!
  * Construct a record with a created timestamp and an associated layer.
- *
  * @param created Created timestamp.
  * @param layer   Associated layer.
  */
@@ -131,7 +120,6 @@
 
 /*!
  * Construct a record from a Feature with a created timestamp.
- *
  * @param feature Feature.
  * @param created Created timestamp.
  */
@@ -140,7 +128,6 @@
 
 /*!
  * Construct a record from a Feature with an associated layer.
- *
  * @param feature Feature.
  * @param layer   Associated layer.
  */
@@ -150,7 +137,6 @@
 /*!
  * Construct a record from a Feature with a created timestamp and an associated
  * layer.
- *
  * @param feature Feature.
  * @param created Created timestamp.
  * @param layer   Associated layer.

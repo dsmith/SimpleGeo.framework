@@ -44,7 +44,7 @@
         [query setAction:@selector(didReceiveContext:)];
     }
     
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/context/", SIMPLEGEO_API_VERSION];
+    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/context/", SG_API_VERSION];
     if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
     else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
     else [endpoint appendFormat:@"address.json"];

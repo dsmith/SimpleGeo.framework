@@ -29,6 +29,7 @@
 //
 
 #import "ASIHTTPRequest.h"
+
 #import "SGFeature.h"
 #import "SGFeatureCollection.h"
 #import "SGStoredRecord.h"
@@ -67,9 +68,9 @@
  * an Xcode docset</a>.
  */
 
-extern NSString * const SIMPLEGEO_API_VERSION;
-extern NSString * const SIMPLEGEO_URL_PREFIX __attribute__ ((deprecated));
-extern NSString * const SIMPLEGEO_HOSTNAME;
+extern NSString * const SG_API_VERSION;
+extern NSString * const SG_HOSTNAME;
+extern NSString * const SG_URL_PREFIX __attribute__ ((deprecated));
 
 /*!
  * Informal delegate protocol for core functionality.
