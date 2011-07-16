@@ -30,7 +30,6 @@
 
 #import "SGFeature.h"
 
-
 @interface SGFeature (Private)
 
 + (SGFeature *)featureWithId:(NSString *)id

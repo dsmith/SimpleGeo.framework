@@ -124,7 +124,7 @@
     NSURL *endpointURL = [self endpointForString:endpoint];
     
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"SGQuery"]];
     [request startAsynchronous];
 }
 

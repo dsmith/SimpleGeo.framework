@@ -36,29 +36,27 @@
  * MultiPolygon representation.
  */
 @interface SGMultiPolygon : SGGeometry {
-  @private
-    // array of SGPolygons
     NSArray* polygons;
 }
 
-//! Polygons that define this multi-polygon.
+//! Polygons that define this multi-polygon
 @property (retain,readonly) NSArray* polygons;
 
 /*!
- * Create a multi-polygon from a set of Polygons.
- * @param polygons Polygons.
+ * Create a multi-polygon from a set of Polygons
+ * @param polygons Polygons
  */
 + (SGMultiPolygon *)multiPolygonWithPolygons:(NSArray *)polygons;
 
 /*!
- * Construct a multi-polygon from a set of Polygons.
- * @param polygons Polygons.
+ * Construct a multi-polygon from a set of Polygons
+ * @param polygons Polygons
  */
 - (id)initWithPolygons:(NSArray *)polygons;
 
 /*!
- * Determine if a given point lies within the bounds of the polygon.
- * @param point Point to check.
+ * Determine if a given point lies within the bounds of the polygon
+ * @param point Point to check
  */
 - (BOOL)containsPoint:(SGPoint *)point;
 

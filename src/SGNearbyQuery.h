@@ -31,8 +31,7 @@
 #import "SGQuery.h"
 
 /*!
- * Abstract query object
- * supporting nearby-specific parameters.
+ * Abstract query object supporting nearby-specific parameters
  */
 @interface SGNearbyQuery : SGQuery
 {
@@ -40,10 +39,10 @@
     int limit;
 }
 
-//! Radius for the nearby query
+//! Max radius to query
 @property (nonatomic, assign) double radius;
 
-//! Limit for the nearby query
+//! Limit number of items returned
 @property (nonatomic, assign) int limit;
 
 @end

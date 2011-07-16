@@ -42,24 +42,24 @@
     NSArray* rings;
 }
 
-//! LinearRings that define this polygon.
+//! LinearRings that define this polygon
 @property (retain,readonly) NSArray* rings;
 
 /*!
- * Create a polygon from a set of LinearRings.
- * @param rings LinearRings.
+ * Create a polygon from a set of LinearRings
+ * @param rings LinearRings
  */
 + (SGPolygon *)polygonWithRings:(NSArray *)rings;
 
 /*!
- * Construct a polygon from a set of LinearRings.
- * @param rings LinearRings.
+ * Construct a polygon from a set of LinearRings
+ * @param rings LinearRings
  */
 - (id)initWithRings:(NSArray *)rings;
 
 /*!
- * Determine if a given point lies within the bounds of the polygon.
- * @param point Point to check.
+ * Determine if a given point lies within the bounds of the polygon
+ * @param point Point to check
  */
 - (BOOL)containsPoint:(SGPoint *)point;
 

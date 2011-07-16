@@ -30,7 +30,6 @@
 
 #import "SimpleGeo.h"
 
-
 @interface SimpleGeo (Internal)
 
 - (NSURL *)endpointForString:(NSString *)path;
@@ -39,7 +38,6 @@
                       private:(BOOL)private;
 - (NSString *)URLEncodedString:(NSString *)string;
 - (NSString *)URLDecodedString:(NSString *)string;
-
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
 
 @end

@@ -35,7 +35,7 @@
 /*!\cond
  * Factory method for creating subclasses of SGGeometry either from an
  * SGGeometry instance or an NSDictionary containing a parsed GeoJSON
- * document).
+ * document)
  * \endcond
  */
 + (SGGeometry *)geometryWithGeometry:(id)geometry;

@@ -30,7 +30,6 @@
 
 #import "SGGeometryCollection.h"
 
-
 @interface SGGeometryCollection (Private)
 
 + (SGGeometryCollection *)geometryCollectionWithDictionary:(NSDictionary *)geometries;

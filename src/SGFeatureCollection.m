@@ -32,13 +32,11 @@
 #import "SGFeatureCollection+Private.h"
 #import "NSArray+SGFeature.h"
 
-// trigger @synthesize in SGFeature to create readwrite accessors
 @interface SGFeatureCollection ()
 
 @property (retain) NSArray* features;
 
 @end
-
 
 @implementation SGFeatureCollection
 

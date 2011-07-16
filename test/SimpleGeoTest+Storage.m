@@ -33,6 +33,13 @@
 
 @implementation SimpleGeoTest (Storage)
 
+- (void)testGetLayers
+{
+    [self prepare];
+    [[self client] getLayers];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 - (void)testGetRecordsForPoint
 {
     [self prepare];
@@ -99,6 +106,17 @@
 }
 
 #pragma mark SimpleGeoStorageDelegate Methods
+
+- (void)didLoadLayers:(NSArray *)layers
+           withCursor:(NSString *)cursor
+{
+    GHTestLog(@"Did load layers: %@", layers);
+    
+    int numLayers = [layers count];
+    GHAssertGreaterThan(numLayers, 0, @"Valid user. Response should contain at lease one layer.");
+    
+    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetLayers)];
+}
 
 - (void)didLoadRecords:(SGFeatureCollection *)records
             forSGQuery:(SGStorageQuery *)query

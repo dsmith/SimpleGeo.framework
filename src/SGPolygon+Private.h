@@ -30,7 +30,6 @@
 
 #import "SGPolygon.h"
 
-
 @interface SGPolygon (Private)
 
 + (SGPolygon *)polygonWithArray:(NSArray *)array;

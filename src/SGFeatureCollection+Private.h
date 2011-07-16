@@ -30,7 +30,6 @@
 
 #import "SGFeatureCollection.h"
 
-
 @interface SGFeatureCollection (Private)
 
 + (SGFeatureCollection *)featureCollectionWithDictionary:(NSDictionary *)features;

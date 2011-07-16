@@ -70,12 +70,6 @@
                                     longitude:longitude] autorelease];
 }
 
-- (id)init
-{
-    return [self initWithLatitude:0
-                        longitude:0];
-}
-
 - (id)initWithLatitude:(double)lat
              longitude:(double)lon
 {

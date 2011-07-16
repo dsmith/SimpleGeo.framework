@@ -31,7 +31,6 @@
 #import "ASIHTTPRequest+OAuth.h"
 #import "SimpleGeo+Internal.h"
 
-
 @implementation SimpleGeo (Internal)
 
 - (NSURL *)endpointForString:(NSString *)path

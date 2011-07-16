@@ -1,5 +1,5 @@
 //
-//  SGContextQuery.m
+//  SimpleGeoTest.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -28,29 +28,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGContextQuery.h"
-
-@implementation SGContextQuery
-
-@synthesize featureCategories, featureSubcategories, filters, acsTableIDs;
-
-- (NSDictionary *)asDictionary
-{
-    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    [dictionary setValue:featureCategories forKey:@"featureCategories"];
-    [dictionary setValue:featureSubcategories forKey:@"featureSubcategories"];
-    [dictionary setValue:filters forKey:@"filters"];
-    [dictionary setValue:acsTableIDs forKey:@"acsTableIDs"];
-    return dictionary;
-}
-
-- (void)dealloc
-{
-    [featureCategories release];
-    [featureSubcategories release];
-    [filters release];
-    [acsTableIDs release];
-    [super dealloc];
-}
-
-@end
+#define SGTestKey @""
+#define SGTestSecret @""
+#define SGTestLayer @""
+#define SGTestProperty @""

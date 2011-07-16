@@ -31,8 +31,6 @@
 #import "SimpleGeoTest.h"
 #import "SGPolygon.h"
 
-NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
-
 @implementation SimpleGeoTest
 
 - (BOOL)shouldRunOnMainThread
@@ -73,18 +71,6 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
     GHAssertEqualObjects([client url], url, @"URLs don't match.");
 }
 
-- (void)testCreateClientWithURL
-{
-    NSURL *url = [NSURL URLWithString:TEST_URL_PREFIX];
-    GHTestLog(@"SimpleGeo URL: %@", url);
-    SimpleGeo *client = [SimpleGeo clientWithDelegate:self
-                                              consumerKey:@""
-                                           consumerSecret:@""
-                                                      URL:url];
-
-    GHAssertEqualObjects([client url], url, @"URLs don't match.");
-}
-
 - (void)testCreateClientUsingSSL
 {
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", SG_HOSTNAME]];
@@ -98,6 +84,22 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
     GHAssertEqualObjects([client url], url, @"URLs don't match.");
 }
 
+#pragma mark Feature Request Tests
+
+- (void)testGetCategories
+{
+    [self prepare];
+    [[self client] getCategories];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetFeature
+{
+    [self prepare];
+    [[self client] getFeatureWithHandle:@"SG_2AziTafTLNReeHpRRkfipn_37.766713_-122.428938@1291796505"];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 #pragma mark SimpleGeoDelegate Methods
 
 - (void)requestDidFinish:(ASIHTTPRequest *)request
@@ -108,6 +110,22 @@ NSString * const TEST_URL_PREFIX = @"http://localhost:4567/";
 - (void)requestDidFail:(ASIHTTPRequest *)request
 {
     GHTestLog(@"Request did fail");
+}
+
+- (void)didLoadCategories:(NSArray *)categories
+{
+    GHTestLog(@"Did load categories: %@", categories);
+    int numCategories = [categories count];
+    GHAssertGreaterThan(numCategories, 0, @"Should return a list of categories");
+    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetCategories)];
+}
+
+- (void)didLoadFeature:(SGFeature *)feature
+                handle:(NSString *)handle
+{
+    GHTestLog(@"Did load feature %@: %@", handle, [feature asDictionary]);
+    GHAssertNotNil(feature,@"Valid handle. Should return one feature");
+    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetFeature)];
 }
 
 @end

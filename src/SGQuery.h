@@ -32,7 +32,7 @@
 @class SGEnvelope;
 
 /*!
- * Abstract query object.
+ * Abstract query object
  */
 @interface SGQuery : NSObject
 {
@@ -64,37 +64,37 @@
 
 /*!
  * Create a point-based query
- * @param point point
+ * @param point Point
  */
 + (id)queryWithPoint:(SGPoint *)point;
 
 /*!
  * Create an address-based query
- * @param address address
+ * @param address Address
  */
 + (id)queryWithAddress:(NSString *)address;
 
 /*!
  * Create an overlap query with a bounding box
- * @param bounds bounding box
+ * @param bounds Bounding box
  */
 + (id)queryWithEnvelope:(SGEnvelope *)envelope;
 
 /*!
  * Construct a point-based query
- * @param point point
+ * @param point Point
  */
 - (id)initWithPoint:(SGPoint *)point;
 
 /*!
  * Construct an address-based query
- * @param address address
+ * @param address Address
  */
 - (id)initWithAddress:(NSString *)address;
 
 /*!
  * Construct an overlap query with a bounding box
- * @param bounds bounding box
+ * @param bounds Bounding box
  */
 - (id)initWithEnvelope:(SGEnvelope *)envelope;
 

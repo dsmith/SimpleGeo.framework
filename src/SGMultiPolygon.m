@@ -61,19 +61,12 @@
     return [[[SGMultiPolygon alloc] initWithPolygons:polygons] autorelease];
 }
 
-- (id)init
-{
-    return [self initWithPolygons:nil];
-}
-
 - (id)initWithPolygons:(NSArray *)somePolygons
 {
     self = [super init];
-
     if (self) {
         polygons = [somePolygons retain];
     }
-
     return self;
 }
 

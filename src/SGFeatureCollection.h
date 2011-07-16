@@ -28,49 +28,47 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-
 /*!
  * Collections of Features.
  */
 @interface SGFeatureCollection : NSObject
 {
-  @private
     NSArray* features;
 }
 
-//! Collected Features.
-@property (retain,readonly) NSArray* features;
+//! Collected Features
+@property (retain, readonly) NSArray* features;
 
 /*!
- * Create a FeatureCollection from a list of Features.
- * @param features List of Features.
+ * Create a FeatureCollection from a list of Features
+ * @param features List of Features
  */
 + (SGFeatureCollection *)featureCollectionWithFeatures:(NSArray *)features;
 
 /*!
- * Create a FeatureCollection from a list of Records.
- * @param records List of Records.
+ * Create a FeatureCollection from a list of Records
+ * @param records List of Records
  */
 + (SGFeatureCollection *)featureCollectionWithRecords:(NSArray *)records;
 
 /*!
- * Construct a FeatureCollection from a list of Features.
- * @param features List of Features.
+ * Construct a FeatureCollection from a list of Features
+ * @param features List of Features
  */
 - (id)initWithFeatures:(NSArray *)features;
 
 /*!
- * Construct a FeatureCollection from a list of Records.
- * @param someRecords List of Records.
+ * Construct a FeatureCollection from a list of Records
+ * @param someRecords List of Records
  */
 - (id)initWithRecords:(NSArray *)someRecords;
 
 /*!
- * Return the FeatureCollection as a dictiuonary.
+ * Return the FeatureCollection as a dictiuonary
  */
 - (NSDictionary *)asDictionary;
 
-//! Gets the number of features in this collection.
+//! Gets the number of features in this collection
 - (NSUInteger)count;
 
 @end

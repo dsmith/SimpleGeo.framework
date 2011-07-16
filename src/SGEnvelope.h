@@ -38,24 +38,24 @@
     double east;
 }
 
-//! Northern latitude (top coordinate).
+//! Northern latitude (top coordinate)
 @property (nonatomic, assign) double north;
 
-//! Southern latitude (bottom coordinate).
+//! Southern latitude (bottom coordinate)
 @property (nonatomic, assign) double south;
 
-//! Western longitude (left coordinate).
+//! Western longitude (left coordinate)
 @property (nonatomic, assign) double west;
 
-//! Eastern longitude (right coordinate).
+//! Eastern longitude (right coordinate)
 @property (nonatomic, assign) double east;
 
 /*!
- * Create a bounding box from edge coordinates.
- * @param north Northern latitude.
- * @param south Southern latitude.
- * @param west Western longitude.
- * @param east Eastern longitude.
+ * Create a bounding box from edge coordinates
+ * @param north Northern latitude
+ * @param south Southern latitude
+ * @param west  Western longitude
+ * @param east  Eastern longitude
  */
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
                             south:(double)southernLat
@@ -63,11 +63,11 @@
                              east:(double)easternLon;
 
 /*!
- * Construct a bounding box from edge coordinates.
- * @param north Northern latitude.
- * @param south Southern latitude.
- * @param west Western longitude.
- * @param east Eastern longitude.
+ * Construct a bounding box from edge coordinates
+ * @param north Northern latitude
+ * @param south Southern latitude
+ * @param west  Western longitude
+ * @param east  Eastern longitude
  */
 - (id)initWithWithNorth:(double)northernLat
                   south:(double)southernLat

@@ -28,7 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-
 @interface NSArray (SGFeature)
 
 + (NSArray *)arrayWithFeatures:(NSArray *)features;

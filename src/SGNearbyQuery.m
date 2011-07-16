@@ -53,4 +53,9 @@
     return dictionary;
 }
 
+-(void)dealloc
+{
+    [super dealloc];
+}
+
 @end

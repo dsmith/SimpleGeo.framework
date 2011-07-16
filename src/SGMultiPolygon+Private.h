@@ -30,7 +30,6 @@
 
 #import "SGMultiPolygon.h"
 
-
 @interface SGMultiPolygon (Private)
 
 + (SGMultiPolygon *)multiPolygonWithArray:(NSArray *)array;

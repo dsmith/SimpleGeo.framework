@@ -76,10 +76,10 @@ NSString * const SG_URL_PREFIX = @"http://api.simplegeo.com";
                                        scheme,
                                        SG_HOSTNAME]];
 
-    return [SimpleGeo clientWithDelegate:delegate
-                             consumerKey:consumerKey
-                          consumerSecret:consumerSecret
-                                     URL:url];
+    return [[[SimpleGeo alloc] initWithDelegate:delegate
+                                    consumerKey:consumerKey
+                                 consumerSecret:consumerSecret
+                                            URL:url] autorelease];
 }
 
 + (SimpleGeo *)clientWithDelegate:(id)delegate
@@ -189,18 +189,22 @@ NSString * const SG_URL_PREFIX = @"http://api.simplegeo.com";
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    SGQuery *query = [[request userInfo] objectForKey:@"query"];    
+    SGQuery *query = [[request userInfo] objectForKey:@"SGQuery"];    
     if (([request responseStatusCode] >= 200 && [request responseStatusCode] < 400) || [request responseStatusCode] == 404) {
         // call requestDidFinish first
         if ([delegate respondsToSelector:@selector(requestDidFinish:)]) {
             [delegate requestDidFinish:request];
         }
-        // make the target/action delegate call
-        [[query target] performSelector:[query action]
-                             withObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                         query, @"query",
-                                         [[request responseData] yajl_JSON], @"response",
-                                         nil]];
+        // make the target/action delegate call        
+        if (query) [[query target] performSelector:[query action]
+                                        withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                    query, @"query",
+                                                    [[request responseData] yajl_JSON], @"response",
+                                                    nil]];
+        else {
+            SEL defaultDelegate = NSSelectorFromString([[request userInfo] objectForKey:@"targetSelector"]);
+            if (defaultDelegate) [self performSelector:defaultDelegate withObject:request];
+        }
     } else {
         // consider non-2xx, 3xx, or 404s to be failures
         if ([request responseStatusCode] == 400) {
@@ -214,12 +218,9 @@ NSString * const SG_URL_PREFIX = @"http://api.simplegeo.com";
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"Request failed: %@", [request error]);
-
-    // TODO how can clients identify which request failed that they queued?
     if ([delegate respondsToSelector:@selector(requestDidFail:)]) {
         [delegate requestDidFail:request];
     }
-    
     [request setDelegate:nil];
 }
 

@@ -48,28 +48,18 @@
                                              east:easternLon] autorelease];
 }
 
-- (id)init
-{
-    return [self initWithWithNorth:0.0
-                             south:0.0
-                              west:0.0
-                              east:0.0];
-}
-
 - (id)initWithWithNorth:(double)northernLat
                   south:(double)southernLat
                    west:(double)westernLon
                    east:(double)easternLon
 {
     self = [super init];
-    
     if (self) {
         north = northernLat;
         south = southernLat;
         west = westernLon;
         east = easternLon;
     }
-    
     return self;
 }
 

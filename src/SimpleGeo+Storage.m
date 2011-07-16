@@ -147,7 +147,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     NSURL *endpointURL = [self endpointForString:endpoint];
     
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"query"]];
+    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"SGQuery"]];
     [request startAsynchronous];
 }
 
@@ -460,7 +460,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                           cursor:[[request objectForKey:@"query"] cursor]];
         
     } else {
-        NSLog(@"Delegate does not implement didLoadRecords:forSGQuery:cursor:");
+        NSLog(@"Delegate does not implement didLoadRecords:forSGQuery:");
     }
 }
 

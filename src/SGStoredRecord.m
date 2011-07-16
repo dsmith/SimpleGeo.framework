@@ -31,12 +31,9 @@
 #import "SGStoredRecord.h"
 #import "SGStoredRecord+Private.h"
 
-
 @implementation SGStoredRecord
 
-@synthesize created;
-@synthesize layer;
-@synthesize distance;
+@synthesize created, layer, layerLink;
 
 + (SGStoredRecord *)recordWithDictionary:(NSDictionary *)data
 {

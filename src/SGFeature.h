@@ -35,103 +35,113 @@
  */
 @interface SGFeature : NSObject
 {
-  @private
-    NSString* featureId;
-    SGGeometry* geometry;
-    NSDictionary* properties;
+    NSString *featureId;
+    SGGeometry *geometry;
+    NSDictionary *properties;
+    
+    NSNumber *distance;
+    NSDictionary *selfLink;
 }
 
 //! Feature id
-@property (retain,readonly) NSString* featureId;
+@property (retain, retain) NSString* featureId;
 
 //! Feature geometry
-@property (retain,readonly) SGGeometry* geometry;
+@property (retain, retain) SGGeometry* geometry;
 
 //! Feature properties
-@property (retain,readonly) NSDictionary* properties;
+@property (retain, retain) NSDictionary* properties;
+
+//! Distance (in meters) from the query point; only present
+// if the feature was generated from a nearby request
+@property (nonatomic, readonly) NSNumber *distance;
+
+//! API URL for the feature; only present if the feature
+// was generated from an API query.
+@property (nonatomic, readonly) NSDictionary *selfLink;
 
 /*!
- * Create a Feature with an id.
- * @param id Feature id.
+ * Create a Feature with an id
+ * @param id Feature id
  */
 + (SGFeature *)featureWithId:(NSString *)id;
 
 /*!
- * Create a Feature with an id and some properties.
- * @param id         Feature id.
- * @param properties Feature properties.
+ * Create a Feature with an id and some properties
+ * @param id         Feature id
+ * @param properties Feature properties
  */
 + (SGFeature *)featureWithId:(NSString *)id
                   properties:(NSDictionary *)properties;
 
 /*!
- * Create a Feature with an id and a geometry.
- * @param id       Feature id.
- * @param geometry Feature geometry.
+ * Create a Feature with an id and a geometry
+ * @param id       Feature id
+ * @param geometry Feature geometry
  */
 + (SGFeature *)featureWithId:(NSString *)id
                     geometry:(SGGeometry *)geometry;
 
 /*!
- * Create a Feature with an id, a geometry, and some properties.
- * @param id         Feature id.
- * @param geometry   Feature geometry.
- * @param properties Feature properties.
+ * Create a Feature with an id, a geometry, and some properties
+ * @param id         Feature id
+ * @param geometry   Feature geometry
+ * @param properties Feature properties
  */
 + (SGFeature *)featureWithId:(NSString *)id
                     geometry:(SGGeometry *)geometry
                   properties:(NSDictionary *)properties;
 
 /*!
- * Create a Feature with a geometry and some properties.
- * @param geometry   Feature geometry.
- * @param properties Feature properties.
+ * Create a Feature with a geometry and some properties
+ * @param geometry   Feature geometry
+ * @param properties Feature properties
  */
 + (SGFeature *)featureWithGeometry:(SGGeometry *)geometry
                         properties:(NSDictionary *)properties;
 
 /*!
- * Construct a Feature with an id.
- * @param id Feature id.
+ * Construct a Feature with an id
+ * @param id Feature id
  */
 - (id)initWithId:(NSString *)id;
 
 /*!
- * Construct a Feature with an id and some properties.
- * @param id         Feature id.
- * @param properties Feature properties.
+ * Construct a Feature with an id and some properties
+ * @param id         Feature id
+ * @param properties Feature properties
  */
 - (id)initWithId:(NSString *)id
       properties:(NSDictionary *)properties;
 
 /*!
- * Construct a Feature with an id and a geometry.
- * @param id       Feature id.
- * @param geometry Feature geometry.
+ * Construct a Feature with an id and a geometry
+ * @param id       Feature id
+ * @param geometry Feature geometry
  */
 - (id)initWithId:(NSString *)id
         geometry:(SGGeometry *)geometry;
 
 /*!
- * Construct a Feature with an id, a geometry, and some properties.
- * @param id         Feature id.
- * @param geometry   Feature geometry.
- * @param properties Feature properties.
+ * Construct a Feature with an id, a geometry, and some properties
+ * @param id         Feature id
+ * @param geometry   Feature geometry
+ * @param properties Feature properties
  */
 - (id)initWithId:(NSString *)id
         geometry:(SGGeometry *)geometry
       properties:(NSDictionary *)properties;
 
 /*!
- * Construct a Feature with a geometry and some properties.
- * @param geometry   Feature geometry.
- * @param properties Feature properties.
+ * Construct a Feature with a geometry and some properties
+ * @param geometry   Feature geometry
+ * @param properties Feature properties
  */
 - (id)initWithGeometry:(SGGeometry *)geometry
             properties:(NSDictionary *)properties;
 
 /*!
- * Checks if two features are equivalent (same ID).
+ * Checks if two features are equivalent (same ID)
  */
 - (BOOL)isEqualToFeature:(SGFeature*)feature;
 

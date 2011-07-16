@@ -42,31 +42,31 @@
     double longitude;
 }
 
-//! Latitude (y coordinate).
+//! Latitude (y coordinate)
 @property (readonly) double latitude;
 
-//! Longitude (x coordinate).
+//! Longitude (x coordinate)
 @property (readonly) double longitude;
 
 /*!
- * Create a point from a pair of coordinates.
- * @param latitude Latitude.
- * @param longitude Longitude.
+ * Create a point from a pair of coordinates
+ * @param latitude Latitude
+ * @param longitude Longitude
  */
 + (SGPoint *)pointWithLatitude:(double)latitude
                      longitude:(double)longitude;
 
 /*!
- * Construct a point from a pair of coordinates.
- * @param latitude Latitude.
- * @param longitude Longitude.
+ * Construct a point from a pair of coordinates
+ * @param latitude Latitude
+ * @param longitude Longitude
  */
 - (id)initWithLatitude:(double)latitude
              longitude:(double)longitude;
 
 /*!
- * Determine if the point lies within a given polygon.
- * @param polygon Polygon to check.
+ * Determine if the point lies within a given polygon
+ * @param polygon Polygon to check
  */
 - (BOOL)isInsidePolygon:(SGGeometry *)polygon;
 

@@ -30,7 +30,6 @@
 
 #import "SGPoint.h"
 
-
 @interface SGPoint (Private)
 
 + (SGPoint *)pointWithArray:(NSArray *)array;

@@ -31,17 +31,14 @@
 #import "NSArray+SGGeometry.h"
 #import "SGGeometry+Private.h"
 
-
 @implementation NSArray (SGGeometry)
 
 + (NSArray *)arrayWithGeometries:(NSArray *)input
 {
     NSMutableArray *geometries = [NSMutableArray arrayWithCapacity:[input count]];
-
     for (NSDictionary *geometry in input) {
         [geometries addObject:[SGGeometry geometryWithGeometry:geometry]];
     }
-
     return geometries;
 }
 

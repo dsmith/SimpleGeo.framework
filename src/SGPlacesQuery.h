@@ -31,7 +31,7 @@
 #import "SGNearbyQuery.h"
 
 /*!
- * Places query object.
+ * SGPlaces query object
  */
 @interface SGPlacesQuery : SGNearbyQuery
 {

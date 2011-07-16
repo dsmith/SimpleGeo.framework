@@ -59,60 +59,57 @@
  *
  * \section intro_sec Introduction
  *
- * Hi, you've reached the documentation for SimpleGeo's Objective-C client.
+ * Hi, you've reached the documentation for SimpleGeo's Objective-C client
  *
- * For more information, please look at the Class documentation.
+ * For more information, please look at the Class documentation
  *
  * You can also
  * <a href="https://github.com/simplegeo/SimpleGeo.framework/downloads">download
- * an Xcode docset</a>.
+ * an Xcode docset</a>
  */
 
 extern NSString * const SG_API_VERSION;
 extern NSString * const SG_HOSTNAME;
-extern NSString * const SG_URL_PREFIX __attribute__ ((deprecated));
+extern NSString * const SG_URL_PREFIX;
 
 /*!
- * Informal delegate protocol for core functionality.
+ * Informal delegate protocol for core functionality
  */
 @interface NSObject (SimpleGeoDelegate)
 
 /*!
- * Called when a feature has been loaded. feature will be nil if it could not
- * be found.
- * @param feature Feature that was loaded.
- * @param handle  Handle used to request this feature.
+ * Called when a request has finished (optional)
+ * @param request Request instance
+ */
+- (void)requestDidFinish:(ASIHTTPRequest *)request;
+
+/*!
+ * Called when a request has failed (optional)
+ * @param request Request instance
+ */
+- (void)requestDidFail:(ASIHTTPRequest *)request;
+
+/*!
+ * Called when a feature has been loaded; return nil if feature not found
+ * @param feature Feature that was loaded
+ * @param handle  Handle used to request this feature
  */
 - (void)didLoadFeature:(SGFeature *)feature
                 handle:(NSString *)handle;
 
 /*!
- * Called when a request has finished. (optional)
- * @param request Request instance.
- */
-- (void)requestDidFinish:(ASIHTTPRequest *)request;
-
-/*!
- * Called when a request has failed. (optional)
- * @param request Request instance.
- */
-- (void)requestDidFail:(ASIHTTPRequest *)request;
-
-/*!
- * Called when categories have been loaded.
- * @param categories An array of categories.
+ * Called when categories have been loaded
+ * @param categories An array of categories
  */
 - (void)didLoadCategories:(NSArray *)categories;
 
 @end
 
-
 /*!
- * SimpleGeo client interface.
+ * SimpleGeo client interface
  */
 @interface SimpleGeo : NSObject
 {
-  @private
     id delegate;
     NSString* consumerKey;
     NSString* consumerSecret;
@@ -120,19 +117,18 @@ extern NSString * const SG_URL_PREFIX __attribute__ ((deprecated));
     NSString *userAgent;
 }
 
-@property (assign)        id delegate;
-@property (copy,readonly) NSString* consumerKey;
-@property (copy,readonly) NSString* consumerSecret;
-@property (copy,readonly) NSURL* url;
-@property (copy,readonly) NSString *userAgent;
-@property (readonly,getter = isSSLEnabled) BOOL sslEnabled;
+@property (assign) id delegate;
+@property (copy, readonly) NSString* consumerKey;
+@property (copy, readonly) NSString* consumerSecret;
+@property (copy, readonly) NSURL* url;
+@property (copy, readonly) NSString *userAgent;
+@property (readonly, getter = isSSLEnabled) BOOL sslEnabled;
 
 /*!
- * Create a client.
- * @param delegate       Delegate. Must conform to SimpleGeoDelegate and other
- *                       variants as appropriate.
- * @param consumerKey    OAuth consumer key.
- * @param consumerSecret OAuth consumer secret.
+ * Create a client
+ * @param delegate       Delegate
+ * @param consumerKey    OAuth consumer key
+ * @param consumerSecret OAuth consumer secret
  */
 + (SimpleGeo *)clientWithDelegate:(id)delegate
                       consumerKey:(NSString *)consumerKey
@@ -146,25 +142,23 @@ extern NSString * const SG_URL_PREFIX __attribute__ ((deprecated));
 + (SimpleGeo *)clientWithDelegate:(id)delegate
                       consumerKey:(NSString *)consumerKey
                    consumerSecret:(NSString *)consumerSecret
-                              URL:(NSURL *)url;
+                              URL:(NSURL *)url __attribute__((deprecated));
 
 /*!
- * Construct a client.
- * @param delegate       Delegate. Must conform to SimpleGeoDelegate and other
- *                       variants as appropriate.
- * @param consumerKey    OAuth consumer key.
- * @param consumerSecret OAuth consumer secret.
+ * Construct a client
+ * @param delegate       Delegate
+ * @param consumerKey    OAuth consumer key
+ * @param consumerSecret OAuth consumer secret
  */
 - (id)initWithDelegate:(id)delegate
            consumerKey:(NSString *)consumerKey
         consumerSecret:(NSString *)consumerSecret;
 
 /*! Construct a client with a custom URL. This is the designated initializer
- * for this class.
- * @param delegate       Delegate. Must conform to SimpleGeoDelegate and other
- *                       variants as appropriate.
- * @param consumerKey    OAuth consumer key.
- * @param consumerSecret OAuth consumer secret.
+ * for this class
+ * @param delegate       Delegate
+ * @param consumerKey    OAuth consumer key
+ * @param consumerSecret OAuth consumer secret
  */
 - (id)initWithDelegate:(id)delegate
            consumerKey:(NSString *)consumerKey
@@ -177,21 +171,21 @@ extern NSString * const SG_URL_PREFIX __attribute__ ((deprecated));
 - (BOOL)isSSLEnabled;
 
 /*!
- * Get a feature with a specific handle.
- * @param handle Handle of feature being queried for.
+ * Get a feature with a specific handle
+ * @param handle Handle of queried feature
  */
 - (void)getFeatureWithHandle:(NSString *)handle;
 
 /*!
- * Get a feature with a specific handle.
- * @param handle Handle of feature being queried for.
- * @param zoom   Zoom level to determine complexity of returned feature.
+ * Get a feature with a specific handle
+ * @param handle Handle of queried feature
+ * @param zoom   Zoom level to determine complexity of returned geometry
  */
 - (void)getFeatureWithHandle:(NSString *)handle
                         zoom:(int)zoom;
 
 /*!
- * Get the overall list of categories.
+ * Get the overall list of categories
  */
 - (void)getCategories;
 

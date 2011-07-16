@@ -100,6 +100,13 @@
 {
     [layer release];
     [cursor release];
+    [sortType release];
+    [startDate release];
+    [endDate release];
+    [propertyType release];
+    [propertyValue release];
+    [propertyStartValue release];
+    [propertyEndValue release];
     [super dealloc];
 }
 

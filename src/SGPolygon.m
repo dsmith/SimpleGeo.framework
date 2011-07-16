@@ -66,11 +66,6 @@
     return [[[SGPolygon alloc] initWithRings:rings] autorelease];
 }
 
-- (id)init
-{
-    return [self initWithRings:nil];
-}
-
 - (id)initWithRings:(NSArray *)someRings
 {
     self = [super init];

@@ -38,7 +38,7 @@
     NSTimeInterval created;
     NSString *layer;
     
-    NSNumber *distance;
+    NSDictionary *layerLink;
 }
 
 //! Created at timestamp (Unix epoch)
@@ -47,99 +47,99 @@
 //! Layer name
 @property (nonatomic, retain) NSString *layer;
 
-//! Distance (in meters) from the query point. This is only present if the
-//  feature was generated from a nearby request.
-@property (nonatomic, readonly) NSNumber *distance;
+//! API URL for the record's layer; only present if the
+// feature was generated from an API query.
+@property (nonatomic, readonly) NSDictionary *layerLink;
 
 /*!
- * Create a record with a created timestamp.
- * @param created Created timestamp.
+ * Create a record with a created timestamp
+ * @param created Created timestamp
  */
 + (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created;
 
 /*!
- * Create a record associated with a layer.
- * @param layer Associated layer.
+ * Create a record associated with a layer
+ * @param layer Associated layer
  */
 + (SGStoredRecord *)recordWithLayer:(NSString *)layer;
 
 /*!
- * Create a record with a created timestamp and an associated layer.
- * @param created Created timestamp.
- * @param layer   Associated layer.
+ * Create a record with a created timestamp and an associated layer
+ * @param created Created timestamp
+ * @param layer   Associated layer
  */
 + (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created
                                          layer:(NSString *)layer;
 
 /*!
- * Create a record from a Feature with a created timestamp.
- * @param feature Feature.
- * @param created Created timestamp.
+ * Create a record from a Feature with a created timestamp
+ * @param feature Feature
+ * @param created Created timestamp
  */
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
                      createdTimestamp:(NSTimeInterval)created;
 
 /*!
- * Create a record from a Feature with an associated layer.
- * @param feature Feature.
- * @param layer  Associated layer.
+ * Create a record from a Feature with an associated layer
+ * @param feature Feature
+ * @param layer  Associated layer
  */
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
                                 layer:(NSString *)layer;
 
 /*!
  * Create a record from a Feature with a created timestamp and an associated
- * layer.
- * @param feature Feature.
- * @param created Created timestamp.
- * @param layer   Associated layer.
+ * layer
+ * @param feature Feature
+ * @param created Created timestamp
+ * @param layer   Associated layer
  */
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
                      createdTimestamp:(NSTimeInterval)created
                                 layer:(NSString *)layer;
 
 /*!
- * Construct a record with a created timestamp.
- * @param created Created timestamp.
+ * Construct a record with a created timestamp
+ * @param created Created timestamp
  */
 - (id)initWithCreatedTimestamp:(NSTimeInterval)created;
 
 /*!
- * Construct a record with an associated layer.
- * @param layer Associated layer.
+ * Construct a record with an associated layer
+ * @param layer Associated layer
  */
 - (id)initWithLayer:(NSString *)layer;
 
 /*!
- * Construct a record with a created timestamp and an associated layer.
- * @param created Created timestamp.
- * @param layer   Associated layer.
+ * Construct a record with a created timestamp and an associated layer
+ * @param created Created timestamp
+ * @param layer   Associated layer
  */
 - (id)initWithCreatedTimestamp:(NSTimeInterval)created
                          layer:(NSString *)layer;
 
 /*!
- * Construct a record from a Feature with a created timestamp.
- * @param feature Feature.
- * @param created Created timestamp.
+ * Construct a record from a Feature with a created timestamp
+ * @param feature Feature
+ * @param created Created timestamp
  */
 - (id)initWithFeature:(SGFeature *)feature
      createdTimestamp:(NSTimeInterval)created;
 
 /*!
- * Construct a record from a Feature with an associated layer.
- * @param feature Feature.
- * @param layer   Associated layer.
+ * Construct a record from a Feature with an associated layer
+ * @param feature Feature
+ * @param layer   Associated layer
  */
 - (id)initWithFeature:(SGFeature *)feature
                 layer:(NSString *)layer;
 
 /*!
  * Construct a record from a Feature with a created timestamp and an associated
- * layer.
- * @param feature Feature.
- * @param created Created timestamp.
- * @param layer   Associated layer.
+ * layer
+ * @param feature Feature
+ * @param created Created timestamp
+ * @param layer   Associated layer
  */
 - (id)initWithFeature:(SGFeature *)feature
      createdTimestamp:(NSTimeInterval)created

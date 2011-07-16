@@ -32,56 +32,62 @@
 @class SGContextQuery;
 
 /*!
- * Informal delegate protocol for Context functionality.
+ * Informal delegate protocol for Context functionality
  */
 @interface NSObject (SimpleGeoContextDelegate)
 
 /*!
- * Called when Context information has been loaded.
- * @param context Context response.
+ * Called when Context information has been loaded
+ * Called only when a custom target/action has not been set
+ * @param context Context response
+ * @param query   SGQuery object
+ */
+- (void)didLoadContext:(NSDictionary *)context
+            forSGQuery:(SGContextQuery *)query;
+
+#pragma mark Deprecated Delegate Methods
+
+/*!
+ * Called when Context information has been loaded
+ * @param context Context response
  * @param query   Query information.
  */
 - (void)didLoadContext:(NSDictionary *)context
               forQuery:(NSDictionary *)query __attribute__((deprecated));
 
-/*!
- * Called when Context information has been loaded.
- * @param context Context response.
- * @param query   Relevant SGQuery object.
- */
-- (void)didLoadContext:(NSDictionary *)context
-            forSGQuery:(SGContextQuery *)query;
-
 @end
 
 /*!
- * Client support for the Places API.
+ * Client support for Context API
  */
 @interface SimpleGeo (Context)
 
 /*!
- * Get Context information for a specific point. (SimpleGeo+Context.h)
- * @param point Query point.
- */
-- (void)getContextForPoint:(SGPoint *)point __attribute__((deprecated));
-
-/*!
- * Get Context information for an address. SimpleGeo will geocode the address
- * for you. (SimpleGeo+Context.h)
- * @param address Query address.
- */
-- (void)getContextForAddress:(NSString *)address __attribute__((deprecated));
-
-/*!
- * Get Context information for a SGQuery object (SimpleGeo+Context.h)
- * @param query Query object.
+ * Get Context information for an SGQuery
+ * @param query Query object
  */
 - (void)getContextForQuery:(SGContextQuery *)query;
 
 /*!
- * Called when a Context request returns if no callback is set
+ * Called when a Context request returns if no target/action is set
+ * Formats response into appropriate the appropriate SG object(s),
+ * then calls standard delegate method didLoadContext:forSGQuery:
  * @param request The request query and response
  */
 - (void)didReceiveContext:(NSDictionary *)request;
+
+#pragma mark Deprecated Request Methods
+
+/*!
+ * Get Context information for a specific point
+ * @param point Query point
+ */
+- (void)getContextForPoint:(SGPoint *)point __attribute__((deprecated));
+
+/*!
+ * Get Context information for an address
+ * @param address Query address
+ */
+- (void)getContextForAddress:(NSString *)address __attribute__((deprecated));
 
 @end

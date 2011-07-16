@@ -32,21 +32,9 @@
 #import "SGFeature+Private.h"
 #import "SGGeometry+Private.h"
 
-
-// trigger @synthesize in SGFeature to create readwrite accessors
-@interface SGFeature ()
-
-@property (retain) NSString* featureId;
-@property (retain) SGGeometry* geometry;
-@property (retain) NSDictionary* properties;
-
-@end
-
-
 @implementation SGFeature
 
-@synthesize featureId;
-@synthesize properties;
+@synthesize featureId, geometry, properties, distance, selfLink;
 
 + (SGFeature *)featureWithId:(NSString *)id
 {
@@ -98,11 +86,6 @@
     return [[[SGFeature alloc] initWithId:id
                                  geometry:geometry
                                properties:properties] autorelease];
-}
-
-- (id)init
-{
-    return [self initWithId:nil];
 }
 
 - (id)initWithId:(NSString *)id
@@ -243,7 +226,7 @@
 }
 
 /**
- * Alternate setter for KeyValueCoding.
+ * Alternate setter for KeyValueCoding
  */
 - (void)setId:(NSString *)id
 {
@@ -251,7 +234,7 @@
 }
 
 /**
- * Setter for KeyValueCoding.
+ * Setter for KeyValueCoding
  */
 - (void)setType:(NSString *)type
 {
