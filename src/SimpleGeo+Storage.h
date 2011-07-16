@@ -114,10 +114,11 @@ extern NSString * const SG_API_VERSION_STORAGE;
  */
 - (void)didLoadRecord:(SGStoredRecord *)record
             fromLayer:(NSString *)layer
-               withId:(NSString *)id;
+               withId:(NSString *)identifier;
 
 /*!
  * Called when records were loaded
+ * \deprecated Use [didLoadRecords:forSGQuery:] instead
  * @param records Matching records
  * @param query   Query information
  * @param cursor  Cursor string to retrieve the next set of records
@@ -168,17 +169,17 @@ extern NSString * const SG_API_VERSION_STORAGE;
  * @param id    ID of the record to delete
  */
 - (void)deleteRecordInLayer:(NSString *)layer
-                     withId:(NSString *)id;
+                     withId:(NSString *)identifier;
 
 /*!
  * Request a record by id
  * @param id    ID of the record
  */
 - (void)getRecordFromLayer:(NSString *)layer
-                    withId:(NSString *)id;
+                    withId:(NSString *)identifier;
 
 /*!
- * Get nearby records using an SGStorageQuery
+ * Get records matching an SGStorageQuery
  * @param query   Storage query
  */
 - (void)getRecordsForQuery:(SGStorageQuery *)query;
@@ -290,6 +291,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer Layer to query
  * @param point Origin point
  */
@@ -298,6 +300,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param radius Radius (in km) to limit results to
@@ -308,6 +311,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param count  Number of results to return
@@ -318,6 +322,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param radius Radius (in km) to limit results to
@@ -330,6 +335,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param cursor Cursor string (used for pagination)
@@ -340,6 +346,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param radius Radius (in km) to limit results to
@@ -352,6 +359,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param radius Radius (in km) to limit results to
@@ -366,6 +374,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param cursor Cursor string (used for pagination)
@@ -378,6 +387,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to a point
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer  Layer to query
  * @param point  Origin point
  * @param radius Radius (in km) to limit results to
@@ -392,6 +402,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  */
@@ -400,6 +411,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param radius  Radius (in km) to limit results to
@@ -410,6 +422,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param count   Number of results to return
@@ -420,6 +433,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param radius  Radius (in km) to limit results to
@@ -432,6 +446,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param cursor  Cursor string (used for pagination)
@@ -442,6 +457,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param radius  Radius (in km) to limit results to
@@ -454,6 +470,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param radius  Radius (in km) to limit results to
@@ -468,6 +485,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param cursor  Cursor string (used for pagination)
@@ -480,6 +498,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get additional records nearest to an address
+ * \deprecated Use [getRecords:forQuery:] instead
  * @param layer   Layer to query
  * @param address Address
  * @param radius  Radius (in km) to limit results to

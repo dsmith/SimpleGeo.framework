@@ -33,11 +33,11 @@
  */
 @interface SGFeatureCollection : NSObject
 {
-    NSArray* features;
+    NSArray *features;
 }
 
 //! Collected Features
-@property (retain, readonly) NSArray* features;
+@property (retain, readonly) NSArray *features;
 
 /*!
  * Create a FeatureCollection from a list of Features

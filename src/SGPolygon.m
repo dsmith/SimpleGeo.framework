@@ -77,7 +77,7 @@
     return self;
 }
 
-- (BOOL)containsPoint:(SGPoint*)point
+- (BOOL)containsPoint:(SGPoint *)point
 {
     BOOL contains = NO;
     for (NSArray *ring in rings) {

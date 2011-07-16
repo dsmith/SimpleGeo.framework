@@ -35,7 +35,7 @@
 
 @interface SGGeometryCollection ()
 
-@property (retain) NSArray* geometries;
+@property (retain) NSArray *geometries;
 
 @end
 

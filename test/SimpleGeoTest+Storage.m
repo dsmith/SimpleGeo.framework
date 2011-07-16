@@ -40,6 +40,14 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
+- (void)testGetRecord
+{
+    [self prepare];
+    [[self client] getRecordFromLayer:SGTestLayer
+                               withId:SGTestRecordID];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 - (void)testGetRecordsForPoint
 {
     [self prepare];
@@ -118,11 +126,21 @@
     [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetLayers)];
 }
 
+- (void)didLoadRecord:(SGStoredRecord *)record
+            fromLayer:(NSString *)layer
+               withId:(NSString *)identifier
+{
+    GHTestLog(@"Did load record y: %@", [record asDictionary]);
+    GHAssertNotNil(record, @"Valid query. Should return record.");
+    GHAssertEquals(layer, SGTestLayer, @"Layer name should be returned");
+    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetRecord)];
+}
+
 - (void)didLoadRecords:(SGFeatureCollection *)records
             forSGQuery:(SGStorageQuery *)query
 {
     GHTestLog(@"Did load records for query: %@", [query asDictionary]);
-    GHTestLog(@"With results: %@", [records asDictionary]);
+    GHTestLog(@"With results: %@", [[records.features objectAtIndex:0] description]);
     
     /* Check records count */    
     int numParts = [records.features count];

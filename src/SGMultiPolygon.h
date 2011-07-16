@@ -36,11 +36,11 @@
  * MultiPolygon representation.
  */
 @interface SGMultiPolygon : SGGeometry {
-    NSArray* polygons;
+    NSArray *polygons;
 }
 
 //! Polygons that define this multi-polygon
-@property (retain,readonly) NSArray* polygons;
+@property (retain,readonly) NSArray *polygons;
 
 /*!
  * Create a multi-polygon from a set of Polygons

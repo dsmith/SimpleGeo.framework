@@ -35,11 +35,11 @@
  */
 @interface SGGeometryCollection : NSObject
 {
-    NSArray* geometries;
+    NSArray *geometries;
 }
 
 //! Collected Geometries
-@property (retain,readonly) NSArray* geometries;
+@property (retain,readonly) NSArray *geometries;
 
 /*!
  * Create a GeometryCollection from a list of Geometries

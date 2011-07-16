@@ -36,16 +36,16 @@
 
 @synthesize featureId, geometry, properties, distance, selfLink;
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
 {
-    return [SGFeature featureWithId:id
+    return [SGFeature featureWithId:identifier
                          dictionary:nil];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
                   dictionary:(NSDictionary *)data
 {
-    return [[[SGFeature alloc] initWithId:id
+    return [[[SGFeature alloc] initWithId:identifier
                                dictionary:data] autorelease];
 }
 
@@ -55,18 +55,18 @@
                          dictionary:data];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
                   properties:(NSDictionary *)properties
 {
-    return [SGFeature featureWithId:id
+    return [SGFeature featureWithId:identifier
                            geometry:nil
                          properties:properties];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
                     geometry:(SGGeometry *)geometry
 {
-    return [SGFeature featureWithId:id
+    return [SGFeature featureWithId:identifier
                            geometry:geometry
                          properties:nil];
 }
@@ -79,33 +79,33 @@
                          properties:properties];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
                     geometry:(SGGeometry *)geometry
                   properties:(NSDictionary *)properties
 {
-    return [[[SGFeature alloc] initWithId:id
+    return [[[SGFeature alloc] initWithId:identifier
                                  geometry:geometry
                                properties:properties] autorelease];
 }
 
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
 {
-    return [self initWithId:id
+    return [self initWithId:identifier
                    geometry:nil];
 }
 
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
       properties:(NSDictionary *)someProperties
 {
-    return [self initWithId:id
+    return [self initWithId:identifier
                    geometry:nil
                  properties:someProperties];
 }
 
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
         geometry:(SGGeometry *)aGeometry
 {
-    return [self initWithId:id
+    return [self initWithId:identifier
                    geometry:aGeometry
                  properties:nil];
 }
@@ -118,14 +118,14 @@
                  properties:someProperties];
 }
 
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
         geometry:(SGGeometry *)aGeometry
       properties:(NSDictionary *)someProperties
 {
     self = [super init];
 
     if (self) {
-        featureId = [id retain];
+        featureId = [identifier retain];
         geometry = [aGeometry retain];
         properties = [someProperties retain];
     }
@@ -133,13 +133,13 @@
     return self;
 }
 
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
       dictionary:(NSDictionary *)data
 {
     self = [super init];
 
     if (self) {
-        featureId = [id retain];
+        featureId = [identifier retain];
 
         if (data) {
             if (! [[data objectForKey:@"type"] isEqual:@"Feature"]) {
@@ -166,23 +166,12 @@
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
 
-    [dict setObject:@"Feature"
-             forKey:@"type"];
-
-    if (featureId) {
-        [dict setObject:featureId
-                 forKey:@"id"];
-    }
-
-    if (geometry) {
-        [dict setObject:geometry
-                 forKey:@"geometry"];
-    }
-
-    if (properties) {
-        [dict setObject:properties
-                 forKey:@"properties"];
-    }
+    [dict setObject:@"Feature" forKey:@"type"];
+    [dict setValue:featureId forKey:@"id"];
+    [dict setValue:geometry forKey:@"geometry"];
+    [dict setValue:properties forKey:@"properties"];
+    [dict setValue:distance forKey:@"distance"];
+    [dict setValue:selfLink forKey:@"selfLink"];
 
     return [NSDictionary dictionaryWithDictionary:dict];
 }
@@ -228,9 +217,9 @@
 /**
  * Alternate setter for KeyValueCoding
  */
-- (void)setId:(NSString *)id
+- (void)setId:(NSString *)identifier
 {
-    [self setFeatureId:id];
+    [self setFeatureId:identifier];
 }
 
 /**

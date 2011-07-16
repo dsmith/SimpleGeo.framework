@@ -81,6 +81,7 @@
 
 /*!
  * Called when a collection of places were loaded from the Places database
+ * \deprecated Use [didLoadPlaces:forSGQuery:] instead
  * @param places Collection of places
  * @param query  Query information
  */
@@ -97,13 +98,13 @@
 #pragma mark Request Methods
 
 /*!
- * Find places matching a SimpleGeo query object
+ * Find places matching an SGPlacesQuery
  * @param query Request query
  */
 - (void)getPlacesForQuery:(SGPlacesQuery *)query;
 
 /*!
- * Add a feature to the Places database (SimpleGeo+Places.h)
+ * Add a feature to the Places database 
  * @param feature Feature to add
  * @param private Whether this addition should be private
  */
@@ -111,7 +112,7 @@
          private:(BOOL)private;
 
 /*!
- * Update a place in the Places database (SimpleGeo+Places.h)
+ * Update a place in the Places database 
  * @param handle Handle of feature to update
  * @param data   Data to update with (geometry/properties optional)
  * @param private Whether this update should be private
@@ -121,7 +122,7 @@
             private:(BOOL)private;
 
 /*!
- * Delete a place from the Places database (SimpleGeo+Places.h)
+ * Delete a place from the Places database 
  * @param handle Handle of feature to remove
  */
 - (void)deletePlace:(NSString *)handle;
@@ -157,13 +158,15 @@
 #pragma mark Deprecated Convenience Methods
 
 /*!
- * Find places near a point (SimpleGeo+Places.h)
+ * Find places near a point 
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point Query point
  */
 - (void)getPlacesNear:(SGPoint *)point __attribute__((deprecated));
 
 /*!
- * Find places near a point (SimpleGeo+Places.h)
+ * Find places near a point 
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point Query point
  * @param limit Number of results to return
  */
@@ -172,14 +175,14 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  */
 - (void)getPlacesNearAddress:(NSString *)address __attribute__((deprecated));
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param limit   Number of results to return. 
  */
@@ -187,7 +190,8 @@
                        count:(int)limit __attribute__((deprecated));
 
 /*!
- * Find places near a point (SimpleGeo+Places.h)
+ * Find places near a point 
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point  Query point
  * @param radius Radius of query (km)
  */
@@ -195,7 +199,8 @@
                within:(double)radius __attribute__((deprecated));
 
 /*!
- * Find places near a point (SimpleGeo+Places.h)
+ * Find places near a point 
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point  Query point
  * @param radius Radius of query (km)
  * @param limit  Number of results to return
@@ -206,7 +211,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param radius  Radius of query (km)
  */
@@ -215,7 +220,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param radius  Radius of query (km)
  * @param limit   Number of results to return
@@ -225,7 +230,8 @@
                        count:(int)limit __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string (SimpleGeo+Places.h)
+ * Find places near a point matching a query string
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point Query point
  * @param query Query string
  */
@@ -233,7 +239,8 @@
              matching:(NSString *)query __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string (SimpleGeo+Places.h)
+ * Find places near a point matching a query string
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point Query point
  * @param query Query string
  * @param limit Number of results to return
@@ -245,7 +252,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param query   Query string
  */
@@ -254,7 +261,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param query   Query string
  * @param limit   Number of results to return
@@ -264,7 +271,8 @@
                        count:(int)limit __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string (SimpleGeo+Places.h)
+ * Find places near a point matching a query string
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point  Query point
  * @param query  Query string
  * @param radius Radius of query (km)
@@ -274,7 +282,8 @@
                within:(double)radius __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string (SimpleGeo+Places.h)
+ * Find places near a point matching a query string
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point  Query point
  * @param query  Query string
  * @param radius Radius of query (km)
@@ -287,7 +296,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param query   Query string
  * @param radius  Radius of query (km)
@@ -298,7 +307,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address Query address
  * @param query   Query string
  * @param radius  Radius of query (km)
@@ -310,7 +319,8 @@
                        count:(int)limit __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string in a specific category (SimpleGeo+Places.h)
+ * Find places near a point matching a query string in a specific category
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point    Query point
  * @param query    Query string
  * @param category Query category
@@ -320,7 +330,8 @@
            inCategory:(NSString *)category __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string in a specific category (SimpleGeo+Places.h)
+ * Find places near a point matching a query string in a specific category
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point    Query point
  * @param query    Query string
  * @param category Query category
@@ -333,7 +344,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address  Query address
  * @param query    Query string
  * @param category Query category
@@ -344,7 +355,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address  Query address
  * @param query    Query string
  * @param category Query category
@@ -356,7 +367,8 @@
                        count:(int)limit __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string in a specific category (SimpleGeo+Places.h)
+ * Find places near a point matching a query string in a specific category
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point    Query point
  * @param query    Query string
  * @param category Query category
@@ -368,7 +380,8 @@
                within:(double)radius __attribute__((deprecated));
 
 /*!
- * Find places near a point matching a query string in a specific category (SimpleGeo+Places.h)
+ * Find places near a point matching a query string in a specific category
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param point    Query point
  * @param query    Query string
  * @param category Query category
@@ -383,7 +396,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address  Query address
  * @param query    Query string
  * @param category Query category
@@ -396,7 +409,7 @@
 
 /*!
  * Find places near an address. SimpleGeo will geocode the address for you
- * (SimpleGeo+Places.h)
+ * \deprecated Use [getPlaces:forQuery:] instead
  * @param address  Query address
  * @param query    Query string
  * @param category Query category

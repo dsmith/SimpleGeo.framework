@@ -59,13 +59,13 @@
  *
  * \section intro_sec Introduction
  *
- * Hi, you've reached the documentation for SimpleGeo's Objective-C client
+ * You've reached the documentation for SimpleGeo's Objective-C client.
  *
- * For more information, please look at the Class documentation
+ * For more information, please look at the Class documentation.
  *
  * You can also
  * <a href="https://github.com/simplegeo/SimpleGeo.framework/downloads">download
- * an Xcode docset</a>
+ * an Xcode docset.</a>
  */
 
 extern NSString * const SG_API_VERSION;
@@ -73,7 +73,7 @@ extern NSString * const SG_HOSTNAME;
 extern NSString * const SG_URL_PREFIX;
 
 /*!
- * Informal delegate protocol for core functionality
+ * Informal delegate protocol for core API functionality
  */
 @interface NSObject (SimpleGeoDelegate)
 
@@ -90,7 +90,8 @@ extern NSString * const SG_URL_PREFIX;
 - (void)requestDidFail:(ASIHTTPRequest *)request;
 
 /*!
- * Called when a feature has been loaded; return nil if feature not found
+ * Called when a feature has been loaded;
+ * return nil if feature not found (optional)
  * @param feature Feature that was loaded
  * @param handle  Handle used to request this feature
  */
@@ -98,7 +99,7 @@ extern NSString * const SG_URL_PREFIX;
                 handle:(NSString *)handle;
 
 /*!
- * Called when categories have been loaded
+ * Called when categories have been loaded (optional)
  * @param categories An array of categories
  */
 - (void)didLoadCategories:(NSArray *)categories;
@@ -111,16 +112,16 @@ extern NSString * const SG_URL_PREFIX;
 @interface SimpleGeo : NSObject
 {
     id delegate;
-    NSString* consumerKey;
-    NSString* consumerSecret;
-    NSURL* url;
+    NSString *consumerKey;
+    NSString *consumerSecret;
+    NSURL *url;
     NSString *userAgent;
 }
 
 @property (assign) id delegate;
-@property (copy, readonly) NSString* consumerKey;
-@property (copy, readonly) NSString* consumerSecret;
-@property (copy, readonly) NSURL* url;
+@property (copy, readonly) NSString *consumerKey;
+@property (copy, readonly) NSString *consumerSecret;
+@property (copy, readonly) NSURL *url;
 @property (copy, readonly) NSString *userAgent;
 @property (readonly, getter = isSSLEnabled) BOOL sslEnabled;
 
@@ -154,8 +155,8 @@ extern NSString * const SG_URL_PREFIX;
            consumerKey:(NSString *)consumerKey
         consumerSecret:(NSString *)consumerSecret;
 
-/*! Construct a client with a custom URL. This is the designated initializer
- * for this class
+/*! Construct a client with a custom URL.
+ * This is the designated initializer for this class
  * @param delegate       Delegate
  * @param consumerKey    OAuth consumer key
  * @param consumerSecret OAuth consumer secret

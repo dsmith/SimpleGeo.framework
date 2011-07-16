@@ -32,7 +32,8 @@
 #import "SGTypes.h"
 
 /*!
- * SGStorage query object
+ * An SGStorageQuery object represents an API query for SimpleGeo Storage.
+ * Call [getRecordsForQuery:] to make a Storage request with an SGStorageQuery object.
  */
 @interface SGStorageQuery : SGNearbyQuery
 {
@@ -50,13 +51,13 @@
     NSObject *propertyEndValue;
 }
 
-//! Associated layer for query
+//! Layer to query
 @property (nonatomic, retain) NSString *layer;
 
-//! Cursor for query
+//! Cursor for paginating query results
 @property (nonatomic, retain) NSString *cursor;
 
-//! Sort type for query
+//! Sorting method for query
 @property (nonatomic, retain) SGSortType sortType;
 
 //! Start date for query
@@ -65,23 +66,23 @@
 //! End date for query
 @property (nonatomic, retain) NSDate *endDate;
 
-//! Property type for a property-based query
+//! Property type for property filtering
 @property (nonatomic, readonly) SGStoredPropertyType propertyType;
 
-//! Property name for a property-based query
+//! Property name for property filtering
 @property (nonatomic, readonly) NSString *propertyName;
 
-//! Property value for a property-based query
+//! Property value for property filtering
 @property (nonatomic, readonly) NSObject *propertyValue;
 
-//! Property start value for a property-based range query
+//! Property start value for range-based property filtering
 @property (nonatomic, retain) NSObject *propertyStartValue;
 
-//! Property end value for a property-based range query
+//! Property end value for a range-based property filtering
 @property (nonatomic, retain) NSObject *propertyEndValue;
 
 /*!
- * Create a point-based query targeting a specific layer
+ * Create a point-based Storage query
  * @param point     Point
  * @param layer     Layer
  */
@@ -89,7 +90,7 @@
                layer:(NSString *)layer;
 
 /*!
- * Create an address-based query targeting a specific layer
+ * Create an address-based Storage quer
  * @param address   Address
  * @param layer     Layer
  */
@@ -97,7 +98,7 @@
                  layer:(NSString *)layer;
 
 /*!
- * Construct a point-based query targeting a specific layer
+ * Construct a point-based Storage quer
  * @param point     Point
  * @param layer     Layer
  */
@@ -105,7 +106,7 @@
               layer:(NSString *)layer;
 
 /*!
- * Construct an address-based query targeting a specific layer
+ * Construct an address-based Storage quer
  * @param address   Address
  * @param layer     Layer
  */
@@ -113,7 +114,7 @@
                 layer:(NSString *)layer;
 
 /*!
- * Set a property by which to query
+ * Set a property name by which to query
  * @param property  Property name
  * @param type      Property type
  */
@@ -121,7 +122,7 @@
              ofType:(SGStoredPropertyType)type;
 
 /*!
- * Set a property value by which to query
+ * Set a property name and value by which to query
  * @param property  Property name
  * @param type      Property type
  * @param value     Property value

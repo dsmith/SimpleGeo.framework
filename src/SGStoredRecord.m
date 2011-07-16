@@ -156,16 +156,9 @@
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
 
-    if (created) {
-        NSNumber *objCreated = [NSNumber numberWithDouble:created];
-        [dict setObject:objCreated
-                 forKey:@"created"];
-    }
-
-    if (layer) {
-        [dict setObject:layer
-                 forKey:@"layer"];
-    }
+    if (created) [dict setObject:[NSNumber numberWithDouble:created] forKey:@"created"];
+    [dict setValue:layer forKey:@"layer"];
+    [dict setValue:layerLink forKey:@"layerLink"];
 
     return [NSDictionary dictionaryWithDictionary:dict];
 }

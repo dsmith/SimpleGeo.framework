@@ -32,7 +32,7 @@
 @class SGEnvelope;
 
 /*!
- * Abstract query object
+ * SGQuery is an abstract class for a SimplGeo API query.
  */
 @interface SGQuery : NSObject
 {
@@ -44,62 +44,62 @@
     SEL action;
 }
 
-//! Point for a point-based query
+//! Point for a point-based API query
 @property (nonatomic, readonly) SGPoint *point;
 
-//! Address for an address-based query
+//! Address for an address-based API query
 @property (nonatomic, readonly) NSString *address;
 
-//! Envelope for a bounding box query
+//! Envelope for a bounding box API query
 @property (nonatomic, readonly) SGEnvelope *envelope;
 
-//! Attached user info
+//! User info attached to the API query
 @property (nonatomic, retain) NSDictionary *userInfo;
 
-//! Delegate object
+//! Delegate object for the API query
 @property (nonatomic, retain) id target;
 
-//! Delegate action
+//! Delegate action for the API query
 @property (nonatomic, assign) SEL action;
 
 /*!
- * Create a point-based query
+ * Create a point-based API query
  * @param point Point
  */
 + (id)queryWithPoint:(SGPoint *)point;
 
 /*!
- * Create an address-based query
+ * Create an address-based API query
  * @param address Address
  */
 + (id)queryWithAddress:(NSString *)address;
 
 /*!
- * Create an overlap query with a bounding box
+ * Create an a bounding box API query
  * @param bounds Bounding box
  */
 + (id)queryWithEnvelope:(SGEnvelope *)envelope;
 
 /*!
- * Construct a point-based query
+ * Construct a point-based API query
  * @param point Point
  */
 - (id)initWithPoint:(SGPoint *)point;
 
 /*!
- * Construct an address-based query
+ * Construct an address-based API query
  * @param address Address
  */
 - (id)initWithAddress:(NSString *)address;
 
 /*!
- * Construct an overlap query with a bounding box
+ * Construct a bounding box API query
  * @param bounds Bounding box
  */
 - (id)initWithEnvelope:(SGEnvelope *)envelope;
 
 /*!
- * Return an NSDictionary representation of this query
+ * Return an NSDictionary representation of the query
  */
 - (NSDictionary *)asDictionary;
 

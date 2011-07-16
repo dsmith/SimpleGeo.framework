@@ -86,9 +86,9 @@
 - (BOOL)isInsidePolygon:(SGGeometry *)polygon
 {
     if ([polygon isKindOfClass:[SGPolygon class]])
-        return [(SGPolygon*)polygon containsPoint:self];
+        return [(SGPolygon *)polygon containsPoint:self];
     else if ([polygon isKindOfClass:[SGMultiPolygon class]])
-        return [(SGMultiPolygon*)polygon containsPoint:self];
+        return [(SGMultiPolygon *)polygon containsPoint:self];
     return NO;
 }
 

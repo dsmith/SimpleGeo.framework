@@ -33,7 +33,7 @@
 @interface SGStoredRecord (Private)
 
 + (SGStoredRecord *)recordWithDictionary:(NSDictionary *)data;
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
       dictionary:(NSDictionary *)data;
 
 @end

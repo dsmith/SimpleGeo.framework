@@ -34,7 +34,7 @@
 
 @interface SGFeatureCollection ()
 
-@property (retain) NSArray* features;
+@property (retain) NSArray *features;
 
 @end
 

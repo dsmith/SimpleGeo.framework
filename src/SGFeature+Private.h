@@ -32,10 +32,10 @@
 
 @interface SGFeature (Private)
 
-+ (SGFeature *)featureWithId:(NSString *)id
++ (SGFeature *)featureWithId:(NSString *)identifier
                   dictionary:(NSDictionary *)data;
 + (SGFeature *)featureWithDictionary:(NSDictionary *)data;
-- (id)initWithId:(NSString *)id
+- (id)initWithId:(NSString *)identifier
       dictionary:(NSDictionary *)data;
 
 @end

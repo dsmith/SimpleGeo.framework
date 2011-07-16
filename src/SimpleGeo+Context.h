@@ -37,7 +37,7 @@
 @interface NSObject (SimpleGeoContextDelegate)
 
 /*!
- * Called when Context information has been loaded
+ * Called when Context information has been loaded.
  * Called only when a custom target/action has not been set
  * @param context Context response
  * @param query   SGQuery object
@@ -49,6 +49,7 @@
 
 /*!
  * Called when Context information has been loaded
+ * \deprecated Use [didLoadContext:forSGQuery:] instead
  * @param context Context response
  * @param query   Query information.
  */
@@ -63,7 +64,7 @@
 @interface SimpleGeo (Context)
 
 /*!
- * Get Context information for an SGQuery
+ * Get Context matching an SGContextQuery
  * @param query Query object
  */
 - (void)getContextForQuery:(SGContextQuery *)query;
@@ -80,12 +81,14 @@
 
 /*!
  * Get Context information for a specific point
+ * \deprecated Use [getContext:forQuery:] instead
  * @param point Query point
  */
 - (void)getContextForPoint:(SGPoint *)point __attribute__((deprecated));
 
 /*!
  * Get Context information for an address
+ * \deprecated Use [getContext:forQuery:] instead
  * @param address Query address
  */
 - (void)getContextForAddress:(NSString *)address __attribute__((deprecated));

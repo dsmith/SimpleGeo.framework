@@ -32,3 +32,4 @@
 #define SGTestSecret @""
 #define SGTestLayer @""
 #define SGTestProperty @""
+#define SGTestRecordID @""

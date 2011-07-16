@@ -59,7 +59,7 @@ extern SGSortType const SGSortTypePropertyDescending;
 
 #pragma mark Feature Types
 
-typedef NSString* SGFeatureType;
+typedef NSString * SGFeatureType;
 #define SGFeatureTypeRegion @"Region"
 #define SGFeatureTypeEntertainment @"Entertainment"
 #define SGFeatureTypeFoodAndDrink @"Food & Drink"
@@ -72,7 +72,7 @@ typedef NSString* SGFeatureType;
 
 #pragma mark Feature Categories (Context)
 
-typedef NSString* SGFeatureCategory;
+typedef NSString * SGFeatureCategory;
 #define SGFeatureCategoryAdministrative @"Administrative"
 #define SGFeatureCategoryCommercialArea @"Commercial Area"
 #define SGFeatureCategoryDMA @"DMA"
@@ -90,7 +90,7 @@ typedef NSString* SGFeatureCategory;
 #define SGFeatureCategoryTimeZone @"Time Zone"
 #define SGFeatureCategoryUSCensus @"US Census"
 
-typedef NSString* SGFeatureSubcategory;
+typedef NSString * SGFeatureSubcategory;
 #define SGFeatureSubcategoryConsolidatedCity @"Consolidated City"
 #define SGFeatureSubcategoryCounty @"County"
 #define SGFeatureSubcategoryParish @"Parish"
@@ -123,7 +123,7 @@ typedef NSString* SGFeatureSubcategory;
 
 #pragma mark Feature Categories (Places)
 
-typedef NSString* SGPlacesCategory;
+typedef NSString * SGPlacesCategory;
 #define SGPlacesCategoryArena @"Arena"
 #define SGPlacesCategoryAutoRacetrack @"Auto Racetrack"
 #define SGPlacesCategoryBullRing @"Bull Ring"

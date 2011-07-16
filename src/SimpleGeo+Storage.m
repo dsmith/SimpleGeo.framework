@@ -43,18 +43,18 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 #pragma mark Record Request Methods
 
 - (void)getRecordFromLayer:(NSString *)layer
-                    withId:(NSString *)id
+                    withId:(NSString *)identifier
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
                                                   SG_API_VERSION_STORAGE,
                                                   layer,
-                                                  id]];
+                                                  identifier]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setRequestMethod:@"GET"];
     [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                           @"didLoadRecord:", @"targetSelector",
                           layer, @"layer",
-                          id,@"id",
+                          identifier, @"id",
                           nil]];
     [request startAsynchronous];
 }
@@ -100,18 +100,18 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 }
 
 - (void)deleteRecordInLayer:(NSString *)layer
-                     withId:(NSString *)id
+                     withId:(NSString *)identifier
 {
     NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
                                                   SG_API_VERSION_STORAGE,
                                                   layer,
-                                                  id]];
+                                                  identifier]];
     ASIHTTPRequest *request = [self requestWithURL:endpointURL];
     [request setRequestMethod:@"DELETE"];
     [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
                           @"didDeleteRecordInLayer:", @"targetSelector",
                           layer, @"layer",
-                          id, @"id",
+                          identifier, @"id",
                           nil]];
     [request startAsynchronous];
 }

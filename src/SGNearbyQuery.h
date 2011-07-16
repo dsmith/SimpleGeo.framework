@@ -31,7 +31,7 @@
 #import "SGQuery.h"
 
 /*!
- * Abstract query object supporting nearby-specific parameters
+ * SGQuery is an abstract class for a SimplGeo nearby API query.
  */
 @interface SGNearbyQuery : SGQuery
 {
@@ -42,7 +42,7 @@
 //! Max radius to query
 @property (nonatomic, assign) double radius;
 
-//! Limit number of items returned
+//! Limit for the number of items returned
 @property (nonatomic, assign) int limit;
 
 @end

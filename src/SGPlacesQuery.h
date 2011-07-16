@@ -31,7 +31,8 @@
 #import "SGNearbyQuery.h"
 
 /*!
- * SGPlaces query object
+ * An SGPlacesQuery object represents an API query for SimpleGeo Places.
+ * Call [getPlacesForQuery:] to make a Places request with an SGPlacesQuery object.
  */
 @interface SGPlacesQuery : SGNearbyQuery
 {
@@ -39,10 +40,10 @@
     NSMutableArray *categories;
 }
 
-//! Seach string for the query
+//! Seach string for query
 @property (nonatomic, retain) NSString *searchString;
 
-//! Categories filter for the query
+//! Categories to query
 @property (nonatomic, retain) NSMutableArray *categories;
 
 @end

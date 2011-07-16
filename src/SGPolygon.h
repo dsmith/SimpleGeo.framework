@@ -39,11 +39,11 @@
 {
   @private
     // array of arrays of SGPoints
-    NSArray* rings;
+    NSArray *rings;
 }
 
 //! LinearRings that define this polygon
-@property (retain,readonly) NSArray* rings;
+@property (retain,readonly) NSArray *rings;
 
 /*!
  * Create a polygon from a set of LinearRings
