@@ -13,6 +13,9 @@ build/*
 xcuserdata
 profile
 *.moved-aside
+ext/
+iOS/ext/
+test/SimpleGeoTestSettings.h
 
 # OS X
 .DS_Store
