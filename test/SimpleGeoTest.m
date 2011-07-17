@@ -49,12 +49,16 @@
 
 - (SGPoint *)point
 {
-    return [SGPoint pointWithLatitude:37.772487 longitude:-122.40572];
+    return [SGPoint pointWithLatitude:37.772487
+                            longitude:-122.40572];
 }
 
 - (SGEnvelope *)envelope
 {
-    return [SGEnvelope envelopeWithNorth:37.750 south:37.751 west:-122.250 east:-122.251];
+    return [SGEnvelope envelopeWithNorth:37.750
+                                    west:-122.250
+                                   south:37.751
+                                    east:-122.251];
 }
 
 #pragma mark Client Tests

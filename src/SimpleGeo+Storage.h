@@ -117,6 +117,17 @@ extern NSString * const SG_API_VERSION_STORAGE;
                withId:(NSString *)identifier;
 
 /*!
+ * Called when a collection of Storage records has been loaded
+ * Called only when a custom target/action has not been set
+ * @param records Matching records
+ * @param query   SGQuery object
+ */
+- (void)didLoadRecords:(SGFeatureCollection *)records
+            forSGQuery:(SGStorageQuery *)query;
+
+#pragma mark Deprecated Request Methods
+
+/*!
  * Called when records were loaded
  * \deprecated Use [didLoadRecords:forSGQuery:] instead
  * @param records Matching records
@@ -126,15 +137,6 @@ extern NSString * const SG_API_VERSION_STORAGE;
 - (void)didLoadRecords:(SGFeatureCollection *)records
               forQuery:(NSDictionary *)query
                 cursor:(NSString *)cursor __attribute__((deprecated));
-
-/*!
- * Called when a collection of Storage records has been loaded
- * Called only when a custom target/action has not been set
- * @param records Matching records
- * @param query   SGQuery object
- */
-- (void)didLoadRecords:(SGFeatureCollection *)records
-            forSGQuery:(SGStorageQuery *)query;
 
 @end
 
@@ -180,7 +182,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Get records matching an SGStorageQuery
- * @param query   Storage query
+ * @param query Query object
  */
 - (void)getRecordsForQuery:(SGStorageQuery *)query;
 

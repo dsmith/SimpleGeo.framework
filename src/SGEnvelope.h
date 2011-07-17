@@ -33,8 +33,8 @@
 @interface SGEnvelope : SGGeometry
 {
     double north;
-    double south;
     double west;
+    double south;
     double east;
 }
 
@@ -53,25 +53,25 @@
 /*!
  * Create a bounding box from edge coordinates
  * @param north Northern latitude
- * @param south Southern latitude
  * @param west  Western longitude
+ * @param south Southern latitude
  * @param east  Eastern longitude
  */
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
-                            south:(double)southernLat
                              west:(double)westernLon
+                            south:(double)southernLat
                              east:(double)easternLon;
 
 /*!
  * Construct a bounding box from edge coordinates
  * @param north Northern latitude
- * @param south Southern latitude
  * @param west  Western longitude
+ * @param south Southern latitude
  * @param east  Eastern longitude
  */
 - (id)initWithWithNorth:(double)northernLat
-                  south:(double)southernLat
                    west:(double)westernLon
+                  south:(double)southernLat
                    east:(double)easternLon;
 
 @end

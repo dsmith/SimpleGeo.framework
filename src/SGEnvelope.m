@@ -33,31 +33,31 @@
 @implementation SGEnvelope
 
 @synthesize north;
-@synthesize south;
 @synthesize east;
+@synthesize south;
 @synthesize west;
 
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
-                            south:(double)southernLat
                              west:(double)westernLon
+                            south:(double)southernLat
                              east:(double)easternLon
 {
     return [[[SGEnvelope alloc] initWithWithNorth:northernLat
-                                            south:southernLat
                                              west:westernLon
+                                            south:southernLat
                                              east:easternLon] autorelease];
 }
 
 - (id)initWithWithNorth:(double)northernLat
-                  south:(double)southernLat
                    west:(double)westernLon
+                  south:(double)southernLat
                    east:(double)easternLon
 {
     self = [super init];
     if (self) {
         north = northernLat;
-        south = southernLat;
         west = westernLon;
+        south = southernLat;
         east = easternLon;
     }
     return self;
