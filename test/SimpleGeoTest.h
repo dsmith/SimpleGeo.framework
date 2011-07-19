@@ -32,9 +32,6 @@
 #import "SimpleGeo.h"
 #import "SimpleGeoTestSettings.h"
 
-#define SGTestAddress @"41 Decatur Street, San Francisco, CA 94103"
-#define SGTestTimeout 2.5
-
 @interface SimpleGeoTest : GHAsyncTestCase
 
 // Test client
@@ -43,5 +40,21 @@
 // Test objects
 - (SGPoint *)point;
 - (SGEnvelope *)envelope;
+
+// Test callbacks
+- (SGCallback *)blockCallback;
+- (SGCallback *)delegateCallback;
+
+// Test blocks
+- (SGSuccessBlock)successBlock;
+- (SGFailureBlock)failureBlock;
+
+// Test delegate methods
+- (void)requestDidSucceed:(NSDictionary *)response;
+- (void)requestDidFail:(NSError *)error;
+
+// Check Methods
+- (void)checkGeoJSONCollectionConversion:(NSDictionary *)response
+                                    type:(GeoJSONCollectionType)type;
 
 @end

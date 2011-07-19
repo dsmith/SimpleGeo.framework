@@ -29,39 +29,13 @@
 //
 
 #import "SGPoint.h"
+#import "SGPoint+Private.h"
 
 @implementation SGPoint
 
-@synthesize latitude;
-@synthesize longitude;
+@synthesize latitude, longitude;
 
-+ (SGPoint *)pointWithArray:(NSArray *)coordinates
-{
-    return [SGPoint pointWithLatitude:[[coordinates objectAtIndex:1] doubleValue]
-                            longitude:[[coordinates objectAtIndex:0] doubleValue]];
-}
-
-+ (SGPoint *)pointWithDictionary:(NSDictionary *)input
-{
-    if ([[input objectForKey:@"type"] isEqual:@"Point"]) {
-        return [SGPoint pointWithArray:[input objectForKey:@"coordinates"]];
-    } else {
-        NSLog(@"%@ could not be converted into a point.", input);
-        return nil;
-    }
-}
-
-+ (SGPoint *)pointWithGeometry:(id)geometry
-{
-    if ([geometry isKindOfClass:[SGPoint class]]) {
-        return geometry;
-    } else if ([geometry isKindOfClass:[NSDictionary class]]) {
-        return [SGPoint pointWithDictionary:geometry];
-    } else {
-        NSLog(@"%@ could not be converted into a point.", geometry);
-        return nil;
-    }
-}
+#pragma mark Instantiation Methods
 
 + (SGPoint *)pointWithLatitude:(double)latitude
                      longitude:(double)longitude
@@ -70,18 +44,33 @@
                                     longitude:longitude] autorelease];
 }
 
++ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    return [[[SGPoint alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
+}
+
 - (id)initWithLatitude:(double)lat
              longitude:(double)lon
 {
     self = [super init];
-
     if (self) {
         latitude = lat;
         longitude = lon;
     }
-
     return self;
 }
+
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    NSString *type = [geoJSONGeometry objectForKey:@"type"];
+    NSArray *coordinates = [geoJSONGeometry objectForKey:@"coordinates"];
+    if (type && [type isEqual:@"Point"] && coordinates && [coordinates count] == 2) {        
+        return [self initWithArray:coordinates];
+    }
+    return nil;
+}
+
+#pragma mark Convenience Methods
 
 - (BOOL)isInsidePolygon:(SGGeometry *)polygon
 {
@@ -92,14 +81,30 @@
     return NO;
 }
 
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    [geoJSON setValue:@"Point" forKey:@"type"];
+    [geoJSON setValue:[NSArray arrayWithObjects:
+                       [NSNumber numberWithDouble:longitude],
+                       [NSNumber numberWithDouble:latitude],
+                       nil] forKey:@"coordinates"];
+    return geoJSON;
+}
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<SGPoint: %f, %f>", latitude, longitude];
+    return [[self asGeoJSON] description];
 }
+
+#pragma mark Comparison Methods
 
 - (BOOL)isEqual:(id)object
 {
-    return latitude == [object latitude] && longitude == [object longitude];
+    if (object == self) return YES;
+    if (!object || ![object isKindOfClass:[self class]]) return NO;
+    return (latitude == [object latitude] &&
+            longitude == [object longitude]);
 }
 
 - (NSUInteger)hash
@@ -108,15 +113,17 @@
            [[NSNumber numberWithDouble:longitude] hash];
 }
 
-- (id)JSON
+#pragma mark Private Methods
+
++ (SGPoint *)pointWithArray:(NSArray *)point
 {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-             @"Point", @"type",
-             [NSArray arrayWithObjects:
-              [NSNumber numberWithDouble:longitude],
-              [NSNumber numberWithDouble:latitude],
-              nil], @"coordinates",
-             nil];
+    return [[[SGPoint alloc] initWithArray:point] autorelease];
+}
+
+- (id)initWithArray:(NSArray *)point
+{
+    return [[SGPoint alloc] initWithLatitude:[[point objectAtIndex:1] doubleValue]
+                                   longitude:[[point objectAtIndex:0] doubleValue]];
 }
 
 @end

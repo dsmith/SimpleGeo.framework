@@ -30,16 +30,14 @@
 
 #import "ASIHTTPRequest.h"
 
-#import "SGFeature.h"
-#import "SGFeatureCollection.h"
-#import "SGStoredRecord.h"
-
 #import "SGGeometry.h"
-#import "SGGeometryCollection.h"
 #import "SGPoint.h"
 #import "SGEnvelope.h"
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
+
+#import "SGFeature.h"
+#import "SGStoredRecord.h"
 
 #if TARGET_OS_IPHONE
     #import "SGGeometry+Mapkit.h"
@@ -53,6 +51,7 @@
 #import "SGStorageQuery.h"
 
 #import "SGTypes.h"
+#import "SGCallback.h"
 
 /*!
  * \mainpage
@@ -69,126 +68,41 @@
  */
 
 extern NSString * const SG_API_VERSION;
-extern NSString * const SG_HOSTNAME;
 extern NSString * const SG_URL_PREFIX;
-
-/*!
- * Informal delegate protocol for core API functionality
- */
-@interface NSObject (SimpleGeoDelegate)
-
-/*!
- * Called when a request has finished (optional)
- * @param request Request instance
- */
-- (void)requestDidFinish:(ASIHTTPRequest *)request;
-
-/*!
- * Called when a request has failed (optional)
- * @param request Request instance
- */
-- (void)requestDidFail:(ASIHTTPRequest *)request;
-
-/*!
- * Called when a feature has been loaded;
- * return nil if feature not found (optional)
- * @param feature Feature that was loaded
- * @param handle  Handle used to request this feature
- */
-- (void)didLoadFeature:(SGFeature *)feature
-                handle:(NSString *)handle;
-
-/*!
- * Called when categories have been loaded (optional)
- * @param categories An array of categories
- */
-- (void)didLoadCategories:(NSArray *)categories;
-
-@end
 
 /*!
  * SimpleGeo client interface
  */
 @interface SimpleGeo : NSObject
 {
-    id delegate;
+    NSString *userAgent;
     NSString *consumerKey;
     NSString *consumerSecret;
-    NSURL *url;
-    NSString *userAgent;
 }
 
-@property (assign) id delegate;
-@property (copy, readonly) NSString *consumerKey;
-@property (copy, readonly) NSString *consumerSecret;
-@property (copy, readonly) NSURL *url;
-@property (copy, readonly) NSString *userAgent;
-@property (readonly, getter = isSSLEnabled) BOOL sslEnabled;
+//! Client consumer key
+@property (nonatomic, readonly) NSString *consumerKey;
+
+//! Client consumer secret
+@property (nonatomic, readonly) NSString *consumerSecret;
+
+#pragma mark Instantiation Methods
 
 /*!
  * Create a client
- * @param delegate       Delegate
  * @param consumerKey    OAuth consumer key
  * @param consumerSecret OAuth consumer secret
  */
-+ (SimpleGeo *)clientWithDelegate:(id)delegate
-                      consumerKey:(NSString *)consumerKey
-                   consumerSecret:(NSString *)consumerSecret;
-
-+ (SimpleGeo *)clientWithDelegate:(id)delegate
-                      consumerKey:(NSString *)consumerKey
-                   consumerSecret:(NSString *)consumerSecret
-                           useSSL:(BOOL)doesUseSSL;
-
-+ (SimpleGeo *)clientWithDelegate:(id)delegate
-                      consumerKey:(NSString *)consumerKey
-                   consumerSecret:(NSString *)consumerSecret
-                              URL:(NSURL *)url __attribute__((deprecated));
++ (SimpleGeo *)clientWithConsumerKey:(NSString *)consumerKey
+                      consumerSecret:(NSString *)consumerSecret;
 
 /*!
  * Construct a client
- * @param delegate       Delegate
  * @param consumerKey    OAuth consumer key
  * @param consumerSecret OAuth consumer secret
  */
-- (id)initWithDelegate:(id)delegate
-           consumerKey:(NSString *)consumerKey
-        consumerSecret:(NSString *)consumerSecret;
-
-/*! Construct a client with a custom URL.
- * This is the designated initializer for this class
- * @param delegate       Delegate
- * @param consumerKey    OAuth consumer key
- * @param consumerSecret OAuth consumer secret
- */
-- (id)initWithDelegate:(id)delegate
-           consumerKey:(NSString *)consumerKey
-        consumerSecret:(NSString *)consumerSecret
-                   URL:(NSURL *)url;
-
-/*! 
- * Is SSL in use by this client?
- */
-- (BOOL)isSSLEnabled;
-
-/*!
- * Get a feature with a specific handle
- * @param handle Handle of queried feature
- */
-- (void)getFeatureWithHandle:(NSString *)handle;
-
-/*!
- * Get a feature with a specific handle
- * @param handle Handle of queried feature
- * @param zoom   Zoom level to determine complexity of returned geometry
- */
-- (void)getFeatureWithHandle:(NSString *)handle
-                        zoom:(int)zoom;
-
-/*!
- * Get the overall list of categories
- */
-- (void)getCategories;
+- (id)initWithConsumerKey:(NSString *)consumerKey
+           consumerSecret:(NSString *)consumerSecret;
 
 @end
 

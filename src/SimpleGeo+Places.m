@@ -28,406 +28,94 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <YAJL/YAJL.h>
 #import "SimpleGeo+Places.h"
 #import "SimpleGeo+Internal.h"
-#import "SGFeatureCollection+Private.h"
 #import "SGPlacesQuery.h"
+#import "SGFeature.h"
+
+@interface SimpleGeo (Private)
+- (NSDictionary *)markFeature:(SGFeature *)feature asPrivate:(BOOL)isPrivate;
+@end
 
 @implementation SimpleGeo (Places)
 
-#pragma mark Place Manipulation Methods
-
-- (void)addPlace:(SGFeature *)feature
-         private:(BOOL)private
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/places",
-                                                  SG_API_VERSION]];
-
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-
-    NSDictionary *featureDict = [self markFeature:feature
-                                          private:private];
-
-    [request appendPostData:[[featureDict yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didAddPlace:", @"targetSelector",
-                          feature, @"feature",
-                          [NSNumber numberWithBool:private], @"private",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)updatePlace:(NSString *)handle
-               with:(SGFeature *)feature
-            private:(BOOL)private
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/features/%@.json",
-                                                  SG_API_VERSION, handle]];
-    
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    
-    NSDictionary *featureDict = [self markFeature:feature
-                                          private:private];
-    
-    [request appendPostData:[[featureDict yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didUpdatePlace:", @"targetSelector",
-                          handle, @"handle",
-                          feature, @"feature",
-                          [NSNumber numberWithBool:private], @"private",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)deletePlace:(NSString *)handle
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/features/%@.json",
-                                                  SG_API_VERSION, handle]];
-
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"DELETE"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didDeletePlace:", @"targetSelector",
-                          handle, @"handle",
-                          nil]];
-    [request startAsynchronous];
-}
-
-#pragma mark Request Methods
+#pragma mark Places Request Methods
 
 - (void)getPlacesForQuery:(SGPlacesQuery *)query
-{
-    if (!query.target || !query.action) {
-        [query setTarget:self];
-        [query setAction:@selector(didReceivePlaces:)];
-    }
-    
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/places/", SG_API_VERSION];
-    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
-    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
-    else [endpoint appendFormat:@"address.json"];
-    
+                 callback:(SGCallback *)callback
+{  
     NSDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.searchString forKey:@"q"];
     [parameters setValue:query.categories forKey:@"category"];
     [parameters setValue:[NSString stringWithFormat:@"%f", query.radius] forKey:@"radius"];
     [parameters setValue:[NSString stringWithFormat:@"%d", query.limit] forKey:@"num"];
-    NSString *paramPairs = [self normalizeRequestParameters:parameters];
     
-    [endpoint appendFormat:@"?%@", paramPairs];
-    NSURL *endpointURL = [self endpointForString:endpoint];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/places/%@",
+                     SG_URL_PREFIX, SG_API_VERSION, [self baseEndpointForQuery:query]];
+                  
+    [self sendHTTPRequest:@"GET"
+                  toURL:url
+             withParams:parameters
+               callback:callback];
+}
+
+#pragma mark Places Manipulation Methods
+
+- (void)addPlace:(SGFeature *)feature
+       isPrivate:(BOOL)isPrivate
+        callback:(SGCallback *)callback
+{
     
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"SGQuery"]];
-    [request startAsynchronous];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/places",
+                     SG_URL_PREFIX, SG_API_VERSION];
+    
+    NSDictionary *featureDict = [self markFeature:feature asPrivate:isPrivate];
+    
+    [self sendHTTPRequest:@"POST"
+                    toURL:url
+               withParams:featureDict
+                 callback:callback];
 }
 
-#pragma mark Dispatcher Methods
-
-- (void)didReceivePlaces:(NSDictionary *)request
-{    
-    if ([delegate respondsToSelector:@selector(didLoadPlaces:forSGQuery:)]) {
-        [delegate didLoadPlaces:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
-                     forSGQuery:[request objectForKey:@"query"]];
-        
-    /* TODO: remove (deprecated) */
-    } else if ([delegate respondsToSelector:@selector(didLoadPlaces:forQuery:)]) {
-        [delegate didLoadPlaces:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
-                       forQuery:[[request objectForKey:@"query"] asDictionary]];
-        
-    } else {
-        NSLog(@"Delegate does not implement didLoadPlaces:forSGQuery:");
-    }
-}
-
-- (void)didAddPlace:(ASIHTTPRequest *)request
+- (void)updatePlace:(SGFeature *)place
+          isPrivate:(BOOL)isPrivate
+           callback:(SGCallback *)callback
 {
-    if ([delegate respondsToSelector:@selector(didAddPlace:handle:URL:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        NSURL *placeURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@",
-                                                SG_HOSTNAME,
-                                                [jsonResponse objectForKey:@"uri"]]];
-        
-        [delegate didAddPlace:[[request userInfo] objectForKey:@"feature"]
-                       handle:[jsonResponse objectForKey:@"id"]
-                          URL:placeURL
-                        token:[jsonResponse objectForKey:@"token"]];
-    } else {
-        NSLog(@"Delegate does not implement didAddPlace:handle:URL:token:");
-    }
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, place.handle];
+    
+    NSDictionary *featureDict = [self markFeature:place asPrivate:isPrivate];
+    
+    [self sendHTTPRequest:@"POST"
+                    toURL:url
+               withParams:featureDict
+                 callback:callback];
 }
 
-- (void)didUpdatePlace:(ASIHTTPRequest *)request
+- (void)deletePlace:(NSString *)handle
+           callback:(SGCallback *)callback
 {
-    if ([delegate respondsToSelector:@selector(didUpdatePlace:handle:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        
-        [delegate didUpdatePlace:[[request userInfo] objectForKey:@"feature"]
-                          handle:[[request userInfo] objectForKey:@"handle"]
-                           token:[jsonResponse objectForKey:@"token"]];
-    } else {
-        NSLog(@"Delegate does not implement didUpdatePlace:handle:token:");
-    }
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"DELETE"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
 }
 
-- (void)didDeletePlace:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didDeletePlace:token:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        
-        [delegate didDeletePlace:[[request userInfo] objectForKey:@"handle"]
-                           token:[jsonResponse objectForKey:@"token"]];
-    } else {
-        NSLog(@"Delegate does not implement didDeletePlace:token:");
-    }
-}
+#pragma Helper Methods
 
-#pragma mark Deprecated Convenience Methods
-
-- (void)getPlacesNear:(SGPoint *)point
+- (NSDictionary *)markFeature:(SGFeature *)feature
+                    asPrivate:(BOOL)isPrivate
 {
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point 
-                count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address 
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-               within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                      within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-               within:(double)radius
-                count:(int)limit;
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                      within:(double)radius
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-                count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-               within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                      within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-               within:(double)radius
-                count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                      within:(double)radius
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-           inCategory:(NSString *)category
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                  inCategory:(NSString *)category
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-           inCategory:(NSString *)category
-                count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                  inCategory:(NSString *)category
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-           inCategory:(NSString *)category
-               within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                  inCategory:(NSString *)category
-                      within:(double)radius
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setRadius:radius];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNear:(SGPoint *)point
-             matching:(NSString *)query
-           inCategory:(NSString *)category
-               within:(double)radius
-                count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithPoint:point];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
-}
-
-- (void)getPlacesNearAddress:(NSString *)address
-                    matching:(NSString *)query
-                  inCategory:(NSString *)category
-                      within:(double)radius
-                       count:(int)limit
-{
-    SGPlacesQuery *placesQuery = [SGPlacesQuery queryWithAddress:address];
-    [placesQuery setSearchString:query];
-    [placesQuery setCategories:[NSArray arrayWithObject:category]];
-    [placesQuery setRadius:radius];
-    [placesQuery setLimit:limit];
-    [self getPlacesForQuery:placesQuery];
+    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:[feature properties]];
+    if (isPrivate) [properties setValue:@"true" forKey:@"private"];
+    else [properties setValue:@"false" forKey:@"private"];
+    NSMutableDictionary *featureDict = [NSMutableDictionary dictionaryWithDictionary:[feature asGeoJSON]];
+    [featureDict setValue:properties forKey:@"properties"];
+    return featureDict;
 }
 
 @end

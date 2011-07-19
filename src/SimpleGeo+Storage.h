@@ -29,116 +29,11 @@
 //
 
 #import "SimpleGeo.h"
-@class SGFeatureCollection;
-@class SGGeometryCollection;
 @class SGStoredRecord;
 @class SGStorageQuery;
+@class SGCallback;
 
 extern NSString * const SG_API_VERSION_STORAGE;
-
-/*!
- * Informal delegate protocol for Storage functionality
- */
-@interface NSObject (SimpleGeoStorageDelegate)
-
-/*!
- * Called when a layer was successfully added or updated
- * @param name Layer name
- */
-- (void)didAddOrUpdateLayer:(NSString *)name;
-
-/*!
- * Called when a record was successfully added or updated
- * @param record Record that was added or updated
- * @param layer  Layer that the record belongs to
- */
-- (void)didAddOrUpdateRecord:(SGStoredRecord *)record
-                     inLayer:(NSString *)layer;
-
-/*!
- * Called when records were successfully added or updated
- * @param records Records that were added or updated
- * @param layer  Layer that the record belongs to
- */
-- (void)didAddOrUpdateRecords:(NSArray *)records
-                      inLayer:(NSString *)layer;
-
-/*!
- * Called when a layer was successfully deleted
- * @param name Layer name
- */
-- (void)didDeleteLayer:(NSString *)name;
-
-/*!
- * Called when a record was successfully deleted
- * @param layer Layer that the record was deleted from
- * @param recordId ID of the record that was deleted
- */
-- (void)didDeleteRecordInLayer:(NSString *)layer
-                        withId:(NSString *)recordId;
-
-/*!
- * Called when the location history for a record was loaded
- * @param history  Record history
- * @param recordId Record ID
- * @param query    Query information
- * @param cursor   Cursor string to retrieve the next set of historical
- *                 locations
- */
-- (void)didLoadHistory:(SGGeometryCollection *)history
-           forRecordId:(NSString *)recordId
-              forQuery:(NSDictionary *)query
-                cursor:(NSString *)cursor;
-
-/*!
- * Called when layer information was loaded
- * @param layer Layer data
- * @param name  Layer name
- */
-- (void)didLoadLayer:(NSDictionary *)layer
-            withName:(NSString *)name;
-
-/*!
- * Called when information about all available layers was loaded
- * @param layers List of NSDictionarys containing layer data
- * @param cursor Cursor string (used for pagination)
- */
-- (void)didLoadLayers:(NSArray *)layers
-           withCursor:(NSString *)cursor;
-
-/*!
- * Called when a record was loaded
- * @param record Record that was loaded
- * @param layer  Layer that the record was loaded from
- * @param id     Id of the record that was loaded
- */
-- (void)didLoadRecord:(SGStoredRecord *)record
-            fromLayer:(NSString *)layer
-               withId:(NSString *)identifier;
-
-/*!
- * Called when a collection of Storage records has been loaded
- * Called only when a custom target/action has not been set
- * @param records Matching records
- * @param query   SGQuery object
- */
-- (void)didLoadRecords:(SGFeatureCollection *)records
-            forSGQuery:(SGStorageQuery *)query;
-
-#pragma mark Deprecated Request Methods
-
-/*!
- * Called when records were loaded
- * \deprecated Use [didLoadRecords:forSGQuery:] instead
- * @param records Matching records
- * @param query   Query information
- * @param cursor  Cursor string to retrieve the next set of records
- */
-- (void)didLoadRecords:(SGFeatureCollection *)records
-              forQuery:(NSDictionary *)query
-                cursor:(NSString *)cursor __attribute__((deprecated));
-
-@end
 
 /*!
  * Client support for the Storage API
@@ -148,369 +43,113 @@ extern NSString * const SG_API_VERSION_STORAGE;
 #pragma mark Record Request Methods
 
 /*!
- * Add or update a record. If a record already exists with the provided ID, it
- * will be updated, otherwise it will be added
- * @param record Record to add or update. Its `id` property must be set
- * @param layer  Layer to apply this record to
+ * Request a record by ID
+ * @param recordID  Record ID
+ * @param layerName Layer name
+ * @param callback  Request callback
  */
-- (void)addOrUpdateRecord:(SGStoredRecord *)record
-                  inLayer:(NSString *)layer;
-
-/*!
- * Add or update a collection of records
- * @param records List of records to add or update. Each record must have its
- *                `id` property set
- * @param layer  Layer to apply these records to
- */
-- (void)addOrUpdateRecords:(NSArray *)records
-                   inLayer:(NSString *)layer;
-
-/*!
- * Delete a record
- * @param layer Layer to delete the record from
- * @param id    ID of the record to delete
- */
-- (void)deleteRecordInLayer:(NSString *)layer
-                     withId:(NSString *)identifier;
-
-/*!
- * Request a record by id
- * @param id    ID of the record
- */
-- (void)getRecordFromLayer:(NSString *)layer
-                    withId:(NSString *)identifier;
+- (void)getRecord:(NSString *)recordID
+          inLayer:(NSString *)layerName
+         callback:(SGCallback *)callback;
 
 /*!
  * Get records matching an SGStorageQuery
- * @param query Query object
+ * @param query     Query
+ * @param callback  Request callback
  */
-- (void)getRecordsForQuery:(SGStorageQuery *)query;
-
-#pragma mark Record History
+- (void)getRecordsForQuery:(SGStorageQuery *)query
+                  callback:(SGCallback *)callback;
 
 /*!
- * Get the location history for a record
- * @param recordId Record ID
- * @param layer    Layer containing the record
+ * Get location history for a record
+ * @param recordID  Record ID
+ * @param layerName Layer name
+ * @param limit     Number of results to return
+ * @param cursor    Cursor string (used for pagination)
+ * @param callback  Request callback
  */
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer;
+- (void)getHistoryForRecord:(NSString *)recordID
+                    inLayer:(NSString *)layerName
+                      limit:(NSNumber *)limit
+                     cursor:(NSString *)cursor
+                   callback:(SGCallback *)callback;
+
+#pragma mark Record Manipulation Methods
 
 /*!
- * Get the location history for a record
- * @param recordId Record ID
- * @param layer    Layer containing the record
- * @param count    Number of results to return
+ * Add or update a record. If a record already exists with the provided ID, it
+ * will be updated, otherwise it will be added
+ * @param record    Record to add or update
+ * @param callback  Request callback
  */
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                        count:(int)count;
+- (void)addOrUpdateRecord:(SGStoredRecord *)record
+                 callback:(SGCallback *)callback;
 
 /*!
- * Get additional location history for a record
- * @param recordId Record ID
- * @param layer    Layer containing the record
- * @param cursor   Cursor string (used for pagination)
+ * Add or update a collection of records
+ * @param records   List of records to add or update
+ * @param layerName Layer name
+ * @param callback  Request callback
  */
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                       cursor:(NSString *)cursor;
+- (void)addOrUpdateRecords:(NSArray *)records
+                   inLayer:(NSString *)layerName
+                  callback:(SGCallback *)callback;
 
 /*!
- * Get additional location history for a record
- * @param recordId Record ID
- * @param layer    Layer containing the record
- * @param cursor   Cursor string (used for pagination)
- * @param count    Number of results to return
+ * Delete a record
+ * @param recordID  Record ID
+ * @param layerName Layer name
+ * @param callback  Request callback
  */
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                       cursor:(NSString *)cursor
-                        count:(int)count;
+- (void)deleteRecord:(NSString *)recordID
+             inLayer:(NSString *)layerName
+            callback:(SGCallback *)callback;
 
-#pragma mark Layer Manipulation
-
-/*!
- * Add or update a layer
- * @param name        Layer name
- * @param title       Layer title
- * @param description Layer description
- * @param public      Whether this layer should be public
- */
-- (void)addOrUpdateLayer:(NSString *)name
-                   title:(NSString *)title
-             description:(NSString *)description
-                  public:(BOOL)public;
-
-/*!
- * Add or update a layer
- * @param name         Layer name
- * @param title        Layer title
- * @param description  Layer description
- * @param public       Whether this layer should be public
- * @param callbackURLs List of callback URLs
- */
-- (void)addOrUpdateLayer:(NSString *)name
-                   title:(NSString *)title
-             description:(NSString *)description
-                  public:(BOOL)public
-            callbackURLs:(NSArray *)callbackURLs;
-
-/*!
- * Get a list of all available layers
- */
-- (void)getLayers;
-
-/*!
- * Get a list of all available layers
- * @param cursor Cursor string (used for pagination)
- */
-- (void)getLayersWithCursor:(NSString *)cursor;
+#pragma mark Layer Request Methods
 
 /*!
  * Get information about a specific layer
- * @param layer Layer name
+ * @param layerName Layer name
+ * @param callback  Request callback
  */
-- (void)getLayer:(NSString *)layer;
+- (void)getLayer:(NSString *)layerName
+        callback:(SGCallback *)callback;
+
+/*!
+ * Get a list of all available layers
+ * @param callback  Request callback
+ */
+- (void)getLayersWithCallback:(SGCallback *)callback;
+
+/*!
+ * Get a list of all available layers
+ * @param cursor    Cursor string (used for pagination)
+ * @param callback  Request callback
+ */
+- (void)getLayersWithCursor:(NSString *)cursor
+                   callback:(SGCallback *)callback;
+
+#pragma mark Layer Manipulation Methods
+
+/*!
+ * Add or update a layer
+ * @param layerName         Layer name
+ * @param layerTitle        Layer title
+ * @param layerDescription  Layer description
+ * @param callbac           Request callback
+ */
+- (void)addOrUpdateLayer:(NSString *)name
+                   title:(NSString *)title
+             description:(NSString *)description
+            callbackURLs:(NSArray *)callbackURLs
+                callback:(SGCallback *)callback;
 
 /*!
  * Delete a layer
- * @param name Layer name
+ * @param layerName Layer name
+ * @param callback  Request callback
  */
-- (void)deleteLayer:(NSString *)name;
-
-#pragma mark Distribution Methods
-
-/*!
- * Called when a Storage request returns if no target/action is set
- * Formats response into appropriate the appropriate SG object(s),
- * then calls standard delegate method didLoadRecords:forSGQuery:
- * @param request The request query and response
- */
-- (void)didReceiveRecords:(NSDictionary *)request;
-
-#pragma mark Deprecated Convenience Request Methods
-
-/*!
- * Get records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer Layer to query
- * @param point Origin point
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point __attribute__((deprecated));
-
-/*!
- * Get records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param radius Radius (in km) to limit results to
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius __attribute__((deprecated));
-
-/*!
- * Get records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param count  Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param radius Radius (in km) to limit results to
- * @param count  Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param cursor Cursor string (used for pagination)
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param radius Radius (in km) to limit results to
- * @param cursor Cursor string (used for pagination)
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param radius Radius (in km) to limit results to
- * @param cursor Cursor string (used for pagination)
- * @param count  Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param cursor Cursor string (used for pagination)
- * @param count  Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to a point
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer  Layer to query
- * @param point  Origin point
- * @param radius Radius (in km) to limit results to
- * @param cursor Cursor string (used for pagination)
- * @param count  Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address __attribute__((deprecated));
-
-/*!
- * Get records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param radius  Radius (in km) to limit results to
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius __attribute__((deprecated));
-
-/*!
- * Get records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param count   Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param radius  Radius (in km) to limit results to
- * @param count   Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param cursor  Cursor string (used for pagination)
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param radius  Radius (in km) to limit results to
- * @param cursor  Cursor string (used for pagination)
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param radius  Radius (in km) to limit results to
- * @param cursor  Cursor string (used for pagination)
- * @param count   Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param cursor  Cursor string (used for pagination)
- * @param count   Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
-
-/*!
- * Get additional records nearest to an address
- * \deprecated Use [getRecords:forQuery:] instead
- * @param layer   Layer to query
- * @param address Address
- * @param radius  Radius (in km) to limit results to
- * @param cursor  Cursor string (used for pagination)
- * @param count   Number of results to return
- */
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count __attribute__((deprecated));
+- (void)deleteLayer:(NSString *)layerName
+           callback:(SGCallback *)callback;
 
 @end

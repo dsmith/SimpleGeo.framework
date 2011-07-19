@@ -31,123 +31,103 @@
 #import "SGGeometry.h"
 
 /*!
- * Feature.
+ * Feature
  */
 @interface SGFeature : NSObject
 {
-    NSString *featureId;
+    NSString *handle;
     SGGeometry *geometry;
-    NSDictionary *properties;
+    NSMutableDictionary *properties;
+    NSDate *created;
     
     NSNumber *distance;
     NSDictionary *selfLink;
 }
 
-//! Feature id
-@property (retain, retain) NSString *featureId;
+//! Feature handle (ID)
+@property (nonatomic, retain) NSString *handle;
 
 //! Feature geometry
-@property (retain, retain) SGGeometry *geometry;
+@property (nonatomic, retain) SGGeometry *geometry;
 
 //! Feature properties
-@property (retain, retain) NSDictionary *properties;
+@property (nonatomic, retain) NSDictionary *properties;
 
-//! Distance (in meters) from the query point; only present
-// if the feature was generated from a nearby request
+//! Created timestamp
+@property (nonatomic, retain) NSDate *created;
+
+//! Distance (in meters) from the query point.
+// Only present if the feature was generated from a nearby request
 @property (nonatomic, readonly) NSNumber *distance;
 
-//! API URL for the feature; only present if the feature
-// was generated from an API query.
+//! API URL for the feature.
+// Only present if the feature was generated from an API query
 @property (nonatomic, readonly) NSDictionary *selfLink;
 
-/*!
- * Create a Feature with an id
- * @param id Feature id
- */
-+ (SGFeature *)featureWithId:(NSString *)identifier;
+#pragma mark Instantiation Methods
 
 /*!
- * Create a Feature with an id and some properties
- * @param id         Feature id
- * @param properties Feature properties
+ * Create an SGFeature with a handle and a geometry
+ * @param handle    Feature handle
+ * @param geometry  Feature geometry
  */
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                  properties:(NSDictionary *)properties;
++ (SGFeature *)featureWithHandle:(NSString *)handle
+                        geometry:(SGGeometry *)geometry;
 
 /*!
- * Create a Feature with an id and a geometry
- * @param id       Feature id
- * @param geometry Feature geometry
+ * Create an SGFeature with a handle, a geometry, and some properties
+ * @param handle        Feature id
+ * @param geometry      Feature geometry
+ * @param properties    Feature properties
  */
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                    geometry:(SGGeometry *)geometry;
++ (SGFeature *)featureWithHandle:(NSString *)handle
+                        geometry:(SGGeometry *)geometry
+                      properties:(NSDictionary *)properties;
 
 /*!
- * Create a Feature with an id, a geometry, and some properties
- * @param id         Feature id
- * @param geometry   Feature geometry
- * @param properties Feature properties
+ * Create an SGFeature from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature   Feature dictionary
  */
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                    geometry:(SGGeometry *)geometry
-                  properties:(NSDictionary *)properties;
++ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 /*!
- * Create a Feature with a geometry and some properties
- * @param geometry   Feature geometry
- * @param properties Feature properties
+ * Construct an SGFeature with a handle and a geometry
+ * @param handle    Feature handle
+ * @param geometry  Feature geometry
  */
-+ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry
-                        properties:(NSDictionary *)properties;
+- (id)initWithHandle:(NSString *)handle
+            geometry:(SGGeometry *)geometry;
 
 /*!
- * Construct a Feature with an id
- * @param id Feature id
+ * Construct an SGFeature with a handle, a geometry, and some properties
+ * @param handle        Feature id
+ * @param geometry      Feature geometry
+ * @param properties    Feature properties
  */
-- (id)initWithId:(NSString *)identifier;
+- (id)initWithHandle:(NSString *)handle
+            geometry:(SGGeometry *)geometry
+          properties:(NSDictionary *)properties;
 
 /*!
- * Construct a Feature with an id and some properties
- * @param id         Feature id
- * @param properties Feature properties
+ * Construct an SGFeature from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature   Feature dictionary
  */
-- (id)initWithId:(NSString *)identifier
-      properties:(NSDictionary *)properties;
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
+
+#pragma mark Convenience Methods
 
 /*!
- * Construct a Feature with an id and a geometry
- * @param id       Feature id
- * @param geometry Feature geometry
+ * Set the properties field
+ * @param properties    Feature properties
  */
-- (id)initWithId:(NSString *)identifier
-        geometry:(SGGeometry *)geometry;
+- (void)setProperties:(NSDictionary *)properties;
 
 /*!
- * Construct a Feature with an id, a geometry, and some properties
- * @param id         Feature id
- * @param geometry   Feature geometry
- * @param properties Feature properties
+ * A dictionary representation of the feature that
+ * conforms to the geoJSON Feature specification
  */
-- (id)initWithId:(NSString *)identifier
-        geometry:(SGGeometry *)geometry
-      properties:(NSDictionary *)properties;
-
-/*!
- * Construct a Feature with a geometry and some properties
- * @param geometry   Feature geometry
- * @param properties Feature properties
- */
-- (id)initWithGeometry:(SGGeometry *)geometry
-            properties:(NSDictionary *)properties;
-
-/*!
- * Checks if two features are equivalent (same ID)
- */
-- (BOOL)isEqualToFeature:(SGFeature *)feature;
-
-/*!
- * Return an NSDictionary representation of this feature;
- */
-- (NSDictionary *)asDictionary;
+- (NSDictionary *)asGeoJSON;
 
 @end

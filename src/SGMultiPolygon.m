@@ -29,36 +29,24 @@
 //
 
 #import "SGMultiPolygon.h"
+#import "SGPolygon.h"
 #import "SGPolygon+Private.h"
+#import "SGPoint.h"
 
 @implementation SGMultiPolygon
 
 @synthesize polygons;
 
-+ (SGMultiPolygon *)multiPolygonWithArray:(NSArray *)coordinates
-{
-    NSMutableArray *polygons = [NSMutableArray arrayWithCapacity:[coordinates count]];
-
-    for (NSArray *polygon in coordinates) {
-        [polygons addObject:[SGPolygon polygonWithArray:polygon]];
-    }
-
-    return [SGMultiPolygon multiPolygonWithPolygons:[NSArray arrayWithArray:polygons]];
-}
-
-+ (SGMultiPolygon *)multiPolygonWithDictionary:(NSDictionary *)dictionary
-{
-    if ([[dictionary objectForKey:@"type"] isEqual:@"MultiPolygon"]) {
-        return [SGMultiPolygon multiPolygonWithArray:[dictionary objectForKey:@"coordinates"]];
-    } else {
-        NSLog(@"%@ could not be converted into a multi-polygon.", dictionary);
-        return nil;
-    }
-}
+#pragma mark Instantiation Methods
 
 + (SGMultiPolygon *)multiPolygonWithPolygons:(NSArray *)polygons
 {
     return [[[SGMultiPolygon alloc] initWithPolygons:polygons] autorelease];
+}
+
++ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    return [[[SGMultiPolygon alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
 }
 
 - (id)initWithPolygons:(NSArray *)somePolygons
@@ -70,6 +58,22 @@
     return self;
 }
 
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    NSString *type = [geoJSONGeometry objectForKey:@"type"];
+    NSArray *coordinates = [geoJSONGeometry objectForKey:@"coordinates"];
+    if (type && [type isEqual:@"MultiPolygon"] && coordinates) {
+        NSMutableArray *allPolygons = [NSMutableArray arrayWithCapacity:[coordinates count]];
+        for (NSArray *polygon in coordinates) {
+            [allPolygons addObject:[SGPolygon polygonWithArray:polygon]];
+        }
+        return [self initWithPolygons:allPolygons];
+    }
+    return nil;
+}
+
+#pragma mark Convenience Methods
+
 -(BOOL)containsPoint:(SGPoint *)point
 {
     for (SGPolygon *polygon in polygons)
@@ -78,16 +82,24 @@
     return NO;
 }
 
-- (void)dealloc
+- (NSDictionary *)asGeoJSON
 {
-    [polygons release];
-    [super dealloc];
+    NSMutableArray *polygonsArray = [NSMutableArray arrayWithCapacity:[polygons count]];
+    for (SGPolygon *polygon in polygons) {
+        [polygonsArray addObject:[[polygon asGeoJSON] objectForKey:@"coordinates"]];
+    }
+    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    [geoJSON setValue:@"MultiPolygon" forKey:@"type"];
+    [geoJSON setValue:polygonsArray forKey:@"coordinates"];
+    return geoJSON;
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<SGMultiPolygon: %@>", polygons];
+    return [[self asGeoJSON] description];
 }
+
+#pragma mark Comparison Methods
 
 - (BOOL)isEqual:(id)object
 {
@@ -97,6 +109,12 @@
 - (NSUInteger)hash
 {
     return [polygons hash];
+}
+
+- (void)dealloc
+{
+    [polygons release];
+    [super dealloc];
 }
 
 @end

@@ -1,8 +1,8 @@
 //
-//  SGFeatureCollection.h
+//  SimpleGeo+Feature.m
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2010-2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,47 +28,41 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#import "SimpleGeo+Feature.h"
+#import "SimpleGeo+Internal.h"
+
 /*!
- * Collections of Features.
+ * Client support for Basic API requests
  */
-@interface SGFeatureCollection : NSObject
-{
-    NSArray *features;
+@implementation SimpleGeo (Feature)
+
+#pragma mark Feature Request Methods
+
+- (void)getFeatureWithHandle:(NSString *)handle
+                        zoom:(NSNumber *)zoom
+                    callback:(SGCallback *)callback
+{    
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:[NSString stringWithFormat:@"%d",[zoom intValue]] forKey:@"zoom"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:parameters
+                 callback:callback];
 }
 
-//! Collected Features
-@property (retain, readonly) NSArray *features;
-
-/*!
- * Create a FeatureCollection from a list of Features
- * @param features List of Features
- */
-+ (SGFeatureCollection *)featureCollectionWithFeatures:(NSArray *)features;
-
-/*!
- * Create a FeatureCollection from a list of Records
- * @param records List of Records
- */
-+ (SGFeatureCollection *)featureCollectionWithRecords:(NSArray *)records;
-
-/*!
- * Construct a FeatureCollection from a list of Features
- * @param features List of Features
- */
-- (id)initWithFeatures:(NSArray *)features;
-
-/*!
- * Construct a FeatureCollection from a list of Records
- * @param someRecords List of Records
- */
-- (id)initWithRecords:(NSArray *)someRecords;
-
-/*!
- * Return the FeatureCollection as a dictiuonary
- */
-- (NSDictionary *)asDictionary;
-
-//! Gets the number of features in this collection
-- (NSUInteger)count;
+- (void)getCategoriesWithCallback:(SGCallback *)callback
+{    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",
+                     SG_URL_PREFIX, SG_API_VERSION];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
+}
 
 @end

@@ -30,92 +30,163 @@
 
 #import "ASIHTTPRequest+OAuth.h"
 #import "SimpleGeo+Internal.h"
+#import <YAJL/YAJL.h>
 
 @implementation SimpleGeo (Internal)
 
-- (NSURL *)endpointForString:(NSString *)path
+#pragma mark Master Request Method
+
+- (void)sendHTTPRequest:(NSString *)type
+                  toURL:(NSString *)url
+             withParams:(NSDictionary *)params 
+               callback:(SGCallback *)callback
 {
-    NSURL *endpoint = [[[NSURL alloc] initWithString:path relativeToURL:url] autorelease];
-    NSLog(@"Endpoint: %@", endpoint);
-    return endpoint;
-}
-
-- (ASIHTTPRequest *)requestWithURL:(NSURL *)aURL
-{
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:aURL];
-    [request setDelegate:self];
-    [request setShouldRedirect:NO];
-    [request addRequestHeader:@"User-Agent" value:self.userAgent];
-    [request addRequestHeader:@"Accept" value:@"application/json, application/javascript, */*"];
-    [request signRequestWithClientIdentifier:consumerKey
-                                      secret:consumerSecret
-                             tokenIdentifier:nil
-                                      secret:nil
-                                 usingMethod:ASIOAuthHMAC_SHA1SignatureMethod];
-
-    return request;
-}
-
-- (NSDictionary *)markFeature:(SGFeature *)feature
-                      private:(BOOL)private
-{
-    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:[feature properties]];
-
-    if (private) {
-        [properties setValue:@"true"
-                      forKey:@"private"];
+    ASIHTTPRequest* request = nil;
+    if([type isEqualToString:@"POST"]) {
+        request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+        [request appendPostData:[[params yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
     } else {
-        [properties setValue:@"false"
-                      forKey:@"private"];
+        NSString *queryParameters = @"";
+        if(params && [params count])
+            queryParameters = [NSString stringWithFormat:@"?%@",
+                               [self normalizeRequestParameters:params]];
+        url = [url stringByAppendingString:queryParameters];
+        request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
     }
-
-    NSMutableDictionary *featureDict = [NSMutableDictionary dictionaryWithDictionary:[feature asDictionary]];
-    [featureDict setValue:properties
-                   forKey:@"properties"];
-
-    return featureDict;
+    
+    request.requestMethod = type;
+    if(consumerKey && consumerSecret) {
+        [request signRequestWithClientIdentifier:consumerKey
+                                          secret:consumerSecret
+                                 tokenIdentifier:nil
+                                          secret:nil
+                                     usingMethod:ASIOAuthHMAC_SHA1SignatureMethod];
+    }
+    
+    NSLog(@"Sending %@ to %@", type, url);
+    
+    request.userInfo = [NSDictionary dictionaryWithObject:callback forKey:@"callback"];    
+    [request setDelegate:self];
+    [request addRequestHeader:@"Accept" value:@"application/json"];
+    [request addRequestHeader:@"User-Agent" value:userAgent];
+    [request startAsynchronous];
 }
 
-- (NSString *)URLEncodedString:(NSString *)string
-{
+#pragma mark ASIHTTPRequest Delegate Methods
 
-    NSString *result = (NSString *) NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+- (void)requestFinished:(ASIHTTPRequest *)request
+{    
+    if(200 <= [request responseStatusCode] && [request responseStatusCode] < 300)
+        [self handleSuccess:request];
+    else
+        [self handleFailure:request];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [self handleFailure:request];
+}
+
+#pragma mark Dispatcher Methods
+
+- (void)handleSuccess:(ASIHTTPRequest *)request
+{
+    NSLog(@"Request succeeded");
+    
+    NSDictionary* userInfo = [request userInfo];
+    if(userInfo) {
+        SGCallback *callback = [userInfo objectForKey:@"callback"];
+        NSDictionary *response = [self jsonObjectForResponseData:[request responseData]];
+        if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.successMethod])
+            [callback.delegate performSelector:callback.successMethod 
+                                    withObject:response];    
+        #if NS_BLOCKS_AVAILABLE
+        if(callback.successBlock)
+            callback.successBlock(response);
+        #endif
+    }
+}
+
+- (void)handleFailure:(ASIHTTPRequest *)request
+{
+    NSLog(@"Request failed");
+    
+    NSDictionary* userInfo = [request userInfo];
+    if(userInfo) {
+        SGCallback *callback = [userInfo objectForKey:@"callback"];
+        if(callback) {
+            NSDictionary *userInfo = (NSDictionary*)[self jsonObjectForResponseData:[request responseData]];
+            if(!userInfo || ![userInfo isKindOfClass:[NSDictionary class]])
+                userInfo = [NSDictionary dictionary];
+            
+            NSError* error = [NSError errorWithDomain:[request.url description]
+                                                 code:[request responseStatusCode]
+                                             userInfo:userInfo];
+            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.failureMethod])
+                [callback.delegate performSelector:callback.failureMethod withObject:error];  
+            NSLog(@"request failed - %@", [error localizedDescription]);
+            
+            #if NS_BLOCKS_AVAILABLE
+            if(callback.failureBlock)
+                callback.failureBlock(error);
+            #endif
+        }
+    }
+}
+
+#pragma Helper Methods for Requests
+
+- (NSString *)baseEndpointForQuery:(SGQuery *)query
+{
+    if (query.point) return [NSString stringWithFormat:@"%f,%f.json",
+                             query.point.latitude,
+                             query.point.longitude];
+    else if (query.envelope) return [NSString stringWithFormat:@"%f,%f,%f,%f.json",
+                                     query.envelope.north,
+                                     query.envelope.west,
+                                     query.envelope.south,
+                                     query.envelope.east];
+    else return [NSString stringWithFormat:@"address.json"];
+}
+
+- (NSURL *)encodeURLString:(NSString *)string
+{
+    NSString *result = (NSString *) [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                               (CFStringRef)string,
                                                                                               NULL,
                                                                                               CFSTR("!*'();:@&=+$,/?#[]"),
-                                                                                              kCFStringEncodingUTF8));
-    return [result autorelease];
+                                                                                              kCFStringEncodingUTF8)) autorelease];
+    return [NSURL URLWithString:result];
 }
-
-- (NSString *)URLDecodedString:(NSString *)string
-{
-    NSString *result = (NSString *) NSMakeCollectable(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
-                                                                                                              (CFStringRef)string,
-                                                                                                              CFSTR(""),
-                                                                                                              kCFStringEncodingUTF8));
-    return [result autorelease];
-}
-
 
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters
 {
-    NSLog(@"%@",parameters);
     NSMutableArray *paramPairs = [NSMutableArray array];
     NSArray *paramNames = [parameters allKeys];
     for (NSString *paramName in paramNames) {
         NSObject *paramObject = [parameters objectForKey:paramName];
         NSArray *paramValues;
-        if (paramObject && [paramObject isKindOfClass:[NSString class]]) {
+        if (paramObject && ([paramObject isKindOfClass:[NSString class]] || [paramObject isKindOfClass:[NSNumber class]])) {
             paramValues = [NSArray arrayWithObject:paramObject];
         } else if (paramObject && [paramObject isKindOfClass:[NSArray class]]) {
             paramValues = (NSArray *)paramObject;
         }
-        for (NSString *paramValue in paramValues) {
-            [paramPairs addObject:[NSString stringWithFormat:@"%@=%@", paramName, [self URLEncodedString:paramValue]]];
+        for (NSObject *paramValue in paramValues) {
+            [paramPairs addObject:[NSString stringWithFormat:@"%@=%@", paramName, paramValue]];
         }
     }
     if ([paramPairs count] > 0) return [paramPairs componentsJoinedByString:@"&"];
     return nil;
+}
+
+- (NSDictionary *)jsonObjectForResponseData:(NSData *)data
+{
+    NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+    NSDictionary *jsonObject = nil;
+    if(jsonString)
+        jsonObject = [jsonString yajl_JSON];
+    [jsonString release];
+    return jsonObject;
 }
 
 @end

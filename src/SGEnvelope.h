@@ -50,6 +50,8 @@
 //! Eastern longitude (right coordinate)
 @property (nonatomic, assign) double east;
 
+#pragma mark Instantiation Methods
+
 /*!
  * Create a bounding box from edge coordinates
  * @param north Northern latitude

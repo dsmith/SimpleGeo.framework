@@ -32,7 +32,16 @@
 
 @interface SGPoint (Private)
 
-+ (SGPoint *)pointWithArray:(NSArray *)array;
-+ (SGPoint *)pointWithDictionary:(NSDictionary *)dictionary;
+/*!
+ * Create a point from an array of coordinates [lon, lat]
+ * @param point Point array
+ */
++ (SGPoint *)pointWithArray:(NSArray *)point;
+
+/*!
+ * Construct a point from an array of coordinates [lon, lat]
+ * @param point Point array
+ */
+- (id)initWithArray:(NSArray *)point;
 
 @end

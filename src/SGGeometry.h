@@ -29,8 +29,36 @@
 //
 
 /*!
- * Abstract Geometry class/factory.
+ * Abstract Geometry class/factory
  */
 @interface SGGeometry : NSObject
+{
+    NSDate *created;
+}
+
+@property (nonatomic, retain) NSDate *created;
+
+#pragma mark GeoJSON -> SGGeometry
+
+/*!
+ * Create an appropriate SGGeometry object from
+ * a valid GeoJSON Geometry dictionary
+ * @param geoJSONGeometry   GeoJSON Geometry dictionary
+ */
++ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry;
+
+/*!
+ * Construct an appropriate SGGeometry object from
+ * a valid GeoJSON Geometry dictionary
+ * @param geoJSONGeometry   GeoJSON Geometry dictionary
+ */
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry;
+
+#pragma mark SGGeometry -> GeoJSON
+
+/*!
+ * SGGeometry object as a GeoJSON Geometry dictionary
+ */
+- (NSDictionary *)asGeoJSON;
 
 @end

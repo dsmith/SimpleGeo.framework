@@ -29,7 +29,7 @@
 //
 
 #import "SimpleGeoTest.h"
-#import "SGPolygon.h"
+#import "NSArray+GeoJSON.h"
 
 @implementation SimpleGeoTest
 
@@ -42,9 +42,8 @@
 
 - (SimpleGeo *)client
 {
-    return [SimpleGeo clientWithDelegate:self
-                             consumerKey:SGTestKey
-                          consumerSecret:SGTestSecret];
+    return [SimpleGeo clientWithConsumerKey:SGTestKey
+                             consumerSecret:SGTestSecret];
 }
 
 - (SGPoint *)point
@@ -61,75 +60,65 @@
                                     east:-122.251];
 }
 
-#pragma mark Client Tests
+#pragma mark Basic Callbacks
 
-- (void)testCreateClientWithDefaultURL
+- (SGCallback *)blockCallback
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", SG_HOSTNAME]];
-    GHTestLog(@"SimpleGeo URL: %@", url);
-    SimpleGeo *client = [SimpleGeo clientWithDelegate:self
-                                          consumerKey:@"" 
-                                       consumerSecret:@"" 
-                                               useSSL:NO];
-
-    GHAssertEqualObjects([client url], url, @"URLs don't match.");
+    return [SGCallback callbackWithSuccessBlock:[self successBlock]
+                                   failureBlock:[self failureBlock]];
 }
 
-- (void)testCreateClientUsingSSL
+- (SGCallback *)delegateCallback
 {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@", SG_HOSTNAME]];
-
-    SimpleGeo *client = [SimpleGeo clientWithDelegate:self
-                                          consumerKey:@"" 
-                                       consumerSecret:@"" 
-                                               useSSL:YES];
-
-    GHAssertTrue([client isSSLEnabled], @"SSL should be enabled");
-    GHAssertEqualObjects([client url], url, @"URLs don't match.");
+    return [SGCallback callbackWithDelegate:self
+                              successMethod:@selector(requestDidSucceed:)
+                              failureMethod:@selector(requestDidFail:)];
 }
 
-#pragma mark Feature Request Tests
+#pragma mark Basic Handler Blocks
 
-- (void)testGetCategories
+- (SGSuccessBlock)successBlock
 {
-    [self prepare];
-    [[self client] getCategories];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+    return [[^(NSDictionary *response) {
+        NSLog(@"%@", response);
+        [self notify:kGHUnitWaitStatusSuccess];
+    } copy] autorelease];
 }
 
-- (void)testGetFeature
+- (SGFailureBlock)failureBlock
 {
-    [self prepare];
-    [[self client] getFeatureWithHandle:@"SG_2AziTafTLNReeHpRRkfipn_37.766713_-122.428938@1291796505"];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+    return [[^(NSError *error) {
+        NSLog(@"%@", error.description);
+        [self notify:kGHUnitWaitStatusFailure];
+    } copy] autorelease];
 }
 
-#pragma mark SimpleGeoDelegate Methods
+#pragma mark Basic Handler Delegate Methods
 
-- (void)requestDidFinish:(ASIHTTPRequest *)request
+- (void)requestDidSucceed:(NSDictionary *)response
 {
-    GHTestLog(@"Request did finish");
+    NSLog(@"%@", response);
+    [self notify:kGHUnitWaitStatusSuccess];
 }
 
-- (void)requestDidFail:(ASIHTTPRequest *)request
+- (void)requestDidFail:(NSError *)error
 {
-    GHTestLog(@"Request did fail");
+    NSLog(@"%@", error.description);
+    [self notify:kGHUnitWaitStatusFailure];
 }
 
-- (void)didLoadCategories:(NSArray *)categories
-{
-    GHTestLog(@"Did load categories: %@", categories);
-    int numCategories = [categories count];
-    GHAssertGreaterThan(numCategories, 0, @"Should return a list of categories");
-    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetCategories)];
-}
+#pragma mark Basic Check Methods
 
-- (void)didLoadFeature:(SGFeature *)feature
-                handle:(NSString *)handle
+- (void)checkGeoJSONCollectionConversion:(NSDictionary *)response
+                                    type:(GeoJSONCollectionType)type
 {
-    GHTestLog(@"Did load feature %@: %@", handle, [feature asDictionary]);
-    GHAssertNotNil(feature,@"Valid handle. Should return one feature");
-    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetFeature)];
+    NSArray *features = [NSArray arrayWithGeoJSONCollection:response];
+    NSDictionary *featureCollection = [features asGeoJSONCollection:type];
+    NSMutableDictionary *cleanResponse = [NSMutableDictionary dictionary];
+    [cleanResponse setValue:[response objectForKey:@"type"] forKey:@"type"];
+    [cleanResponse setValue:[response objectForKey:@"features"] forKey:@"features"];
+    [cleanResponse setValue:[response objectForKey:@"geometries"] forKey:@"geometries"];
+    GHAssertEqualObjects(cleanResponse, featureCollection, @"Feature's GeoJSON should match response geoJSON");
 }
 
 @end

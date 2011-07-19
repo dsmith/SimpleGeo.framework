@@ -30,6 +30,11 @@
 
 #import "SGTypes.h"
 
+#pragma mark GeoJSON Types
+
+GeoJSONCollectionType const GeoJSONCollectionTypeFeature = @"FeatureCollection";
+GeoJSONCollectionType const GeoJSONCollectionTypeGeometry = @"GeometryCollection";
+
 #pragma mark Context Filters
 
 SGContextFilter const SGContextFilterQuery = @"query";
@@ -39,14 +44,16 @@ SGContextFilter const SGContextFilterAddress = @"address";
 SGContextFilter const SGContextFilterDemographics = @"demographics";
 SGContextFilter const SGContextFilterIntersections = @"intersections";
 
-#pragma mark Storage Queries
+#pragma mark Storage Property Types
 
 SGStoredPropertyType const SGStoredPropertyTypeBoolean = @"boolean";
 SGStoredPropertyType const SGStoredPropertyTypeNumber = @"number";
 SGStoredPropertyType const SGStoredPropertyTypeString = @"string";
 
-SGSortType const SGSortTypeDistance = @"";
-SGSortType const SGSortTypeCreatedAscending = @"created";
-SGSortType const SGSortTypeCreatedDescending = @"-created";
-SGSortType const SGSortTypePropertyAscending = @"property";
-SGSortType const SGSortTypePropertyDescending = @"-property";
+#pragma mark Storage Sort Orders
+
+SGSortOrder const SGSortOrderDistance = @"";
+SGSortOrder const SGSortOrderCreatedAscending = @"created";
+SGSortOrder const SGSortOrderCreatedDescending = @"-created";
+SGSortOrder const SGSortOrderPropertyAscending = @"property";
+SGSortOrder const SGSortOrderPropertyDescending = @"-property";

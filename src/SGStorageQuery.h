@@ -39,7 +39,7 @@
 {
     NSString *layer;
     NSString *cursor;
-    SGSortType sortType;
+    SGSortOrder sortType;
     
     NSDate *startDate;
     NSDate *endDate;
@@ -58,7 +58,7 @@
 @property (nonatomic, retain) NSString *cursor;
 
 //! Sorting method for query
-@property (nonatomic, retain) SGSortType sortType;
+@property (nonatomic, retain) SGSortOrder sortType;
 
 //! Start date for query
 @property (nonatomic, retain) NSDate *startDate;
@@ -81,6 +81,8 @@
 //! Property end value for a range-based property filtering
 @property (nonatomic, retain) NSObject *propertyEndValue;
 
+#pragma mark Instantiation Methods
+
 /*!
  * Create a point-based Storage query
  * @param point     Point
@@ -90,7 +92,7 @@
                layer:(NSString *)layer;
 
 /*!
- * Create an address-based Storage quer
+ * Create an address-based Storage query
  * @param address   Address
  * @param layer     Layer
  */
@@ -98,7 +100,15 @@
                  layer:(NSString *)layer;
 
 /*!
- * Construct a point-based Storage quer
+ * Construct an envelope-based Storage query
+ * @param envelope  Envelope
+ * @param layer     Layer
+ */
++ (id)queryWithEnvelope:(SGEnvelope *)envelope
+                  layer:(NSString *)layer;
+
+/*!
+ * Construct a point-based Storage query
  * @param point     Point
  * @param layer     Layer
  */
@@ -106,12 +116,22 @@
               layer:(NSString *)layer;
 
 /*!
- * Construct an address-based Storage quer
+ * Construct an address-based Storage query
  * @param address   Address
  * @param layer     Layer
  */
 - (id)initWithAddress:(NSString *)address
                 layer:(NSString *)layer;
+
+/*!
+ * Construct an envelope-based Storage query
+ * @param envelope  Envelope
+ * @param layer     Layer
+ */
+- (id)initWithEnvelope:(SGEnvelope *)anEnvelope
+                 layer:(NSString *)aLayer;
+
+#pragma mark Convenience Methods
 
 /*!
  * Set a property name by which to query

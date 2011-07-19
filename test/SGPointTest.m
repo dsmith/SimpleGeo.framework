@@ -36,19 +36,4 @@
 
 @implementation SGPointTest
 
-- (BOOL)shouldRunOnMainThread
-{
-    return NO;
-}
-
-- (void)testPointWithLatitudeAndLongitude
-{
-    double latitude = 40.0;
-    double longitude = -105.0;
-    SGPoint *point = [SGPoint pointWithLatitude:latitude longitude:longitude];
-
-    GHAssertEquals([point latitude], latitude, @"Latitudes don't match.");
-    GHAssertEquals([point longitude], longitude, @"Longitudes don't match.");
-}
-
 @end

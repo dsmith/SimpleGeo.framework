@@ -37,16 +37,18 @@
  */
 @interface SGPoint : SGGeometry
 {
-  @private
+    @private
     double latitude;
     double longitude;
 }
 
 //! Latitude (y coordinate)
-@property (readonly) double latitude;
+@property (nonatomic, readonly) double latitude;
 
 //! Longitude (x coordinate)
-@property (readonly) double longitude;
+@property (nonatomic, readonly) double longitude;
+
+#pragma mark Instantiation Methods
 
 /*!
  * Create a point from a pair of coordinates
@@ -63,6 +65,8 @@
  */
 - (id)initWithLatitude:(double)latitude
              longitude:(double)longitude;
+
+#pragma mark Convenience Methods
 
 /*!
  * Determine if the point lies within a given polygon

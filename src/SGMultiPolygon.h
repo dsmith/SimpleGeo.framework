@@ -33,14 +33,16 @@
 @class SGPoint;
 
 /*!
- * MultiPolygon representation.
+ * MultiPolygon representation
  */
 @interface SGMultiPolygon : SGGeometry {
     NSArray *polygons;
 }
 
 //! Polygons that define this multi-polygon
-@property (retain,readonly) NSArray *polygons;
+@property (nonatomic, retain) NSArray *polygons;
+
+#pragma mark Instantiation Methods
 
 /*!
  * Create a multi-polygon from a set of Polygons
@@ -53,6 +55,8 @@
  * @param polygons Polygons
  */
 - (id)initWithPolygons:(NSArray *)polygons;
+
+#pragma mark Convenience Methods
 
 /*!
  * Determine if a given point lies within the bounds of the polygon

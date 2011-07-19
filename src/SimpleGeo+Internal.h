@@ -32,12 +32,30 @@
 
 @interface SimpleGeo (Internal)
 
-- (NSURL *)endpointForString:(NSString *)path;
-- (ASIHTTPRequest *)requestWithURL:(NSURL *)aURL;
-- (NSDictionary *)markFeature:(SGFeature *)feature
-                      private:(BOOL)private;
-- (NSString *)URLEncodedString:(NSString *)string;
-- (NSString *)URLDecodedString:(NSString *)string;
+#pragma mark Master Request Method
+
+/*!
+ * Send an API request
+ * @param type      Request type
+ * @param url       Request URL
+ * @param params    Request parameters
+ * @param callback  Request callback
+ */
+- (void)sendHTTPRequest:(NSString *)type
+                  toURL:(NSString *)url
+             withParams:(NSDictionary *)parameters 
+               callback:(SGCallback *)callback;
+
+#pragma mark Dispatcher Methods
+
+- (void)handleSuccess:(ASIHTTPRequest *)request;
+- (void)handleFailure:(ASIHTTPRequest *)request;
+
+#pragma Helper Methods for Requests
+
+- (NSString *)baseEndpointForQuery:(SGQuery *)query;
+- (NSURL *)encodeURLString:(NSString *)string;
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
+- (NSDictionary *)jsonObjectForResponseData:(NSData *)data;
 
 @end

@@ -32,7 +32,16 @@
 
 @interface SGPolygon (Private)
 
-+ (SGPolygon *)polygonWithArray:(NSArray *)array;
-+ (SGPolygon *)polygonWithDictionary:(NSDictionary *)dictionary;
+/*!
+ * Create a polygon from an array of coordinates
+ * @param polygon Polygon array
+ */
++ (SGPolygon *)polygonWithArray:(NSArray *)polygon;
+
+/*!
+ * Create a polygon from an array of coordinates
+ * @param polygon Polygon array
+ */
+- (id)initWithArray:(NSArray *)polygon;
 
 @end

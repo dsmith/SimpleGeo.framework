@@ -29,52 +29,95 @@
 //
 
 #import "SGPolygon.h"
+#import "SGPolygon+Private.h"
+#import "SGPoint.h"
 #import "SGPoint+Private.h"
 
 @implementation SGPolygon
 
 @synthesize rings;
 
-+ (SGPolygon *)polygonWithArray:(NSArray *)coordinates
-{
-    NSMutableArray *rings = [NSMutableArray arrayWithCapacity:[coordinates count]];
-
-    for (NSArray *ring in coordinates) {
-        NSMutableArray *r = [NSMutableArray arrayWithCapacity:[ring count]];
-        for (NSArray *coordinate in ring) {
-            [r addObject:[SGPoint pointWithLatitude:[[coordinate objectAtIndex:1] doubleValue]
-                                          longitude:[[coordinate objectAtIndex:0] doubleValue]]];
-        }
-        [rings addObject:r];
-    }
-
-    return [SGPolygon polygonWithRings:[NSArray arrayWithArray:rings]];
-}
-
-+ (SGPolygon *)polygonWithDictionary:(NSDictionary *)dictionary
-{
-    if ([[dictionary objectForKey:@"type"] isEqual:@"Polygon"]) {
-        return [SGPolygon polygonWithArray:[dictionary objectForKey:@"coordinates"]];
-    } else {
-        NSLog(@"%@ could not be converted into a polygon.", dictionary);
-        return nil;
-    }
-}
+#pragma mark Instantiation Methods
 
 + (SGPolygon *)polygonWithRings:(NSArray *)rings
 {
     return [[[SGPolygon alloc] initWithRings:rings] autorelease];
 }
 
++ (SGPolygon *)polygonWithBoundary:(NSArray *)boundary
+                             holes:(NSArray *)holes
+{
+    return [[[SGPolygon alloc] initWithBoundary:boundary
+                                          holes:holes] autorelease];
+}
+
++ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    return [[[SGPolygon alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
+}
+
 - (id)initWithRings:(NSArray *)someRings
 {
     self = [super init];
-
     if (self) {
         rings = [someRings retain];
     }
-
     return self;
+}
+
+- (id)initWithBoundary:(NSArray *)boundary
+                 holes:(NSArray *)holes
+{
+    NSMutableArray *allRings = [NSMutableArray arrayWithArray:boundary];
+    [allRings addObjectsFromArray:holes];
+    return [self initWithRings:allRings];
+}
+
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    NSString *type = [geoJSONGeometry objectForKey:@"type"];
+    NSArray *coordinates = [geoJSONGeometry objectForKey:@"coordinates"];
+    if (type && [type isEqual:@"Polygon"] && coordinates) {
+        return [self initWithArray:coordinates];
+    }
+    return nil;
+}
+
+- (void)dealloc
+{
+    [rings release];
+    [super dealloc];
+}
+
+#pragma mark Convenience Methods
+
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableArray *newRings = [NSMutableArray arrayWithCapacity:[rings count]];
+    for (NSArray *ring in rings) {
+        NSMutableArray *newRing = [NSMutableArray arrayWithCapacity:[ring count]];
+        for (SGPoint *point in ring) {
+            [newRing addObject:[NSArray arrayWithObjects:[NSNumber numberWithDouble:point.longitude],
+                                [NSNumber numberWithDouble:point.latitude], nil]];
+        }
+        [newRings addObject:newRing];
+    }
+    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    [geoJSON setValue:@"Polygon" forKey:@"type"];
+    [geoJSON setValue:newRings forKey:@"coordinates"];
+    return geoJSON;
+}
+
+- (NSArray *)boundary
+{
+    return [rings objectAtIndex:0];
+}
+
+- (NSArray *)holes
+{
+    NSMutableArray *holesArray = [NSMutableArray arrayWithArray:rings];
+    [holesArray removeObjectAtIndex:0];
+    return holesArray;
 }
 
 - (BOOL)containsPoint:(SGPoint *)point
@@ -92,16 +135,12 @@
     return contains;
 }
 
-- (void)dealloc
-{
-    [rings release];
-    [super dealloc];
-}
-
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<SGPolygon: %@>", rings];
+    return [[self asGeoJSON] description];
 }
+
+#pragma mark Comparison Methods
 
 - (BOOL)isEqual:(id)object
 {
@@ -111,6 +150,26 @@
 - (NSUInteger)hash
 {
     return [rings hash];
+}
+
+#pragma mark Private Methods
+
++ (SGPolygon *)polygonWithArray:(NSArray *)polygon
+{
+    return [[[SGPolygon alloc] initWithArray:polygon] autorelease];
+}
+
+- (id)initWithArray:(NSArray *)polygon
+{
+    NSMutableArray *allRings = [NSMutableArray arrayWithCapacity:[polygon count]];
+    for (NSArray *ring in polygon) {
+        NSMutableArray *thisRing = [NSMutableArray arrayWithCapacity:[ring count]];
+        for (NSArray *coordinate in ring) {
+            [thisRing addObject:[SGPoint pointWithArray:coordinate]];
+        }
+        [allRings addObject:thisRing];
+    }
+    return [self initWithRings:allRings];
 }
 
 @end

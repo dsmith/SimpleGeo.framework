@@ -29,144 +29,101 @@
 //
 
 #import "SGStoredRecord.h"
-#import "SGStoredRecord+Private.h"
 
 @implementation SGStoredRecord
 
-@synthesize created, layer, layerLink;
+@synthesize layer, layerLink;
 
-+ (SGStoredRecord *)recordWithDictionary:(NSDictionary *)data
-{
-    return [[[SGStoredRecord alloc] initWithId:nil
-                              dictionary:data] autorelease];
-}
-
-+ (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created
-{
-    return [SGStoredRecord recordWithCreatedTimestamp:created
-                                          layer:nil];
-}
-
-+ (SGStoredRecord *)recordWithLayer:(NSString *)layer
-{
-    return [SGStoredRecord recordWithCreatedTimestamp:0
-                                          layer:layer];
-}
-+ (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created
-                                         layer:(NSString *)layer
-{
-    return [[[SGStoredRecord alloc] initWithCreatedTimestamp:created
-                                                 layer:layer] autorelease];
-}
+#pragma mark Instantiation Methods
 
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                     createdTimestamp:(NSTimeInterval)created
+                                layer:(NSString *)layerName
 {
     return [SGStoredRecord recordWithFeature:feature
-                      createdTimestamp:created
-                                 layer:nil];
+                                       layer:layerName
+                                   timestamp:[NSDate date]];
 }
 
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                                layer:(NSString *)layer
-{
-    return [SGStoredRecord recordWithFeature:feature
-                      createdTimestamp:0
-                                 layer:layer];
-}
-
-+ (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                     createdTimestamp:(NSTimeInterval)created
-                                layer:(NSString *)layer
+                                layer:(NSString *)layerName
+                            timestamp:(NSDate *)dateCreated
 {
     return [[[SGStoredRecord alloc] initWithFeature:feature
-                             createdTimestamp:created
-                                        layer:layer] autorelease];
+                                             layer:layerName
+                                          timestamp:dateCreated] autorelease];
 }
 
-- (id)init
++ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    return [self initWithLayer:nil];
+    return [[[SGStoredRecord alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
-- (id)initWithCreatedTimestamp:(NSTimeInterval)timestampCreated
+- (id)initWithFeature:(SGFeature *)feature
+                layer:(NSString *)layerName
 {
-    return [self initWithCreatedTimestamp:timestampCreated
-                                    layer:nil];
+    return [self initWithFeature:feature
+                           layer:layerName
+                       timestamp:[NSDate date]];
 }
 
-- (id)initWithLayer:(NSString *)theLayer
+- (id)initWithFeature:(SGFeature *)feature
+                layer:(NSString *)layerName
+            timestamp:(NSDate *)dateCreated
 {
-    return [self initWithCreatedTimestamp:0
-                                    layer:theLayer];
-}
-- (id)initWithCreatedTimestamp:(NSTimeInterval)createdTimestamp
-                         layer:(NSString *)theLayer
-{
-    self = [super init];
-
+    self = [super initWithHandle:[feature handle]
+                        geometry:[feature geometry]
+                      properties:[feature properties]];
     if (self) {
-        created = createdTimestamp;
-        layer = [theLayer retain];
+        layer = [layerName retain];
+        created = [dateCreated retain];
     }
-
     return self;
 }
 
-- (id)initWithFeature:(SGFeature *)feature
-     createdTimestamp:(NSTimeInterval)createdTimestamp
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    return [self initWithFeature:feature
-                createdTimestamp:createdTimestamp
-                           layer:nil];
-}
-
-- (id)initWithFeature:(SGFeature *)feature
-                layer:(NSString *)theLayer
-{
-    return [self initWithFeature:feature
-                createdTimestamp:0
-                           layer:theLayer];
-}
-
-- (id)initWithFeature:(SGFeature *)feature
-     createdTimestamp:(NSTimeInterval)createdTimestamp
-                layer:(NSString *)theLayer
-{
-    self = [super initWithId:[feature featureId]
-                    geometry:[feature geometry]
-                  properties:[feature properties]];
-
+    self = [super initWithGeoJSON:geoJSONFeature];
     if (self) {
-        created = createdTimestamp;
-        layer = [theLayer retain];
+        // layerLink
+        NSDictionary *layerLinkDict = [geoJSONFeature objectForKey:@"layerLink"];
+        if (layerLinkDict) layerLink = [[layerLinkDict objectForKey:@"href"] retain];
+        // layer
+        layer = [[properties objectForKey:@"layer"] retain];
+        [properties removeObjectForKey:@"layer"];
     }
-
     return self;
+}
+
+#pragma mark Convenience Methods
+
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
+    [[dictionary objectForKey:@"properties"] setValue:layer forKey:@"layer"];
+    if (layerLink) [dictionary setValue:[NSDictionary dictionaryWithObject:layerLink forKey:@"href"] forKey:@"layerLink"];
+    return dictionary;
+}
+
+#pragma mark Comparison Methods
+
+- (BOOL)isEqual:(id)object
+{
+    if (object == self) return YES;
+    if (!object || ![object isKindOfClass:[self class]]) return NO;
+    return ([super isEqual:object] &&
+            [layer isEqual:[object layer]]);
+}
+
+- (NSUInteger)hash
+{
+    return [super hash] + [layer hash];
 }
 
 - (void)dealloc
 {
-    [distance release];
     [layer release];
+    [layerLink release];
     [super dealloc];
-}
-
-- (NSDictionary *)asDictionary
-{
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super asDictionary]];
-
-    if (created) [dict setObject:[NSNumber numberWithDouble:created] forKey:@"created"];
-    [dict setValue:layer forKey:@"layer"];
-    [dict setValue:layerLink forKey:@"layerLink"];
-
-    return [NSDictionary dictionaryWithDictionary:dict];
-}
-
-
-- (id)JSON
-{
-    return [self asDictionary];
 }
 
 @end

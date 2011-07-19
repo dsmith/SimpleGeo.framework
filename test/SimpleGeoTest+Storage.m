@@ -30,125 +30,180 @@
 
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Storage.h"
+#import "NSArray+GeoJSON.h"
 
 @implementation SimpleGeoTest (Storage)
 
-- (void)testGetLayers
-{
-    [self prepare];
-    [[self client] getLayers];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
+#pragma mark Records Requests Tests
 
-- (void)testGetRecord
+- (void)testGetRecordAndConversion
 {
     [self prepare];
-    [[self client] getRecordFromLayer:SGTestLayer
-                               withId:SGTestRecordID];
+    [[self client] getRecord:SGTestRecordID
+                     inLayer:SGTestLayer
+                    callback:[SGCallback callbackWithSuccessBlock:
+                              ^(NSDictionary *response) {
+                                  SGStoredRecord *record = [SGStoredRecord recordWithGeoJSON:response];
+                                  NSLog(@"SGStoredRecord: %@", record);
+                                  GHAssertEqualObjects(response, [record asGeoJSON],
+                                                       @"Record's GeoJSON should match response geoJSON");
+                                  [self successBlock](response);
+                              } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetRecordsForPoint
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point]];
-    [testQuery setLayer:SGTestLayer];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetRecordsForAddress
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestLayer];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestLayer];
+    [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsWithLimit
+- (void)testGetRecordsForEnvelope
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [testQuery setLimit:3];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithEnvelope:[self envelope] layer:SGTestLayer];
+    [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsWithComplexQuery
+- (void)testGetRecordsWithLimitsAndRecordCollectionConversion
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [testQuery setRadius:5.0];
-    [testQuery setStartDate:[NSDate dateWithTimeIntervalSince1970:0]];
-    [testQuery setEndDate:[NSDate date]];
-    [testQuery setSortType:SGSortTypeCreatedDescending];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [query setRadius:15.0];
+    [query setLimit:10];
+    [[self client] getRecordsForQuery:query
+                             callback:[SGCallback callbackWithSuccessBlock:
+                                       ^(NSDictionary *response) {
+                                           GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
+                                                                   query.limit, @"Should return no more records than the limit");
+                                           [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeFeature];
+                                           [self successBlock](response);
+                                       } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsWithProperty
+- (void)testGetRecordsInDateRangeAndSortingScheme
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [testQuery setProperty:SGTestProperty ofType:SGStoredPropertyTypeString equals:@"Airport"];
-    [testQuery setSortType:SGSortTypePropertyDescending];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:-20000]];
+    [query setStartDate:[NSDate date]];
+    [query setSortType:SGSortOrderCreatedDescending];
+    [[self client] getRecordsForQuery:query
+                             callback:[SGCallback callbackWithSuccessBlock:
+                                       ^(NSDictionary *response) {
+                                           // TODO check dates
+                                           // TODO check sorting
+                                           [self successBlock](response);
+                                       } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsWithPropertyRange
+- (void)testGetRecordsMatchingStringProperty
 {
     [self prepare];
-    SGStorageQuery *testQuery = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [testQuery setProperty:SGTestProperty ofType:SGStoredPropertyTypeString];
-    [testQuery setPropertyStartValue:@"A"];
-    [testQuery setPropertyEndValue:@"C"];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getRecordsForQuery:testQuery];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [query setProperty:SGTestPropertyString
+                ofType:SGStoredPropertyTypeString
+                equals:SGTestPropertyStringValue];
+    [[self client] getRecordsForQuery:query
+                             callback:[SGCallback callbackWithSuccessBlock:
+                                       ^(NSDictionary *response) {
+                                           // TODO check property
+                                           [self successBlock](response);
+                                       } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-#pragma mark SimpleGeoStorageDelegate Methods
-
-- (void)didLoadLayers:(NSArray *)layers
-           withCursor:(NSString *)cursor
+- (void)testGetRecordsMatchingBooleanProperty
 {
-    GHTestLog(@"Did load layers: %@", layers);
-    
-    int numLayers = [layers count];
-    GHAssertGreaterThan(numLayers, 0, @"Valid user. Response should contain at lease one layer.");
-    
-    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetLayers)];
+    // property = value
 }
 
-- (void)didLoadRecord:(SGStoredRecord *)record
-            fromLayer:(NSString *)layer
-               withId:(NSString *)identifier
+- (void)testGetRecordsMatchingNumberPropertyRange
 {
-    GHTestLog(@"Did load record y: %@", [record asDictionary]);
-    GHAssertNotNil(record, @"Valid query. Should return record.");
-    GHAssertEquals(layer, SGTestLayer, @"Layer name should be returned");
-    [self notify:kGHUnitWaitStatusSuccess forSelector:@selector(testGetRecord)];
+    [self prepare];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    [query setProperty:SGTestPropertyNumber ofType:SGStoredPropertyTypeNumber];
+    [query setPropertyStartValue:[NSNumber numberWithInt:SGTestPropertyNumberStart]];
+    [query setPropertyEndValue:[NSNumber numberWithInt:SGTestPropertyNumberEnd]];
+    [[self client] getRecordsForQuery:query
+                             callback:[SGCallback callbackWithSuccessBlock:
+                                       ^(NSDictionary *response) {
+                                           // TODO check property range
+                                           [self successBlock](response);
+                                       } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)didLoadRecords:(SGFeatureCollection *)records
-            forSGQuery:(SGStorageQuery *)query
+- (void)testGetRecordHistory
 {
-    GHTestLog(@"Did load records for query: %@", [query asDictionary]);
-    GHTestLog(@"With results: %@", [[records.features objectAtIndex:0] description]);
-    
-    /* Check records count */    
-    int numParts = [records.features count];
-    GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
-    if (query.limit != SGDefaultLimit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
-    
-    SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
-    [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
+    [self prepare];
+    [[self client] getHistoryForRecord:SGTestRecordID
+                               inLayer:SGTestLayer
+                                 limit:[NSNumber numberWithInt:SGTestLimit]
+                                cursor:nil
+                              callback:[SGCallback callbackWithSuccessBlock:
+                                        ^(NSDictionary *response) {
+                                            GHAssertLessThanOrEqual((int)[[response objectForKey:@"geometries"] count],
+                                                                   SGTestLimit, @"Should return no more history records than the limit");
+                                            [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeGeometry];
+                                            [self successBlock](response);
+                                        } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
+
+- (void)testGetRecordHistoryWithCursor
+{
+    // history pagination
+}
+
+#pragma mark Records Manipulation Tests
+
+// add
+// add many
+// update
+// update many
+// delete
+
+#pragma mark Layers Request Tests
+
+- (void)testGetLayer
+{
+    [self prepare];
+    [[self client] getLayer:SGTestLayer callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetLayers
+{
+    [self prepare];
+    [[self client] getLayersWithCallback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetLayersWithCursor
+{
+    [self prepare];
+    [[self client] getLayersWithCursor:SGTestLayerCursor callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+#pragma mark Layers Manipulation Tests
+
+// add layer
+// update layer
+// delete layer
 
 @end

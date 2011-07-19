@@ -39,9 +39,6 @@
     SGPoint *point;
     NSString *address;
     SGEnvelope *envelope;
-    NSDictionary *userInfo;
-    id target;
-    SEL action;
 }
 
 //! Point for a point-based API query
@@ -53,14 +50,7 @@
 //! Envelope for a bounding box API query
 @property (nonatomic, readonly) SGEnvelope *envelope;
 
-//! User info attached to the API query
-@property (nonatomic, retain) NSDictionary *userInfo;
-
-//! Delegate object for the API query
-@property (nonatomic, retain) id target;
-
-//! Delegate action for the API query
-@property (nonatomic, assign) SEL action;
+#pragma mark Instantiation Methods
 
 /*!
  * Create a point-based API query
@@ -98,8 +88,10 @@
  */
 - (id)initWithEnvelope:(SGEnvelope *)envelope;
 
+#pragma mark Convenience Methods
+
 /*!
- * Return an NSDictionary representation of the query
+ * A dictionary representation of the query
  */
 - (NSDictionary *)asDictionary;
 

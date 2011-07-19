@@ -35,6 +35,8 @@
 
 @synthesize radius, limit;
 
+#pragma mark Instantiation Methods
+
 - (id)init
 {
     self = [super init];
@@ -45,17 +47,14 @@
     return self;
 }
 
+#pragma mark Convenience Methods
+
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
     [dictionary setValue:[NSNumber numberWithDouble:radius] forKey:@"radius"];
     [dictionary setValue:[NSNumber numberWithInt:limit] forKey:@"limit"];
     return dictionary;
-}
-
--(void)dealloc
-{
-    [super dealloc];
 }
 
 @end

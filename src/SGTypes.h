@@ -33,6 +33,12 @@
 #define SGDefaultLimit 25
 #define SGDefaultRadius 10.0
 
+#pragma mark GeoJSON Types
+
+typedef NSString * GeoJSONCollectionType;
+extern GeoJSONCollectionType const GeoJSONCollectionTypeFeature;
+extern GeoJSONCollectionType const GeoJSONCollectionTypeGeometry;
+
 #pragma mark Context Filters
 
 typedef NSString * SGContextFilter;
@@ -43,19 +49,21 @@ extern SGContextFilter const SGContextFilterAddress;
 extern SGContextFilter const SGContextFilterDemographics;
 extern SGContextFilter const SGContextFilterIntersections;
 
-#pragma mark Storage Queries
+#pragma mark Storage Property Types
 
 typedef NSString * SGStoredPropertyType;
 extern SGStoredPropertyType const SGStoredPropertyTypeBoolean;
 extern SGStoredPropertyType const SGStoredPropertyTypeNumber;
 extern SGStoredPropertyType const SGStoredPropertyTypeString;
 
-typedef NSString * SGSortType;
-extern SGSortType const SGSortTypeDistance;
-extern SGSortType const SGSortTypeCreatedAscending;
-extern SGSortType const SGSortTypeCreatedDescending;
-extern SGSortType const SGSortTypePropertyAscending;
-extern SGSortType const SGSortTypePropertyDescending;
+#pragma mark Storage Sort Orders
+
+typedef NSString * SGSortOrder;
+extern SGSortOrder const SGSortOrderDistance;
+extern SGSortOrder const SGSortOrderCreatedAscending;
+extern SGSortOrder const SGSortOrderCreatedDescending;
+extern SGSortOrder const SGSortOrderPropertyAscending;
+extern SGSortOrder const SGSortOrderPropertyDescending;
 
 #pragma mark Feature Types
 

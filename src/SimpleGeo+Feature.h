@@ -1,8 +1,8 @@
 //
-//  SGStoredRecord+Private.h
+//  SimpleGeo+Feature.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,12 +28,30 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGStoredRecord.h"
+#import "SimpleGeo.h"
+@class SGCallback;
 
-@interface SGStoredRecord (Private)
+/*!
+ * Client support for Basic API requests
+ */
+@interface SimpleGeo (Feature)
 
-+ (SGStoredRecord *)recordWithDictionary:(NSDictionary *)data;
-- (id)initWithId:(NSString *)identifier
-      dictionary:(NSDictionary *)data;
+#pragma mark Feature Request Methods
+
+/*!
+ * Get a feature with a specific handle
+ * @param handle    Feature handle
+ * @param zoom      Zoom (complexity of returned geometry) (optional)
+ * @param callback  Request callback
+ */
+- (void)getFeatureWithHandle:(NSString *)handle
+                        zoom:(NSNumber *)zoom
+                    callback:(SGCallback *)callback;
+
+/*!
+ * Get the overall list of categories
+ * @param callback  Request callback
+ */
+- (void)getCategoriesWithCallback:(SGCallback *)callback;
 
 @end

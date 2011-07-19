@@ -29,212 +29,124 @@
 //
 
 #import "SGFeature.h"
-#import "SGFeature+Private.h"
-#import "SGGeometry+Private.h"
+#import "SGGeometry.h"
 
 @implementation SGFeature
 
-@synthesize featureId, geometry, properties, distance, selfLink;
+@synthesize handle, geometry, properties, created, distance, selfLink;
 
-+ (SGFeature *)featureWithId:(NSString *)identifier
+#pragma mark Instantiation Methods
+
++ (SGFeature *)featureWithHandle:(NSString *)handle
+                        geometry:(SGGeometry *)geometry
 {
-    return [SGFeature featureWithId:identifier
-                         dictionary:nil];
+    return [SGFeature featureWithHandle:handle
+                               geometry:geometry
+                             properties:nil];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                  dictionary:(NSDictionary *)data
++ (SGFeature *)featureWithHandle:(NSString *)handle
+                        geometry:(SGGeometry *)geometry
+                      properties:(NSDictionary *)properties
 {
-    return [[[SGFeature alloc] initWithId:identifier
-                               dictionary:data] autorelease];
+    return [[[SGFeature alloc] initWithHandle:handle
+                                     geometry:geometry
+                                   properties:properties] autorelease];
 }
 
-+ (SGFeature *)featureWithDictionary:(NSDictionary *)data
++ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    return [SGFeature featureWithId:nil
-                         dictionary:data];
+    return [[[SGFeature alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                  properties:(NSDictionary *)properties
+- (id)initWithHandle:(NSString *)aHandle
+            geometry:(SGGeometry *)aGeometry
 {
-    return [SGFeature featureWithId:identifier
-                           geometry:nil
-                         properties:properties];
+    return [self initWithHandle:aHandle
+                       geometry:aGeometry
+                     properties:nil];
 }
 
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                    geometry:(SGGeometry *)geometry
-{
-    return [SGFeature featureWithId:identifier
-                           geometry:geometry
-                         properties:nil];
-}
-
-+ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry
-                        properties:(NSDictionary *)properties
-{
-    return [SGFeature featureWithId:nil
-                           geometry:geometry
-                         properties:properties];
-}
-
-+ (SGFeature *)featureWithId:(NSString *)identifier
-                    geometry:(SGGeometry *)geometry
-                  properties:(NSDictionary *)properties
-{
-    return [[[SGFeature alloc] initWithId:identifier
-                                 geometry:geometry
-                               properties:properties] autorelease];
-}
-
-- (id)initWithId:(NSString *)identifier
-{
-    return [self initWithId:identifier
-                   geometry:nil];
-}
-
-- (id)initWithId:(NSString *)identifier
-      properties:(NSDictionary *)someProperties
-{
-    return [self initWithId:identifier
-                   geometry:nil
-                 properties:someProperties];
-}
-
-- (id)initWithId:(NSString *)identifier
-        geometry:(SGGeometry *)aGeometry
-{
-    return [self initWithId:identifier
-                   geometry:aGeometry
-                 properties:nil];
-}
-
-- (id)initWithGeometry:(SGGeometry *)aGeometry
-            properties:(NSDictionary *)someProperties
-{
-    return [self initWithId:nil
-                   geometry:aGeometry
-                 properties:someProperties];
-}
-
-- (id)initWithId:(NSString *)identifier
-        geometry:(SGGeometry *)aGeometry
-      properties:(NSDictionary *)someProperties
+- (id)initWithHandle:(NSString *)aHandle
+            geometry:(SGGeometry *)aGeometry
+          properties:(NSDictionary *)someProperties
 {
     self = [super init];
-
     if (self) {
-        featureId = [identifier retain];
+        handle = [aHandle retain];
         geometry = [aGeometry retain];
-        properties = [someProperties retain];
+        [self setProperties:someProperties];
     }
-
     return self;
 }
 
-- (id)initWithId:(NSString *)identifier
-      dictionary:(NSDictionary *)data
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    self = [super init];
-
+    self = [self initWithHandle:[geoJSONFeature objectForKey:@"id"]
+                       geometry:[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]]
+                     properties:[geoJSONFeature objectForKey:@"properties"]];
     if (self) {
-        featureId = [identifier retain];
-
-        if (data) {
-            if (! [[data objectForKey:@"type"] isEqual:@"Feature"]) {
-                NSLog(@"Unsupported geometry type: %@", [data objectForKey:@"type"]);
-                return nil;
-            }
-
-            [self setValuesForKeysWithDictionary:data];
-        }
+        // date
+        NSNumber *epoch = [geoJSONFeature objectForKey:@"created"];
+        if (epoch) created = [[NSDate alloc] initWithTimeIntervalSince1970:[epoch intValue]];
+        // distance, links
+        distance = [[geoJSONFeature objectForKey:@"distance"] retain];
+        NSDictionary *selfLinkDict = [geoJSONFeature objectForKey:@"selfLink"];
+        if (selfLinkDict) selfLink = [[selfLinkDict objectForKey:@"href"] retain];
     }
-
     return self;
 }
 
-- (void)dealloc
+#pragma mark Convenience Methods
+
+- (void)setProperties:(NSDictionary *)someProperties
 {
-    [featureId release];
-    [geometry release];
     [properties release];
-    [super dealloc];
+    properties = [[NSMutableDictionary dictionaryWithDictionary:someProperties] retain];
 }
 
-- (NSDictionary *)asDictionary
+- (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
-
-    [dict setObject:@"Feature" forKey:@"type"];
-    [dict setValue:featureId forKey:@"id"];
-    [dict setValue:geometry forKey:@"geometry"];
-    [dict setValue:properties forKey:@"properties"];
-    [dict setValue:distance forKey:@"distance"];
-    [dict setValue:selfLink forKey:@"selfLink"];
-
-    return [NSDictionary dictionaryWithDictionary:dict];
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary setObject:@"Feature" forKey:@"type"];
+    [dictionary setValue:handle forKey:@"id"];
+    [dictionary setValue:[geometry asGeoJSON] forKey:@"geometry"];
+    [dictionary setValue:distance forKey:@"distance"];
+    if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
+    if (selfLink) [dictionary setValue:[NSDictionary dictionaryWithObject:selfLink forKey:@"href"] forKey:@"selfLink"];
+    [dictionary setValue:[NSMutableDictionary dictionaryWithDictionary:properties] forKey:@"properties"];
+    return dictionary;
 }
 
 - (NSString *)description
 {
-    return [[self asDictionary] description];
+    return [[self asGeoJSON] description];
 }
+
+#pragma mark Comparison Methods
 
 - (BOOL)isEqual:(id)object
 {
     if (object == self) return YES;
     if (!object || ![object isKindOfClass:[self class]]) return NO;
-    return [self isEqualToFeature:(SGFeature *)object];
-}
-
-- (BOOL)isEqualToFeature:(SGFeature *)feature
-{
-    return [featureId isEqualToString:[feature featureId]];
+    return [handle isEqual:[object handle]] &&
+    [created isEqual:[object created]];
 }
 
 - (NSUInteger)hash
 {
-    return [featureId hash];
+    return [handle hash] + [created hash];
 }
 
-- (id)JSON
+- (void)dealloc
 {
-    return [self asDictionary];
-}
-
-- (SGGeometry *)geometry
-{
-    return geometry;
-}
-
-- (void)setGeometry:(id)input
-{
+    [handle release];
     [geometry release];
-    geometry = [[SGGeometry geometryWithGeometry:input] retain];
-}
-
-/**
- * Alternate setter for KeyValueCoding
- */
-- (void)setId:(NSString *)identifier
-{
-    [self setFeatureId:identifier];
-}
-
-/**
- * Setter for KeyValueCoding
- */
-- (void)setType:(NSString *)type
-{
-    // noop; we know this is a feature
-}
-
-// prevent exceptions from being thrown when JSON responses contain unexpected keys
-- (void)setValue:(id)value
- forUndefinedKey:(NSString *)key
-{
-    NSLog(@"%@ received a value for an unknown property: %@: %@", [self class], key, value);
+    [properties release];
+    [created release];
+    [distance release];
+    [selfLink release];
+    [super dealloc];
 }
 
 @end

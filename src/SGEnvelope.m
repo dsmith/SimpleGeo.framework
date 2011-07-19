@@ -37,6 +37,8 @@
 @synthesize south;
 @synthesize west;
 
+#pragma mark Instantiation Methods
+
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
                              west:(double)westernLon
                             south:(double)southernLat
@@ -61,6 +63,45 @@
         east = easternLon;
     }
     return self;
+}
+
+#pragma mark Convenience Methods
+
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    [geoJSON setValue:[NSArray arrayWithObjects:
+                       [NSNumber numberWithDouble:north],
+                       [NSNumber numberWithDouble:west],
+                       [NSNumber numberWithDouble:south],
+                       [NSNumber numberWithDouble:east],
+                       nil] forKey:@"bbox"];
+    return geoJSON;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<SGEnvelope: (%f, %f), (%f, %f)>", north, west, south, east];
+}
+
+#pragma mark Comparison Methods
+
+- (BOOL)isEqual:(id)object
+{
+    if (object == self) return YES;
+    if (!object || ![object isKindOfClass:[self class]]) return NO;
+    return (north == [object north] &&
+            west == [object west] &&
+            south == [object south] &&
+            east == [object east]);
+}
+
+- (NSUInteger)hash
+{
+    return [[NSNumber numberWithDouble:north] hash] +
+    [[NSNumber numberWithDouble:west] hash] +
+    [[NSNumber numberWithDouble:south] hash] +
+    [[NSNumber numberWithDouble:east] hash];
 }
 
 @end

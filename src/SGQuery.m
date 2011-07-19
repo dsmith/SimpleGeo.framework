@@ -34,7 +34,7 @@
 
 @implementation SGQuery
 
-@synthesize point, address, envelope, userInfo, target, action;
+@synthesize point, address, envelope;
 
 #pragma mark Instantiation Methods
 
@@ -80,15 +80,14 @@
     return self;
 }
 
+#pragma mark Convenience Methods
+
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setValue:point forKey:@"point"];
     [dictionary setValue:address forKey:@"address"];
     [dictionary setValue:envelope forKey:@"envelope"];
-    [dictionary setValue:userInfo forKey:@"userInfo"];
-    [dictionary setValue:target forKey:@"target"];
-    [dictionary setValue:NSStringFromSelector(action) forKey:@"action"];
     return dictionary;
 }
 
@@ -96,8 +95,6 @@
     [point release];
     [address release];
     [envelope release];
-    [userInfo release];
-    [target release];
     [super dealloc];
 }
 

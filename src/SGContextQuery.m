@@ -34,6 +34,8 @@
 
 @synthesize featureCategories, featureSubcategories, filters, acsTableIDs;
 
+#pragma mark Convenience Methods
+
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];

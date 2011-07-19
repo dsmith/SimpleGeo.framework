@@ -28,71 +28,31 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <YAJL/YAJL.h>
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Internal.h"
 #import "SGContextQuery.h"
 
 @implementation SimpleGeo (Context)
 
-#pragma mark Request Methods
+#pragma mark Context Request Methods
 
 - (void)getContextForQuery:(SGContextQuery *)query
+                  callback:(SGCallback *)callback
 {
-    if (!query.target || !query.action) {
-        [query setTarget:self];
-        [query setAction:@selector(didReceiveContext:)];
-    }
-    
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/context/", SG_API_VERSION];
-    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
-    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
-    else [endpoint appendFormat:@"address.json"];
-    
     NSDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.filters forKey:@"filter"];
     [parameters setValue:query.featureCategories forKey:@"features__category"];
     [parameters setValue:query.featureSubcategories forKey:@"features__subcategory"];
     [parameters setValue:query.acsTableIDs forKey:@"demographics.acs__table"];
-    NSString *paramPairs = [self normalizeRequestParameters:parameters];
     
-    if (paramPairs) [endpoint appendFormat:@"?%@", paramPairs];
-    NSURL *endpointURL = [self endpointForString:endpoint];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/context/%@",
+                     SG_URL_PREFIX, SG_API_VERSION, [self baseEndpointForQuery:query]];
     
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"SGQuery"]];
-    [request startAsynchronous];
-}
-
-#pragma mark Dispatcher Methods
-
-- (void)didReceiveContext:(NSDictionary *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadContext:forSGQuery:)]) {
-        [delegate didLoadContext:[request objectForKey:@"response"]
-                      forSGQuery:[request objectForKey:@"query"]];
-    
-    /* TODO: remove (deprecated) */
-    } else if ([delegate respondsToSelector:@selector(didLoadContext:forQuery:)]) {
-        [delegate didLoadContext:[request objectForKey:@"response"]
-                        forQuery:[[request objectForKey:@"query"] asDictionary]];
-        
-    } else {
-        NSLog(@"Delegate does not implement didLoadContext:forSGQuery:");
-    }
-}
-
-#pragma mark Deprecated Request Methods
-
-- (void)getContextForPoint:(SGPoint *)point
-{
-    [self getContextForQuery:[SGContextQuery queryWithPoint:point]];
-}
-
-- (void)getContextForAddress:(NSString *)address
-{
-    [self getContextForQuery:[SGContextQuery queryWithAddress:address]];
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:parameters
+                 callback:callback];
 }
 
 @end

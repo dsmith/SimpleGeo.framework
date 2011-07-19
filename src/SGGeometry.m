@@ -29,29 +29,41 @@
 //
 
 #import "SGGeometry.h"
-#import "SGPoint+Private.h"
-#import "SGPolygon+Private.h"
-#import "SGMultiPolygon+Private.h"
+#import "SGPoint.h"
+#import "SGPolygon.h"
+#import "SGMultiPolygon.h"
 
 @implementation SGGeometry
 
-+ (SGGeometry *)geometryWithGeometry:(id)geometry
-{
-    if ([geometry isKindOfClass:[SGGeometry class]]) {
-        return geometry;
-    } else if ([geometry isKindOfClass:[NSDictionary class]]) {
-        NSString *type = [geometry objectForKey:@"type"];
-        if ([type isEqual:@"Point"]) {
-            return [SGPoint pointWithDictionary:geometry];
-        } else if ([type isEqual:@"Polygon"]) {
-            return [SGPolygon polygonWithDictionary:geometry];
-        } else if ([type isEqual:@"MultiPolygon"]) {
-            return [SGMultiPolygon multiPolygonWithDictionary:geometry];
-        }
-    }
+@synthesize created;
 
-    NSLog(@"%@ could not be converted into a geometry.", geometry);
-    return nil;
+#pragma mark GeoJSON -> SGGeometry
+
++ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    return [[[SGGeometry alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
+}
+
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    NSString *type = [geoJSONGeometry objectForKey:@"type"];
+    if ([type isEqual:@"Point"]) self = [[SGPoint alloc] initWithGeoJSON:geoJSONGeometry];
+    else if ([type isEqual:@"Polygon"]) self = [[SGPolygon alloc] initWithGeoJSON:geoJSONGeometry];
+    else if ([type isEqual:@"MultiPolygon"]) self = [[SGMultiPolygon alloc] initWithGeoJSON:geoJSONGeometry];    
+    if (self) {
+        NSNumber *epoch = [geoJSONGeometry objectForKey:@"created"];
+        if (epoch) created = [NSDate dateWithTimeIntervalSince1970:[epoch doubleValue]];
+    }
+    return self;
+}
+
+#pragma mark SGGeometry -> GeoJSON
+
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
+    return dictionary;
 }
 
 @end

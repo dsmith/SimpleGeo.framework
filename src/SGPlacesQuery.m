@@ -34,6 +34,8 @@
 
 @synthesize searchString, categories;
 
+#pragma mark Convenience Methods
+
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];

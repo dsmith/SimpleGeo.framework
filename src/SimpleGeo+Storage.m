@@ -28,13 +28,11 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <YAJL/YAJL.h>
 #import "SimpleGeo+Storage.h"
 #import "SimpleGeo+Internal.h"
-#import "SGFeatureCollection+Private.h"
-#import "SGGeometryCollection+Private.h"
-#import "SGStoredRecord+Private.h"
 #import "SGStorageQuery.h"
+#import "NSArray+GeoJSON.h"
+#import "SGCallback.h"
 
 NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
@@ -42,92 +40,22 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
 #pragma mark Record Request Methods
 
-- (void)getRecordFromLayer:(NSString *)layer
-                    withId:(NSString *)identifier
+- (void)getRecord:(NSString *)recordID
+          inLayer:(NSString *)layerName
+         callback:(SGCallback *)callback
 {
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SG_API_VERSION_STORAGE,
-                                                  layer,
-                                                  identifier]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"GET"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didLoadRecord:", @"targetSelector",
-                          layer, @"layer",
-                          identifier, @"id",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)addOrUpdateRecord:(SGStoredRecord *)record
-                  inLayer:(NSString *)layer
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SG_API_VERSION_STORAGE,
-                                                  layer,
-                                                  [record featureId]]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-
-    [request appendPostData:[[record yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"PUT"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didAddOrUpdateRecord:", @"targetSelector",
-                          record, @"record",
-                          layer, @"layer",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)addOrUpdateRecords:(NSArray *)records
-                   inLayer:(NSString *)layer
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@.json",
-                                                  SG_API_VERSION_STORAGE,
-                                                  layer]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    SGFeatureCollection *featureCollection = [SGFeatureCollection featureCollectionWithRecords:records];
-
-    [request appendPostData:[[featureCollection yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"POST"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didAddOrUpdateRecords:", @"targetSelector",
-                          records, @"records",
-                          layer, @"layer",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)deleteRecordInLayer:(NSString *)layer
-                     withId:(NSString *)identifier
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/records/%@/%@.json",
-                                                  SG_API_VERSION_STORAGE,
-                                                  layer,
-                                                  identifier]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"DELETE"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didDeleteRecordInLayer:", @"targetSelector",
-                          layer, @"layer",
-                          identifier, @"id",
-                          nil]];
-    [request startAsynchronous];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
 }
 
 - (void)getRecordsForQuery:(SGStorageQuery *)query
+                  callback:(SGCallback *)callback
 {
-    if (!query.target || !query.action) {
-        [query setTarget:self];
-        [query setAction:@selector(didReceiveRecords:)];
-    }
-    
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/records/%@/nearby/", SG_API_VERSION_STORAGE, query.layer];
-    if (query.point) [endpoint appendFormat:@"%f,%f.json", query.point.latitude, query.point.longitude];
-    else if (query.envelope) [endpoint appendFormat:@"%f,%f,%f,%f.json", query.envelope.north, query.envelope.west, query.envelope.south, query.envelope.east];
-    else [endpoint appendFormat:@"address.json"];
-    
     NSDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.cursor forKey:@"cursor"];
@@ -141,505 +69,142 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     [parameters setValue:query.propertyValue forKey:@"prop.equals"];
     [parameters setValue:query.propertyStartValue forKey:@"prop.start"];
     [parameters setValue:query.propertyEndValue forKey:@"prop.end"];
-    NSString *paramPairs = [self normalizeRequestParameters:parameters];
     
-    [endpoint appendFormat:@"?%@", paramPairs];
-    NSURL *endpointURL = [self endpointForString:endpoint];
-    
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:[NSDictionary dictionaryWithObject:query forKey:@"SGQuery"]];
-    [request startAsynchronous];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/nearby/%@",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, query.layer, [self baseEndpointForQuery:query]];
+
+    [self sendHTTPRequest:@"GET"
+                  toURL:url
+             withParams:parameters
+               callback:callback];
 }
 
-#pragma mark Record History
-
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
+- (void)getHistoryForRecord:(NSString *)recordID
+                    inLayer:(NSString *)layerName
+                      limit:(NSNumber *)limit
+                     cursor:(NSString *)cursor
+                   callback:(SGCallback *)callback
 {
-    [self getHistoryForRecordId:recordId
-                        inLayer:layer
-                          count:0];
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:[NSString stringWithFormat:@"%d", [limit intValue]] forKey:@"limit"];
+    [parameters setValue:cursor forKey:@"cursor"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@/history.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:parameters
+                 callback:callback];
 }
 
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                        count:(int)count
+#pragma mark Record Manipulation Methods
+
+- (void)addOrUpdateRecord:(SGStoredRecord *)record
+                 callback:(SGCallback *)callback
 {
-    [self getHistoryForRecordId:recordId
-                        inLayer:layer
-                         cursor:nil
-                          count:count];
+    [self addOrUpdateRecords:[NSArray arrayWithObject:record]
+                     inLayer:record.layer
+                    callback:callback];
 }
 
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                       cursor:(NSString *)cursor
+- (void)addOrUpdateRecords:(NSArray *)records
+                   inLayer:(NSString *)layerName
+                  callback:(SGCallback *)callback
 {
-    [self getHistoryForRecordId:recordId
-                        inLayer:layer
-                         cursor:cursor
-                          count:0];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
+    
+    NSDictionary *featureCollection = [records asGeoJSONCollection:GeoJSONCollectionTypeFeature];
+    
+    [self sendHTTPRequest:@"POST"
+                    toURL:url
+               withParams:featureCollection
+                 callback:callback];
 }
 
-- (void)getHistoryForRecordId:(NSString *)recordId
-                      inLayer:(NSString *)layer
-                       cursor:(NSString *)cursor
-                        count:(int)count
+- (void)deleteRecord:(NSString *)recordID
+             inLayer:(NSString *)layerName
+            callback:(SGCallback *)callback
 {
-    NSMutableString *endpoint  = [NSMutableString stringWithFormat:@"/%@/records/%@/%@/history.json",
-                                  SG_API_VERSION_STORAGE, layer,recordId];
-    NSMutableArray *queryParams = [NSMutableArray array];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, layerName, recordID];
     
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                     @"didLoadHistory:", @"targetSelector",
-                                     recordId, @"recordId",
-                                     layer, @"layer",
-                                     nil];
-    if (count > 0) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%d", @"limit", count]];
-        NSNumber *objCount = [NSNumber numberWithDouble:count];
-        [userInfo setObject:objCount forKey:@"limit"];
-    }
-    
-    if (cursor && ! [cursor isEqualToString:@""]) {
-        [queryParams addObject:[NSString stringWithFormat:@"%@=%@", @"cursor", cursor]];
-        [userInfo setObject:cursor forKey:@"cursor"];
-    }
-    
-    if ([queryParams count] > 0) {
-        [endpoint appendFormat:@"?%@", [queryParams componentsJoinedByString:@"&"]];
-    }
-    
-    NSURL *endpointURL = [self endpointForString:endpoint];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setUserInfo:userInfo];
-    [request startAsynchronous];
+    [self sendHTTPRequest:@"DELETE"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
 }
 
-#pragma mark Layer Manipulation
+#pragma mark Layer Request Methods
 
-- (void)addOrUpdateLayer:(NSString *)name
-                   title:(NSString *)title
-             description:(NSString *)description
-                  public:(BOOL)public
-{
-    [self addOrUpdateLayer:name
-                     title:title
-               description:description
-                    public:public
-              callbackURLs:[NSArray array]];
+- (void)getLayer:(NSString *)layerName
+        callback:(SGCallback *)callback
+{    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
 }
 
-- (void)addOrUpdateLayer:(NSString *)name
-                   title:(NSString *)title
-             description:(NSString *)description
-                  public:(BOOL)public
-            callbackURLs:(NSArray *)callbackURLs
+- (void)getLayersWithCallback:(SGCallback *)callback
 {
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/layers/%@.json",
-                                                  SG_API_VERSION_STORAGE, name]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    
-    NSMutableDictionary *layerDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                      name, @"name",
-                                      title, @"title",
-                                      description, @"description",
-                                      callbackURLs, @"callbackURLs",
-                                      nil];
-    if (public) {
-        [layerDict setValue:@"true"
-                     forKey:@"public"];
-    } else {
-        [layerDict setValue:@"false"
-                     forKey:@"public"];
-    }
-    
-    [request appendPostData:[[layerDict yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setRequestMethod:@"PUT"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestLoadAddOrUpdateLayer:", @"targetSelector",
-                          layerDict, @"layerInfo",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)getLayers
-{
-    [self getLayersWithCursor:nil];
+    [self getLayersWithCursor:nil
+                     callback:callback];
 }
 
 - (void)getLayersWithCursor:(NSString *)cursor
+                   callback:(SGCallback *)callback
 {
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/layers.json",
-                                 SG_API_VERSION_STORAGE];
-    if (cursor) {
-        [endpoint appendFormat:@"?%@", [NSString stringWithFormat:@"%@=%@",
-                                        @"cursor", cursor]];
-    }
-    NSURL *endpointURL = [self endpointForString:endpoint];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"GET"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestLoadLoadLayers:", @"targetSelector",
-                          cursor, @"cursor",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)getLayer:(NSString *)layer
-{
-    NSMutableString *endpoint = [NSMutableString stringWithFormat:@"/%@/layers/%@.json",
-                                 SG_API_VERSION_STORAGE, layer];
-    NSURL *endpointURL = [self endpointForString:endpoint];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"GET"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestLoadLoadLayer:", @"targetSelector",
-                          layer, @"layer",
-                          nil]];
-    [request startAsynchronous];
-}
-
-- (void)deleteLayer:(NSString *)name
-{
-    NSURL *endpointURL = [self endpointForString:[NSString stringWithFormat:@"/%@/layers/%@.json",
-                                                  SG_API_VERSION_STORAGE, name]];
-    ASIHTTPRequest *request = [self requestWithURL:endpointURL];
-    [request setRequestMethod:@"DELETE"];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                          @"didRequestLoadDeleteLayer:", @"targetSelector",
-                          name, @"layer",
-                          nil]];
-    [request startAsynchronous];
-}
-
-#pragma mark Dispatcher Methods
-
-- (void)didRequestLoadAddOrUpdateLayer:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didAddOrUpdateLayer:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            NSMutableDictionary *layerDict = [[request userInfo] objectForKey:@"layerInfo"];
-            [delegate didAddOrUpdateLayer:[layerDict objectForKey:@"name"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didAddOrUpdateLayer:");
-    }
-}
-
-- (void)didRequestLoadDeleteLayer:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didDeleteLayer:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            [delegate didDeleteLayer:[[request userInfo] objectForKey:@"layer"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didDeleteLayer:");
-    }
-}
-
-- (void)didRequestLoadLoadLayer:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadLayer:withName:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadLayer:jsonResponse
-                          withName:[[request userInfo] objectForKey:@"layer"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didLoadLayer:withName:");
-    }
-}
-
-- (void)didRequestLoadLoadLayers:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadLayers:withCursor:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            [delegate didLoadLayers:[jsonResponse objectForKey:@"layers"] 
-                         withCursor:[[request userInfo] objectForKey:@"cursor"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didLoadLayers:withCursor:");
-    }
-}
-
-- (void)didAddOrUpdateRecord:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didAddOrUpdateRecord:inLayer:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            [delegate didAddOrUpdateRecord:[[request userInfo] objectForKey:@"record"]
-                                   inLayer:[[request userInfo] objectForKey:@"layer"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didAddOrUpdateRecord:inLayer:");
-    }
-}
-
-- (void)didAddOrUpdateRecords:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didAddOrUpdateRecords:inLayer:)]) {
-        [delegate didAddOrUpdateRecords:[[request userInfo] objectForKey:@"records"]
-                                inLayer:[[request userInfo] objectForKey:@"layer"]];
-    } else {
-        NSLog(@"Delegate does not implement didAddOrUpdateRecords:inLayer:");
-    }
-}
-
-- (void)didDeleteRecordInLayer:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didDeleteRecordInLayer:withId:)]) {
-        [delegate didDeleteRecordInLayer:[[request userInfo] objectForKey:@"layer"]
-                                  withId:[[request userInfo] objectForKey:@"id"]];
-    } else {
-        NSLog(@"Delegate does not implement didDeleteRecordInLayer:withId:");
-    }
-}
-
-- (void)didLoadHistory:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadHistory:forRecordId:forQuery:cursor:)]) {
-        NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-        
-        NSMutableDictionary *query = [NSMutableDictionary dictionaryWithDictionary:[request userInfo]];
-        [query removeObjectForKey:@"targetSelector"];
-        
-        SGGeometryCollection *history = [SGGeometryCollection geometryCollectionWithDictionary:jsonResponse];
-        [delegate didLoadHistory:history
-                     forRecordId:[[request userInfo] objectForKey:@"recordId"]
-                        forQuery:query
-                          cursor:[[request userInfo] objectForKey:@"cursor"]];
-        
-    } else {
-        NSLog(@"Delegate does not implement didLoadHistory:forRecordId:inLayer:cursor:");
-    }
-}
-
-- (void)didLoadRecord:(ASIHTTPRequest *)request
-{
-    if ([delegate respondsToSelector:@selector(didLoadRecord:fromLayer:withId:)]) {
-        if ([request responseStatusCode] == 404) {
-            NSLog(@"Response code = 404");
-        } else {
-            NSDictionary *jsonResponse = [[request responseData] yajl_JSON];
-            SGStoredRecord *record = [SGStoredRecord recordWithDictionary:jsonResponse];
-            [delegate didLoadRecord:record
-                          fromLayer:[[request userInfo] objectForKey:@"layer"]
-                             withId:[[request userInfo] objectForKey:@"id"]];
-        }
-    } else {
-        NSLog(@"Delegate does not implement didLoadRecord:fromLayer:withId:");
-    }
-}
-
-- (void)didReceiveRecords:(NSDictionary *)request
-{
-    NSLog(@"%@",[request objectForKey:@"response"]);
-    if ([delegate respondsToSelector:@selector(didLoadRecords:forSGQuery:)]) {
-        [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
-                      forSGQuery:[request objectForKey:@"query"]];
+    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:cursor forKey:@"cursor"];
     
-    /* TODO: remove (deprecated) */
-    } else if ([delegate respondsToSelector:@selector(didLoadRecords:forQuery:cursor:)]) {
-        [delegate didLoadRecords:[SGFeatureCollection featureCollectionWithDictionary:[request objectForKey:@"response"]]
-                        forQuery:[[request objectForKey:@"query"] asDictionary]
-                          cursor:[[request objectForKey:@"query"] cursor]];
-        
-    } else {
-        NSLog(@"Delegate does not implement didLoadRecords:forSGQuery:");
-    }
+    NSString *url = [NSString stringWithFormat:@"%@/%@/layers.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:parameters
+                 callback:callback];
 }
 
-#pragma mark Deprecated Convenience Request Methods
+#pragma mark Layer Manipulation Methods
 
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
+- (void)addOrUpdateLayer:(NSString *)name
+                   title:(NSString *)title
+             description:(NSString *)description
+            callbackURLs:(NSArray *)callbackURLs
+                callback:(SGCallback *)callback
 {
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [self getRecordsForQuery:storageQuery];
+    NSDictionary *layerDict = [NSMutableDictionary dictionary];
+    [layerDict setValue:name forKey:@"name"];
+    [layerDict setValue:title forKey:@"title"];
+    [layerDict setValue:description forKey:@"description"];
+    [layerDict setValue:@"false" forKey:@"public"];
+    [layerDict setValue:callbackURLs forKey:@"callbackURLs"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, name];
+    
+    [self sendHTTPRequest:@"PUT"
+                    toURL:url
+               withParams:layerDict
+                 callback:callback];
 }
 
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
+- (void)deleteLayer:(NSString *)layerName
+           callback:(SGCallback *)callback
 {
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-                     near:(SGPoint *)point
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithPoint:point];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
-}
-
-- (void)getRecordsInLayer:(NSString *)layer
-              nearAddress:(NSString *)address
-                   radius:(double)radius
-                   cursor:(NSString *)cursor
-                    count:(int)count
-{
-    SGStorageQuery *storageQuery = [SGStorageQuery queryWithAddress:address];
-    [storageQuery setLayer:layer];
-    [storageQuery setRadius:radius];
-    [storageQuery setCursor:cursor];
-    [storageQuery setLimit:count];
-    [self getRecordsForQuery:storageQuery];
+    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, layerName];
+    
+    [self sendHTTPRequest:@"DELETE"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
 }
 
 @end

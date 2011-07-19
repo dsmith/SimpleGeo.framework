@@ -35,114 +35,72 @@
  */
 @interface SGStoredRecord : SGFeature
 {
-    NSTimeInterval created;
     NSString *layer;
     
     NSDictionary *layerLink;
 }
 
-//! Created at timestamp (Unix epoch)
-@property (nonatomic, assign) NSTimeInterval created;
-
 //! Layer name
 @property (nonatomic, retain) NSString *layer;
 
-//! API URL for the record's layer; only present if the
-// feature was generated from an API query.
+//! API URL for the record's layer
+// Only present if the feature was generated from an API query.
 @property (nonatomic, readonly) NSDictionary *layerLink;
 
-/*!
- * Create a record with a created timestamp
- * @param created Created timestamp
- */
-+ (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created;
+#pragma mark Instantiation Methods
 
 /*!
- * Create a record associated with a layer
- * @param layer Associated layer
- */
-+ (SGStoredRecord *)recordWithLayer:(NSString *)layer;
-
-/*!
- * Create a record with a created timestamp and an associated layer
- * @param created Created timestamp
- * @param layer   Associated layer
- */
-+ (SGStoredRecord *)recordWithCreatedTimestamp:(NSTimeInterval)created
-                                         layer:(NSString *)layer;
-
-/*!
- * Create a record from a Feature with a created timestamp
- * @param feature Feature
- * @param created Created timestamp
- */
-+ (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                     createdTimestamp:(NSTimeInterval)created;
-
-/*!
- * Create a record from a Feature with an associated layer
+ * Create an SGStoredRecord from a Feature with an associated layer
  * @param feature Feature
  * @param layer  Associated layer
  */
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                                layer:(NSString *)layer;
+                                layer:(NSString *)layerName;
 
 /*!
- * Create a record from a Feature with a created timestamp and an associated
+ * Create an SGStoredRecord from a Feature with a created timestamp and an associated
  * layer
  * @param feature Feature
  * @param created Created timestamp
  * @param layer   Associated layer
  */
 + (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                     createdTimestamp:(NSTimeInterval)created
-                                layer:(NSString *)layer;
+                                layer:(NSString *)layerName
+                            timestamp:(NSDate *)dateCreated;
 
 /*!
- * Construct a record with a created timestamp
- * @param created Created timestamp
+ * Create an SGStoredRecord from a dictionary that
+ * abides by the GeoJSON Feature specification.
+ * Note: GeoJSON Feature must contain a layer property
+ * @param feature   Feature dictionary
  */
-- (id)initWithCreatedTimestamp:(NSTimeInterval)created;
++ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 /*!
- * Construct a record with an associated layer
- * @param layer Associated layer
- */
-- (id)initWithLayer:(NSString *)layer;
-
-/*!
- * Construct a record with a created timestamp and an associated layer
- * @param created Created timestamp
- * @param layer   Associated layer
- */
-- (id)initWithCreatedTimestamp:(NSTimeInterval)created
-                         layer:(NSString *)layer;
-
-/*!
- * Construct a record from a Feature with a created timestamp
- * @param feature Feature
- * @param created Created timestamp
- */
-- (id)initWithFeature:(SGFeature *)feature
-     createdTimestamp:(NSTimeInterval)created;
-
-/*!
- * Construct a record from a Feature with an associated layer
+ * Construct an SGStoredRecord from a Feature with an associated layer
  * @param feature Feature
  * @param layer   Associated layer
  */
 - (id)initWithFeature:(SGFeature *)feature
-                layer:(NSString *)layer;
+                layer:(NSString *)layerName;
 
 /*!
- * Construct a record from a Feature with a created timestamp and an associated
- * layer
+ * Construct an SGStoredRecord from a Feature with
+ * a created timestamp and an associated layer
  * @param feature Feature
  * @param created Created timestamp
  * @param layer   Associated layer
  */
 - (id)initWithFeature:(SGFeature *)feature
-     createdTimestamp:(NSTimeInterval)created
-                layer:(NSString *)layer;
+                layer:(NSString *)layerName
+            timestamp:(NSDate *)dateCreated;
+
+/*!
+ * Construct an SGStoredRecord from a dictionary that
+ * abides by the GeoJSON Feature specification.
+ * Note: GeoJSON Feature must contain a layer property
+ * @param feature   Feature dictionary
+ */
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 @end

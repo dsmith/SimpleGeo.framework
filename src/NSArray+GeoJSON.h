@@ -1,8 +1,8 @@
 //
-//  SGGeometry+Private.h
+//  NSArray+GeoJSON.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,16 +28,34 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGGeometry.h"
+#import <Foundation/Foundation.h>
+#import "SGTypes.h"
 
-@interface SGGeometry (Private)
+@interface NSArray (GeoJSON)
 
-/*!\cond
- * Factory method for creating subclasses of SGGeometry either from an
- * SGGeometry instance or an NSDictionary containing a parsed GeoJSON
- * document)
- * \endcond
+#pragma mark SGGeometry -> GeoJSON
+
+/*!
+ * Create an array of SGGeometry objects from
+ * a GeoJSON GeometryCollection or FeatureCollection
+ * @param collection A GeoJSON Collection
  */
-+ (SGGeometry *)geometryWithGeometry:(id)geometry;
++ (NSArray *)arrayWithGeoJSONCollection:(NSDictionary *)collection;
+
+/*!
+ * Construct an array of SGGeometry objects from
+ * a GeoJSON GeometryCollection or FeatureCollection
+ * @param collection A GeoJSON Collection
+ */
+- (id)initWithGeoJSONCollection:(NSDictionary *)collection;
+
+#pragma mark GeoJSON -> SGGeometry
+
+/*!
+ * A GeoJSON collection dictionary from
+ * an array of SGGeometries, SGFeatures, or SGStoredRecords
+ * @param collectionType    Type of geoJSON collection (Feature/Geometry)
+ */
+- (NSDictionary *)asGeoJSONCollection:(GeoJSONCollectionType)collectionType;
 
 @end

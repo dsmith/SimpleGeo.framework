@@ -37,25 +37,55 @@
  */
 @interface SGPolygon : SGGeometry
 {
-  @private
-    // array of arrays of SGPoints
     NSArray *rings;
 }
 
 //! LinearRings that define this polygon
-@property (retain,readonly) NSArray *rings;
+@property (nonatomic, retain) NSArray *rings;
+
+#pragma mark Instantiation Methods
 
 /*!
- * Create a polygon from a set of LinearRings
+ * Create a polygon from a set of LinearRings of SGPoints
  * @param rings LinearRings
  */
 + (SGPolygon *)polygonWithRings:(NSArray *)rings;
+
+/*!
+ * Create a polygon from a boundary ring and
+ * and array of hole rings of SGPoints
+ * @param boundary  Boundary ring
+ * @param holes     Hole rings
+ */
++ (SGPolygon *)polygonWithBoundary:(NSArray *)boundary
+                             holes:(NSArray *)holes;
 
 /*!
  * Construct a polygon from a set of LinearRings
  * @param rings LinearRings
  */
 - (id)initWithRings:(NSArray *)rings;
+
+/*!
+ * Construct a polygon from a boundary ring and
+ * and array of hole rings
+ * @param boundary  Boundary ring
+ * @param holes     Hole rings
+ */
+- (id)initWithBoundary:(NSArray *)boundary
+                 holes:(NSArray *)holes;
+
+#pragma mark Convenience Methods
+
+/*!
+ * Boundary ring
+ */
+- (NSArray *)boundary;
+
+/*!
+ * Array of hole rings
+ */
+- (NSArray *)holes;
 
 /*!
  * Determine if a given point lies within the bounds of the polygon

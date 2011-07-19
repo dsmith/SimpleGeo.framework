@@ -30,64 +30,78 @@
 
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Places.h"
+#import "NSArray+GeoJSON.h"
 
 @implementation SimpleGeoTest (Places)
+
+#pragma mark Places Requests Tests
 
 - (void)testGetPlacesForPoint
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getPlacesForQuery:testQuery];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithPoint:[self point]];
+    [[self client] getPlacesForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetPlacesForAddress
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithAddress:SGTestAddress];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getPlacesForQuery:testQuery];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithAddress:SGTestAddress];
+    [[self client] getPlacesForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetPlacesWithLimit
+- (void)testGetPlacesForEnvelope
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setLimit:3];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getPlacesForQuery:testQuery];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithEnvelope:[self envelope]];
+    [[self client] getPlacesForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetPlacesWithComplexQuery
+- (void)testGetPlacesWithLimitsAndFeatureCollectionConversion
 {
     [self prepare];
-    SGPlacesQuery *testQuery = [SGPlacesQuery queryWithPoint:[self point]];
-    [testQuery setRadius:5.0];
-    [testQuery setCategories:[NSArray arrayWithObject:SGPlacesCategoryRestaurant]];
-    [testQuery setSearchString:@"Sparky"];
-    [testQuery setUserInfo:[NSDictionary dictionaryWithObject:NSStringFromSelector(_cmd) forKey:@"testName"]];
-    [[self client] getPlacesForQuery:testQuery];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithPoint:[self point]];
+    [query setRadius:SGTestRadius];
+    [query setLimit:SGTestLimit];
+    [[self client] getPlacesForQuery:query
+                            callback:[SGCallback callbackWithSuccessBlock:
+                                   ^(NSDictionary *response) {
+                                       GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
+                                                               query.limit, @"Should return no more records than the limit");
+                                       [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeFeature];
+                                       [self successBlock](response);
+                                   } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-#pragma mark SimpleGeoPlaceDelegate Methods
-
-- (void)didLoadPlaces:(SGFeatureCollection *)places
-           forSGQuery:(SGPlacesQuery *)query
+- (void)testGetPlacesWithFilters
 {
-    GHTestLog(@"Did load places for query: %@", [query asDictionary]);
-    GHTestLog(@"With results: %@", [places asDictionary]);
-    
-    /* Check features count */
-    int numParts = [places.features count];
-    GHAssertGreaterThan(numParts, 0, @"Valid query. Response should contain at lease one feature.");
-    if (query.limit != SGDefaultLimit) GHAssertEquals(numParts, query.limit, @"Limit used. Response should be limited to n features.");
-    
-    SEL testName = NSSelectorFromString([[query userInfo] objectForKey:@"testName"]);
-    [self notify:kGHUnitWaitStatusSuccess forSelector:testName];
+    [self prepare];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithAddress:SGTestAddress];
+    [query setCategories:[NSArray arrayWithObject:SGPlacesCategoryRestaurant]];
+    [query setSearchString:@"coffee"];
+    [[self client] getPlacesForQuery:query callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+#pragma mark Places Manipulation Tests
+
+- (void)testAddPlace
+{
+    // add
+}
+
+- (void)testUpdatePlace
+{
+    // update
+}
+
+- (void)testDeletePlace
+{
+    //delete
 }
 
 @end

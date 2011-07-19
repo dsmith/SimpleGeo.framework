@@ -34,6 +34,8 @@
 
 @synthesize layer, cursor, sortType, startDate, endDate, propertyType, propertyName, propertyValue, propertyStartValue, propertyEndValue;
 
+#pragma mark Instantiation Methods
+
 + (id)queryWithPoint:(SGPoint *)point
                layer:(NSString *)layer
 {
@@ -46,6 +48,13 @@
 {
     return [[[SGStorageQuery alloc] initWithAddress:address
                                               layer:layer] autorelease];
+}
+
++ (id)queryWithEnvelope:(SGEnvelope *)envelope
+                  layer:(NSString *)layer
+{
+    return [[[SGStorageQuery alloc] initWithEnvelope:envelope
+                                               layer:layer] autorelease];
 }
 
 - (id)initWithPoint:(SGPoint *)aPoint
@@ -67,6 +76,18 @@
     }
     return self;
 }
+
+- (id)initWithEnvelope:(SGEnvelope *)anEnvelope
+                 layer:(NSString *)aLayer
+{
+    self = [self initWithEnvelope:anEnvelope];
+    if (self) {
+        layer = [aLayer retain];
+    }
+    return self;
+}
+
+#pragma mark Convenience Methods
 
 - (void)setProperty:(NSString *)property
              ofType:(SGStoredPropertyType)type
