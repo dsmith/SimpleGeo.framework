@@ -32,7 +32,10 @@
 #import "SimpleGeo+Context.h"
 #import "NSArray+GeoJSON.h"
 
-@implementation SimpleGeoTest (Context)
+@interface ContextTests : SimpleGeoTest
+@end
+
+@implementation ContextTests
 
 #pragma mark Context Requests Tests
 
@@ -64,7 +67,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setFilters:[NSArray arrayWithObjects:SGContextFilterWeather, SGContextFilterIntersections, nil]];
+    [query setFilters:SGTestContextFilters];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -79,7 +82,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setFeatureCategories:[NSArray arrayWithObjects:SGFeatureCategoryNational, SGFeatureCategoryTimeZone, nil]];
+    [query setFeatureCategories:SGTestContextCategories];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -94,11 +97,11 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setAcsTableIDs:[NSArray arrayWithObjects:@"B01001", @"B01002", nil]];
+    [query setAcsTableIDs:SGTestContextDemographicsTables];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
-                                           GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:@"B01001"],
+                                           GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:[query.acsTableIDs objectAtIndex:0]],
                                                           @"Response should contain specified demographics tables");
                                            [self successBlock](response);
                                        } failureBlock:[self failureBlock]]];

@@ -33,7 +33,7 @@
 
 @implementation SGPoint
 
-@synthesize latitude, longitude;
+@synthesize latitude, longitude, created;
 
 #pragma mark Instantiation Methods
 
@@ -65,7 +65,12 @@
     NSString *type = [geoJSONGeometry objectForKey:@"type"];
     NSArray *coordinates = [geoJSONGeometry objectForKey:@"coordinates"];
     if (type && [type isEqual:@"Point"] && coordinates && [coordinates count] == 2) {        
-        return [self initWithArray:coordinates];
+        self = [self initWithArray:coordinates];
+        if (self) {
+            NSNumber *epoch = [geoJSONGeometry objectForKey:@"created"];
+            if (epoch) created = [NSDate dateWithTimeIntervalSince1970:[epoch doubleValue]];
+        }
+        return self;
     }
     return nil;
 }
@@ -83,8 +88,9 @@
 
 - (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    NSMutableDictionary *geoJSON = [NSMutableDictionary dictionaryWithCapacity:3];
     [geoJSON setValue:@"Point" forKey:@"type"];
+    [geoJSON setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
     [geoJSON setValue:[NSArray arrayWithObjects:
                        [NSNumber numberWithDouble:longitude],
                        [NSNumber numberWithDouble:latitude],

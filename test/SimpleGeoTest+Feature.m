@@ -31,14 +31,17 @@
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Feature.h"
 
-@implementation SimpleGeoTest (Feature)
+@interface FeaturesTests : SimpleGeoTest
+@end
+
+@implementation FeaturesTests
 
 #pragma mark Feature Request & Conversion Tests
 
-- (void)testGetFeatureAndConversion
+- (void)testGetPointFeatureAndConvert
 {
     [self prepare];
-    [[self client] getFeatureWithHandle:SGTestPointFeatureHandle
+    [[self client] getFeatureWithHandle:SGTestFeatureHandlePoint
                                    zoom:nil
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {
@@ -51,10 +54,10 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetFeatureAndPolygonConversionWithZoom
+- (void)testGetPolygonFeatureWithZoomAndConvert
 {
     [self prepare];
-    [[self client] getFeatureWithHandle:SGTestPolygonFeatureHandle
+    [[self client] getFeatureWithHandle:SGTestFeatureHandlePolygon
                                    zoom:[NSNumber numberWithInt:5]
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {
@@ -67,10 +70,10 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetFeatureAndMultiPolygonConversion
+- (void)testGetMultiPolygonFeatureAndConvert
 {
     [self prepare];
-    [[self client] getFeatureWithHandle:SGTestMultiPolygonFeatureHandle
+    [[self client] getFeatureWithHandle:SGTestFeatureHandleMultiPolygon
                                    zoom:nil
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {

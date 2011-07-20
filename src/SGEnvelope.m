@@ -69,19 +69,17 @@
 
 - (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
-    [geoJSON setValue:[NSArray arrayWithObjects:
-                       [NSNumber numberWithDouble:north],
-                       [NSNumber numberWithDouble:west],
-                       [NSNumber numberWithDouble:south],
-                       [NSNumber numberWithDouble:east],
-                       nil] forKey:@"bbox"];
-    return geoJSON;
+    return [NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:
+                                               [NSNumber numberWithDouble:north],
+                                               [NSNumber numberWithDouble:west],
+                                               [NSNumber numberWithDouble:south],
+                                               [NSNumber numberWithDouble:east],
+                                               nil] forKey:@"bbox"];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<SGEnvelope: (%f, %f), (%f, %f)>", north, west, south, east];
+    return [[self asGeoJSON] description];
 }
 
 #pragma mark Comparison Methods
@@ -99,9 +97,9 @@
 - (NSUInteger)hash
 {
     return [[NSNumber numberWithDouble:north] hash] +
-    [[NSNumber numberWithDouble:west] hash] +
-    [[NSNumber numberWithDouble:south] hash] +
-    [[NSNumber numberWithDouble:east] hash];
+           [[NSNumber numberWithDouble:west] hash] +
+           [[NSNumber numberWithDouble:south] hash] +
+           [[NSNumber numberWithDouble:east] hash];
 }
 
 @end

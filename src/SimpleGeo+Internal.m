@@ -42,7 +42,7 @@
                callback:(SGCallback *)callback
 {
     ASIHTTPRequest* request = nil;
-    if([type isEqualToString:@"POST"]) {
+    if([type isEqualToString:@"POST"] || [type isEqualToString:@"PUT"]) {
         request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
         [request appendPostData:[[params yajl_JSONString] dataUsingEncoding:NSUTF8StringEncoding]];
     } else {

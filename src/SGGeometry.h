@@ -32,11 +32,6 @@
  * Abstract Geometry class/factory
  */
 @interface SGGeometry : NSObject
-{
-    NSDate *created;
-}
-
-@property (nonatomic, retain) NSDate *created;
 
 #pragma mark GeoJSON -> SGGeometry
 

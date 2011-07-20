@@ -28,55 +28,50 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGStoredRecord.h"
-#import "SGPoint.h"
+#import "SGPlace.h"
 
-@implementation SGStoredRecord
+@implementation SGPlace
 
-@synthesize layer, layerLink;
+@synthesize name, isPrivate;
 
 #pragma mark Instantiation Methods
 
-+ (SGStoredRecord *)recordWithID:(NSString *)identifier
-                           point:(SGPoint *)point
-                           layer:(NSString *)layerName
++ (SGPlace *)placeWithName:(NSString *)name
+                     point:(SGPoint *)point
 {
-    return [[[SGStoredRecord alloc] initWithID:identifier
-                                        point:point
-                                        layer:layerName] autorelease];
+    return [[[SGPlace alloc] initWithName:name
+                                    point:point] autorelease];
 }
 
-+ (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                                layer:(NSString *)layerName
++ (SGPlace *)placeWithFeature:(SGFeature *)feature
+                         name:(NSString *)name
 {
-    return [[[SGStoredRecord alloc] initWithFeature:feature
-                                              layer:layerName] autorelease];
+    return [[[SGPlace alloc] initWithFeature:feature
+                                        name:name] autorelease];
 }
 
-+ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature
++ (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    return [[[SGStoredRecord alloc] initWithGeoJSON:geoJSONFeature] autorelease];
+    return [[[SGPlace alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
-- (id)initWithID:(NSString *)anIdentifier
-           point:(SGPoint *)point
-           layer:(NSString *)layerName
+- (id)initWithName:(NSString *)aName
+             point:(SGPoint *)point
 {
     self = [super initWithGeometry:point];
     if (self) {
-        identifier = [anIdentifier retain];
-        layer = [layerName retain];
+        name = [aName retain];
     }
     return self;
 }
 
 - (id)initWithFeature:(SGFeature *)feature
-                layer:(NSString *)layerName
+                 name:(NSString *)aName
 {
     if ([feature.geometry isKindOfClass:[SGPoint class]]) {
         self = [feature copy];
         if (self) {
-            layer = layerName;
+            name = aName;
         }
     }
     return nil;
@@ -86,12 +81,13 @@
 {
     self = [super initWithGeoJSON:geoJSONFeature];
     if (self) {
-        // layer
-        layer = [[properties objectForKey:@"layer"] retain];
-        [properties removeObjectForKey:@"layer"];
-        // layerLink
-        NSDictionary *layerLinkDict = [geoJSONFeature objectForKey:@"layerLink"];
-        if (layerLinkDict) layerLink = [[layerLinkDict objectForKey:@"href"] retain];
+        // name
+        name = [[properties objectForKey:@"name"] retain];
+        [properties removeObjectForKey:@"name"];
+        // visibility
+        NSString *visibility = [properties objectForKey:@"private"];
+        if ([visibility isEqual:@"true"]) isPrivate = YES;
+        [properties removeObjectForKey:@"private"];
     }
     return self;
 }
@@ -101,32 +97,16 @@
 - (NSDictionary *)asGeoJSON
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
-    [[dictionary objectForKey:@"properties"] setValue:layer forKey:@"layer"];
-    if (layerLink) [dictionary setValue:[NSDictionary dictionaryWithObject:layerLink forKey:@"href"] forKey:@"layerLink"];
+    [[dictionary objectForKey:@"properties"] setValue:name forKey:@"name"];
+    if (isPrivate) [[dictionary objectForKey:@"properties"] setValue:@"true" forKey:@"private"];
     return dictionary;
-}
-
-#pragma mark Comparison Methods
-
-- (BOOL)isEqual:(id)object
-{
-    if (object == self) return YES;
-    if (!object || ![object isKindOfClass:[self class]]) return NO;
-    return ([super isEqual:object] &&
-            [layer isEqual:[object layer]]);
-}
-
-- (NSUInteger)hash
-{
-    return [super hash] + [layer hash];
 }
 
 #pragma mark Memory
 
 - (void)dealloc
 {
-    [layer release];
-    [layerLink release];
+    [name release];
     [super dealloc];
 }
 

@@ -88,7 +88,7 @@
     for (SGPolygon *polygon in polygons) {
         [polygonsArray addObject:[[polygon asGeoJSON] objectForKey:@"coordinates"]];
     }
-    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
+    NSMutableDictionary *geoJSON = [NSMutableDictionary dictionaryWithCapacity:2];
     [geoJSON setValue:@"MultiPolygon" forKey:@"type"];
     [geoJSON setValue:polygonsArray forKey:@"coordinates"];
     return geoJSON;

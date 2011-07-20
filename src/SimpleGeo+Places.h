@@ -52,30 +52,28 @@
 
 /*!
  * Add a feature to the Places database 
- * @param feature   Feature to add
- * @param isPrivate Whether this addition should be private
+ * @param place     Place to add
  * @param callback  Request callback
  */
-- (void)addPlace:(SGFeature *)feature
-       isPrivate:(BOOL)isPrivate
+- (void)addPlace:(SGPlace *)place
         callback:(SGCallback *)callback;
 
 /*!
  * Update a place in the Places database 
- * @param feature   Feature to update
- * @param isPrivate Whether this update should be private
- * @param callback  Request callback
+ * @param identifier    Place ID
+ * @param place         The updated Place
+ * @param callback      Request callback
  */
-- (void)updatePlace:(SGFeature *)place
-          isPrivate:(BOOL)isPrivate
+- (void)updatePlace:(NSString *)identifier
+          withPlace:(SGPlace *)place
            callback:(SGCallback *)callback;
 
 /*!
  * Delete a place from the Places database 
- * @param handle    Handle of feature to remove
- * @param callback  Request callback
+ * @param identifier    Place ID
+ * @param callback      Request callback
  */
-- (void)deletePlace:(NSString *)handle
+- (void)deletePlace:(NSString *)identifier
            callback:(SGCallback *)callback;
 
 @end

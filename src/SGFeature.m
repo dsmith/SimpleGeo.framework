@@ -33,25 +33,13 @@
 
 @implementation SGFeature
 
-@synthesize handle, geometry, properties, created, distance, selfLink;
+@synthesize identifier, geometry, properties, created, distance, selfLink;
 
 #pragma mark Instantiation Methods
 
-+ (SGFeature *)featureWithHandle:(NSString *)handle
-                        geometry:(SGGeometry *)geometry
++ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry
 {
-    return [SGFeature featureWithHandle:handle
-                               geometry:geometry
-                             properties:nil];
-}
-
-+ (SGFeature *)featureWithHandle:(NSString *)handle
-                        geometry:(SGGeometry *)geometry
-                      properties:(NSDictionary *)properties
-{
-    return [[[SGFeature alloc] initWithHandle:handle
-                                     geometry:geometry
-                                   properties:properties] autorelease];
+    return [[[SGFeature alloc] initWithGeometry:geometry] autorelease];
 }
 
 + (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature
@@ -59,40 +47,31 @@
     return [[[SGFeature alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
-- (id)initWithHandle:(NSString *)aHandle
-            geometry:(SGGeometry *)aGeometry
-{
-    return [self initWithHandle:aHandle
-                       geometry:aGeometry
-                     properties:nil];
-}
-
-- (id)initWithHandle:(NSString *)aHandle
-            geometry:(SGGeometry *)aGeometry
-          properties:(NSDictionary *)someProperties
+- (id)initWithGeometry:(SGGeometry *)aGeometry
 {
     self = [super init];
     if (self) {
-        handle = [aHandle retain];
         geometry = [aGeometry retain];
-        [self setProperties:someProperties];
     }
     return self;
 }
 
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    self = [self initWithHandle:[geoJSONFeature objectForKey:@"id"]
-                       geometry:[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]]
-                     properties:[geoJSONFeature objectForKey:@"properties"]];
+    self = [self initWithGeometry:[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]]];
     if (self) {
+        // id
+        identifier = [[geoJSONFeature objectForKey:@"id"] retain];
+        // properties
+        [self setProperties:[geoJSONFeature objectForKey:@"properties"]];
         // date
         NSNumber *epoch = [geoJSONFeature objectForKey:@"created"];
         if (epoch) created = [[NSDate alloc] initWithTimeIntervalSince1970:[epoch intValue]];
-        // distance, links
-        distance = [[geoJSONFeature objectForKey:@"distance"] retain];
+        // link
         NSDictionary *selfLinkDict = [geoJSONFeature objectForKey:@"selfLink"];
         if (selfLinkDict) selfLink = [[selfLinkDict objectForKey:@"href"] retain];
+        // distance
+        distance = [[geoJSONFeature objectForKey:@"distance"] retain];
     }
     return self;
 }
@@ -109,11 +88,11 @@
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:@"Feature" forKey:@"type"];
-    [dictionary setValue:handle forKey:@"id"];
+    [dictionary setValue:identifier forKey:@"id"];
     [dictionary setValue:[geometry asGeoJSON] forKey:@"geometry"];
-    [dictionary setValue:distance forKey:@"distance"];
     if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
-    if (selfLink) [dictionary setValue:[NSDictionary dictionaryWithObject:selfLink forKey:@"href"] forKey:@"selfLink"];
+    if (selfLink) [dictionary setValue:[NSDictionary dictionaryWithObject:selfLink forKey:@"href"] forKey:@"selfLink"]; // TODO remove?
+    [dictionary setValue:distance forKey:@"distance"]; // TODO remove?
     [dictionary setValue:[NSMutableDictionary dictionaryWithDictionary:properties] forKey:@"properties"];
     return dictionary;
 }
@@ -129,18 +108,19 @@
 {
     if (object == self) return YES;
     if (!object || ![object isKindOfClass:[self class]]) return NO;
-    return [handle isEqual:[object handle]] &&
-    [created isEqual:[object created]];
+    return [identifier isEqual:[object identifier]] && [geometry isEqual:[object geometry]];
 }
 
 - (NSUInteger)hash
 {
-    return [handle hash] + [created hash];
+    return [identifier hash] + [geometry hash];
 }
+
+#pragma mark Memory
 
 - (void)dealloc
 {
-    [handle release];
+    [identifier release];
     [geometry release];
     [properties release];
     [created release];

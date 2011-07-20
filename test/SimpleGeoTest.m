@@ -33,6 +33,8 @@
 
 @implementation SimpleGeoTest
 
+@synthesize addedPlaceID;
+
 - (BOOL)shouldRunOnMainThread
 {
     return NO;
@@ -48,16 +50,27 @@
 
 - (SGPoint *)point
 {
-    return [SGPoint pointWithLatitude:37.772487
-                            longitude:-122.40572];
+    return [SGPoint pointWithLatitude:SGTestLatitude
+                            longitude:SGTestLongitude];
 }
 
 - (SGEnvelope *)envelope
 {
-    return [SGEnvelope envelopeWithNorth:37.750
-                                    west:-122.250
-                                   south:37.751
-                                    east:-122.251];
+    return [SGEnvelope envelopeWithNorth:SGTestEnvelopeNorth
+                                    west:SGTestEnvelopeWest
+                                   south:SGTestEnvelopeSouth
+                                    east:SGTestEnvelopeEast];
+}
+
+- (SGFeature *)feature
+{
+    NSDictionary *properties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                SGTestPOSTPropStringValue, SGTestPOSTPropStringKey,
+                                SGTestPOSTPropNumberValue, SGTestPOSTPropNumberKey, nil];
+    SGFeature *feature = [SGFeature featureWithGeometry:[SGPoint pointWithLatitude:SGTestPOSTLatitude
+                                                                   longitude:SGTestPOSTLongitude]];
+    [feature setProperties:properties];
+    return feature;
 }
 
 #pragma mark Basic Callbacks

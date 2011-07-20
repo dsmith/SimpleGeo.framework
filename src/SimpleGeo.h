@@ -37,6 +37,7 @@
 #import "SGMultiPolygon.h"
 
 #import "SGFeature.h"
+#import "SGPlace.h"
 #import "SGStoredRecord.h"
 
 #if TARGET_OS_IPHONE
@@ -52,6 +53,7 @@
 
 #import "SGTypes.h"
 #import "SGCallback.h"
+#import "NSArray+GeoJSON.h"
 
 /*!
  * \mainpage

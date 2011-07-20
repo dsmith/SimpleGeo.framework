@@ -91,23 +91,6 @@
 
 #pragma mark Convenience Methods
 
-- (NSDictionary *)asGeoJSON
-{
-    NSMutableArray *newRings = [NSMutableArray arrayWithCapacity:[rings count]];
-    for (NSArray *ring in rings) {
-        NSMutableArray *newRing = [NSMutableArray arrayWithCapacity:[ring count]];
-        for (SGPoint *point in ring) {
-            [newRing addObject:[NSArray arrayWithObjects:[NSNumber numberWithDouble:point.longitude],
-                                [NSNumber numberWithDouble:point.latitude], nil]];
-        }
-        [newRings addObject:newRing];
-    }
-    NSMutableDictionary *geoJSON = (NSMutableDictionary *)[super asGeoJSON];
-    [geoJSON setValue:@"Polygon" forKey:@"type"];
-    [geoJSON setValue:newRings forKey:@"coordinates"];
-    return geoJSON;
-}
-
 - (NSArray *)boundary
 {
     return [rings objectAtIndex:0];
@@ -133,6 +116,23 @@
         }
     }
     return contains;
+}
+
+- (NSDictionary *)asGeoJSON
+{
+    NSMutableArray *newRings = [NSMutableArray arrayWithCapacity:[rings count]];
+    for (NSArray *ring in rings) {
+        NSMutableArray *newRing = [NSMutableArray arrayWithCapacity:[ring count]];
+        for (SGPoint *point in ring) {
+            [newRing addObject:[NSArray arrayWithObjects:[NSNumber numberWithDouble:point.longitude],
+                                [NSNumber numberWithDouble:point.latitude], nil]];
+        }
+        [newRings addObject:newRing];
+    }
+    NSMutableDictionary *geoJSON = [NSMutableDictionary dictionaryWithCapacity:2];
+    [geoJSON setValue:@"Polygon" forKey:@"type"];
+    [geoJSON setValue:newRings forKey:@"coordinates"];
+    return geoJSON;
 }
 
 - (NSString *)description

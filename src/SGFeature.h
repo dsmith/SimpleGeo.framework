@@ -31,101 +31,81 @@
 #import "SGGeometry.h"
 
 /*!
- * Feature
+ * SimpleGeo Feature representation
  */
 @interface SGFeature : NSObject
 {
-    NSString *handle;
+    // required
     SGGeometry *geometry;
-    NSMutableDictionary *properties;
+    // optional
+    NSString *identifier;
     NSDate *created;
-    
-    NSNumber *distance;
+    NSMutableDictionary *properties;
+    // from API
     NSDictionary *selfLink;
+    NSNumber *distance;
 }
 
 //! Feature handle (ID)
-@property (nonatomic, retain) NSString *handle;
+@property (nonatomic, retain) NSString *identifier;
 
 //! Feature geometry
 @property (nonatomic, retain) SGGeometry *geometry;
 
-//! Feature properties
-@property (nonatomic, retain) NSDictionary *properties;
-
 //! Created timestamp
 @property (nonatomic, retain) NSDate *created;
 
-//! Distance (in meters) from the query point.
-// Only present if the feature was generated from a nearby request
-@property (nonatomic, readonly) NSNumber *distance;
+//! Feature properties
+@property (nonatomic, retain) NSDictionary *properties;
 
 //! API URL for the feature.
-// Only present if the feature was generated from an API query
+// Only present if the feature originated from an API request
 @property (nonatomic, readonly) NSDictionary *selfLink;
+
+//! Distance (in meters) from the query point.
+// Valid for SGFeatures with point geometry
+// Only present if the feature originated from a nearby request
+@property (nonatomic, readonly) NSNumber *distance;
 
 #pragma mark Instantiation Methods
 
 /*!
- * Create an SGFeature with a handle and a geometry
- * @param handle    Feature handle
- * @param geometry  Feature geometry
- */
-+ (SGFeature *)featureWithHandle:(NSString *)handle
-                        geometry:(SGGeometry *)geometry;
-
-/*!
- * Create an SGFeature with a handle, a geometry, and some properties
- * @param handle        Feature id
+ * Create an SGFeature with a geometry
  * @param geometry      Feature geometry
- * @param properties    Feature properties
  */
-+ (SGFeature *)featureWithHandle:(NSString *)handle
-                        geometry:(SGGeometry *)geometry
-                      properties:(NSDictionary *)properties;
++ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry;
 
 /*!
  * Create an SGFeature from a dictionary that
  * abides by the GeoJSON Feature specification
- * @param feature   Feature dictionary
+ * @param feature       Feature dictionary
  */
 + (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 /*!
- * Construct an SGFeature with a handle and a geometry
- * @param handle    Feature handle
- * @param geometry  Feature geometry
- */
-- (id)initWithHandle:(NSString *)handle
-            geometry:(SGGeometry *)geometry;
-
-/*!
- * Construct an SGFeature with a handle, a geometry, and some properties
- * @param handle        Feature id
+ * Construct an SGFeature a geometry
  * @param geometry      Feature geometry
- * @param properties    Feature properties
  */
-- (id)initWithHandle:(NSString *)handle
-            geometry:(SGGeometry *)geometry
-          properties:(NSDictionary *)properties;
+- (id)initWithGeometry:(SGGeometry *)geometry;
 
 /*!
  * Construct an SGFeature from a dictionary that
  * abides by the GeoJSON Feature specification
- * @param feature   Feature dictionary
+ * @param feature       Feature dictionary
  */
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 #pragma mark Convenience Methods
 
 /*!
- * Set the properties field
+ * Set properties; creates a
+ * deep mutable copy of the properties dictionary
  * @param properties    Feature properties
  */
 - (void)setProperties:(NSDictionary *)properties;
 
 /*!
- * A dictionary representation of the feature that
+ * Dictionary representation of the SGFeature that
  * conforms to the geoJSON Feature specification
  */
 - (NSDictionary *)asGeoJSON;

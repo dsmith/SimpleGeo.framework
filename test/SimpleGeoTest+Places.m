@@ -30,9 +30,11 @@
 
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Places.h"
-#import "NSArray+GeoJSON.h"
 
-@implementation SimpleGeoTest (Places)
+@interface PlacesReadTests : SimpleGeoTest
+@end
+
+@implementation PlacesReadTests
 
 #pragma mark Places Requests Tests
 
@@ -60,7 +62,7 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetPlacesWithLimitsAndFeatureCollectionConversion
+- (void)testGetPlacesWithLimitsAndConvertFeatureCollection
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithPoint:[self point]];
@@ -81,27 +83,53 @@
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithAddress:SGTestAddress];
-    [query setCategories:[NSArray arrayWithObject:SGPlacesCategoryRestaurant]];
-    [query setSearchString:@"coffee"];
+    [query setCategories:SGTestPlacesCategories];
+    [query setSearchString:SGTestPlacesSearchString];
     [[self client] getPlacesForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
+
+@end
+
+@interface PlacesWriteTests : SimpleGeoTest
+@end
+
+@implementation PlacesWriteTests
 
 #pragma mark Places Manipulation Tests
 
 - (void)testAddPlace
 {
-    // add
+    [self prepare];
+    SGPlace *place = [SGPlace placeWithFeature:[self feature]
+                                          name:SGTestPlacesName];
+    [[self client] addPlace:place
+                   callback:[SGCallback callbackWithSuccessBlock:
+                             ^(NSDictionary *response) {
+                                 [self setAddedPlaceID:[response objectForKey:@"id"]];
+                                 [self successBlock](response);
+                             } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testUpdatePlace
 {
-    // update
+    [self prepare];
+    SGPlace *place = [SGPlace placeWithFeature:[self feature]
+                                          name:SGTestPlacesName];
+    [place setIsPrivate:YES];
+    [[self client] updatePlace:[self addedPlaceID]
+                     withPlace:place
+                      callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testDeletePlace
+- (void)test_DeletePlace
 {
-    //delete
+    [self prepare];
+    [[self client] deletePlace:[self addedPlaceID]
+                      callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 @end

@@ -128,7 +128,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
             callback:(SGCallback *)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, layerName, recordID];
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
     
     [self sendHTTPRequest:@"DELETE"
                     toURL:url
@@ -199,7 +199,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
            callback:(SGCallback *)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, layerName];
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
     
     [self sendHTTPRequest:@"DELETE"
                     toURL:url

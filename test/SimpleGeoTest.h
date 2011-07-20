@@ -33,6 +33,11 @@
 #import "SimpleGeoTestSettings.h"
 
 @interface SimpleGeoTest : GHAsyncTestCase
+{
+    NSString *addedPlaceID;
+}
+
+@property (nonatomic, retain) NSString *addedPlaceID;
 
 // Test client
 - (SimpleGeo *)client;
@@ -40,6 +45,7 @@
 // Test objects
 - (SGPoint *)point;
 - (SGEnvelope *)envelope;
+- (SGFeature *)feature;
 
 // Test callbacks
 - (SGCallback *)blockCallback;

@@ -33,10 +33,6 @@
 #import "SGPlacesQuery.h"
 #import "SGFeature.h"
 
-@interface SimpleGeo (Private)
-- (NSDictionary *)markFeature:(SGFeature *)feature asPrivate:(BOOL)isPrivate;
-@end
-
 @implementation SimpleGeo (Places)
 
 #pragma mark Places Request Methods
@@ -62,60 +58,42 @@
 
 #pragma mark Places Manipulation Methods
 
-- (void)addPlace:(SGFeature *)feature
-       isPrivate:(BOOL)isPrivate
+- (void)addPlace:(SGPlace *)place
         callback:(SGCallback *)callback
 {
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/places",
                      SG_URL_PREFIX, SG_API_VERSION];
     
-    NSDictionary *featureDict = [self markFeature:feature asPrivate:isPrivate];
-    
     [self sendHTTPRequest:@"POST"
                     toURL:url
-               withParams:featureDict
+               withParams:[place asGeoJSON]
                  callback:callback];
 }
 
-- (void)updatePlace:(SGFeature *)place
-          isPrivate:(BOOL)isPrivate
+- (void)updatePlace:(NSString *)identifier
+          withPlace:(SGPlace *)place
            callback:(SGCallback *)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, place.handle];
-    
-    NSDictionary *featureDict = [self markFeature:place asPrivate:isPrivate];
+                     SG_URL_PREFIX, SG_API_VERSION, identifier];
     
     [self sendHTTPRequest:@"POST"
                     toURL:url
-               withParams:featureDict
+               withParams:[place asGeoJSON]
                  callback:callback];
 }
 
-- (void)deletePlace:(NSString *)handle
+- (void)deletePlace:(NSString *)identifier
            callback:(SGCallback *)callback
 {
     NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, handle];
+                     SG_URL_PREFIX, SG_API_VERSION, identifier];
     
     [self sendHTTPRequest:@"DELETE"
                     toURL:url
                withParams:nil
                  callback:callback];
-}
-
-#pragma Helper Methods
-
-- (NSDictionary *)markFeature:(SGFeature *)feature
-                    asPrivate:(BOOL)isPrivate
-{
-    NSMutableDictionary *properties = [NSMutableDictionary dictionaryWithDictionary:[feature properties]];
-    if (isPrivate) [properties setValue:@"true" forKey:@"private"];
-    else [properties setValue:@"false" forKey:@"private"];
-    NSMutableDictionary *featureDict = [NSMutableDictionary dictionaryWithDictionary:[feature asGeoJSON]];
-    [featureDict setValue:properties forKey:@"properties"];
-    return featureDict;
 }
 
 @end

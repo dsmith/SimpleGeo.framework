@@ -40,13 +40,17 @@
     @private
     double latitude;
     double longitude;
+    NSDate *created;
 }
 
 //! Latitude (y coordinate)
-@property (nonatomic, readonly) double latitude;
+@property (nonatomic, assign) double latitude;
 
 //! Longitude (x coordinate)
-@property (nonatomic, readonly) double longitude;
+@property (nonatomic, assign) double longitude;
+
+//! Date created
+@property (nonatomic, retain) NSDate *created;
 
 #pragma mark Instantiation Methods
 

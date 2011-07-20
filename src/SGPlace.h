@@ -1,8 +1,8 @@
 //
-//  SGGeometry.m
+//  SGPlace.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,37 +28,66 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGGeometry.h"
+#import "SGFeature.h"
 #import "SGPoint.h"
-#import "SGPolygon.h"
-#import "SGMultiPolygon.h"
 
-@implementation SGGeometry
-
-#pragma mark GeoJSON -> SGGeometry
-
-+ (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
+/*!
+ * SimpleGeo Place representation
+ */
+@interface SGPlace : SGFeature
 {
-    return [[[SGGeometry alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
+    // required
+    NSString *name;
+    BOOL isPrivate;
 }
 
-- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
-{
-    NSString *type = [geoJSONGeometry objectForKey:@"type"];
-    if ([type isEqual:@"Point"]) return [[SGPoint alloc] initWithGeoJSON:geoJSONGeometry];
-    else if ([type isEqual:@"Polygon"]) return [[SGPolygon alloc] initWithGeoJSON:geoJSONGeometry];
-    else if ([type isEqual:@"MultiPolygon"]) return [[SGMultiPolygon alloc] initWithGeoJSON:geoJSONGeometry];    
-    return nil;
-}
+//! Place name
+@property (nonatomic, retain) NSString *name;
 
-#pragma mark SGGeometry -> GeoJSON
+//! Place visibility
+@property (nonatomic, assign) BOOL isPrivate;
 
-- (NSDictionary *)asGeoJSON
-{
-    // subclasses must implement
-    return nil;
-}
+#pragma mark Instantiation Methods
 
-#pragma mark Comparison Methods
+/*!
+ * Create an SGPlace with a name, and location
+ * @param name          Place name
+ * @param point         Place location
+ */
++ (SGPlace *)placeWithName:(NSString *)name
+                     point:(SGPoint *)point;
+
+/*!
+ * Create an SGPlace with a point-feature and name
+ * @param feature       Point feature
+ * @param name          Place name
+ */
++ (SGPlace *)placeWithFeature:(SGFeature *)feature
+                         name:(NSString *)name;
+
+/*!
+ * Construct an SGPlace from a dictionary that
+ * abides by the GeoJSON Feature specification.
+ * Note: geoJSON Feature must contain a "name"
+ * key and value in the property dictionary
+ * @param feature       Feature dictionary
+ */
++ (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature;
+
+/*!
+ * Construct an SGPlace with a name and location
+ * @param name          Place name
+ * @param point         Place location
+ */
+- (id)initWithName:(NSString *)name
+             point:(SGPoint *)point;
+
+/*!
+ * Construct an SGPlace with a point-feature and name
+ * @param feature       Point feature
+ * @param name          Place name
+ */
+- (id)initWithFeature:(SGFeature *)feature
+                 name:(NSString *)name;
 
 @end

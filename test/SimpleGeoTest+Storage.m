@@ -32,15 +32,18 @@
 #import "SimpleGeo+Storage.h"
 #import "NSArray+GeoJSON.h"
 
-@implementation SimpleGeoTest (Storage)
+@interface StorageReadTests : SimpleGeoTest
+@end
+
+@implementation StorageReadTests
 
 #pragma mark Records Requests Tests
 
-- (void)testGetRecordAndConversion
+- (void)testGetRecordAndConvert
 {
     [self prepare];
-    [[self client] getRecord:SGTestRecordID
-                     inLayer:SGTestLayer
+    [[self client] getRecord:SGTestStorageGETRecordID
+                     inLayer:SGTestStorageGETLayer
                     callback:[SGCallback callbackWithSuccessBlock:
                               ^(NSDictionary *response) {
                                   SGStoredRecord *record = [SGStoredRecord recordWithGeoJSON:response];
@@ -55,7 +58,7 @@
 - (void)testGetRecordsForPoint
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
     [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -63,7 +66,7 @@
 - (void)testGetRecordsForAddress
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestLayer];
+    SGStorageQuery *query = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestStorageGETLayer];
     [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -71,17 +74,17 @@
 - (void)testGetRecordsForEnvelope
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithEnvelope:[self envelope] layer:SGTestLayer];
+    SGStorageQuery *query = [SGStorageQuery queryWithEnvelope:[self envelope] layer:SGTestStorageGETLayer];
     [[self client] getRecordsForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsWithLimitsAndRecordCollectionConversion
+- (void)testGetRecordsWithLimitsAndConvertRecordCollection
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [query setRadius:15.0];
-    [query setLimit:10];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
+    [query setRadius:SGTestRadius];
+    [query setLimit:SGTestLimit];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -93,12 +96,12 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordsInDateRangeAndSortingScheme
+- (void)testGetRecordsInDateRangeAndSort
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:-20000]];
-    [query setStartDate:[NSDate date]];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
+    [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:SGTestStorageGETStart]];
+    [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:SGTestStorageGETEnd]];
     [query setSortType:SGSortOrderCreatedDescending];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
@@ -113,10 +116,10 @@
 - (void)testGetRecordsMatchingStringProperty
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [query setProperty:SGTestPropertyString
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
+    [query setProperty:SGTestStorageGETPropStringKey
                 ofType:SGStoredPropertyTypeString
-                equals:SGTestPropertyStringValue];
+                equals:SGTestStorageGETPropStringValue];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -128,16 +131,17 @@
 
 - (void)testGetRecordsMatchingBooleanProperty
 {
-    // property = value
+    // TODO
+    GHAssertNotNil(nil, @"bool prop");
 }
 
 - (void)testGetRecordsMatchingNumberPropertyRange
 {
     [self prepare];
-    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
-    [query setProperty:SGTestPropertyNumber ofType:SGStoredPropertyTypeNumber];
-    [query setPropertyStartValue:[NSNumber numberWithInt:SGTestPropertyNumberStart]];
-    [query setPropertyEndValue:[NSNumber numberWithInt:SGTestPropertyNumberEnd]];
+    SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
+    [query setProperty:SGTestStorageGETPropNumberKey ofType:SGStoredPropertyTypeNumber];
+    [query setPropertyStartValue:[NSNumber numberWithInt:SGTestStorageGETPropNumberStartValue]];
+    [query setPropertyEndValue:[NSNumber numberWithInt:SGTestStorageGETPropNumberEndValue]];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -147,11 +151,11 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testGetRecordHistory
+- (void)testGetRecordHistoryAndConvertGeometryCollection
 {
     [self prepare];
-    [[self client] getHistoryForRecord:SGTestRecordID
-                               inLayer:SGTestLayer
+    [[self client] getHistoryForRecord:SGTestStorageGETRecordID
+                               inLayer:SGTestStorageGETLayer
                                  limit:[NSNumber numberWithInt:SGTestLimit]
                                 cursor:nil
                               callback:[SGCallback callbackWithSuccessBlock:
@@ -166,23 +170,16 @@
 
 - (void)testGetRecordHistoryWithCursor
 {
-    // history pagination
+    // TODO
+    GHAssertNotNil(nil, @"history pagination");
 }
-
-#pragma mark Records Manipulation Tests
-
-// add
-// add many
-// update
-// update many
-// delete
 
 #pragma mark Layers Request Tests
 
 - (void)testGetLayer
 {
     [self prepare];
-    [[self client] getLayer:SGTestLayer callback:SGTestCallback];
+    [[self client] getLayer:SGTestStorageGETLayer callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -196,14 +193,80 @@
 - (void)testGetLayersWithCursor
 {
     [self prepare];
-    [[self client] getLayersWithCursor:SGTestLayerCursor callback:SGTestCallback];
+    [[self client] getLayersWithCursor:SGTestStorageGETLayersCursor callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
+@end
+
+@interface StorageWriteTests : SimpleGeoTest
+@end
+
+@implementation StorageWriteTests
+
 #pragma mark Layers Manipulation Tests
 
-// add layer
-// update layer
-// delete layer
+- (void)testAddLayer
+{
+    [self prepare];
+    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
+                              title:@"Temporary iOS Test Layer"
+                        description:@"SimpleGeo iOS client test layer"
+                       callbackURLs:nil
+                           callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testUpdateLayer
+{
+    [self prepare];
+    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
+                              title:@"Temporary iOS Test Layer"
+                        description:@"updated!"
+                       callbackURLs:nil
+                           callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)test__DeleteLayer
+{
+    [self prepare];
+    [[self client] deleteLayer:@"com.simplegeo.testing.ios"
+                      callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+#pragma mark Records Manipulation Tests
+
+- (void)testAddRecord
+{
+    [self prepare];
+    SGStoredRecord *record = [SGStoredRecord recordWithFeature:[self feature]
+                                                         layer:SGTestStoragePOSTLayer];
+    [record setIdentifier:SGTestPOSTFeatureID];
+    [[self client] addOrUpdateRecord:record
+                            callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testAddUpdateRecords
+{
+    [self prepare];
+    SGStoredRecord *record = [SGStoredRecord recordWithID:SGTestPOSTFeatureID
+                                                    point:[self point]
+                                                    layer:SGTestStoragePOSTLayer];
+    [[self client] addOrUpdateRecord:record
+                            callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)test_DeleteRecord
+{
+    [self prepare];
+    [[self client] deleteRecord:SGTestPOSTFeatureID
+                        inLayer:SGTestStoragePOSTLayer
+                       callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
 
 @end
