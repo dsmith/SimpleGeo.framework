@@ -30,11 +30,6 @@
 
 #import "SGTypes.h"
 
-#pragma mark GeoJSON Types
-
-GeoJSONCollectionType const GeoJSONCollectionTypeFeature = @"FeatureCollection";
-GeoJSONCollectionType const GeoJSONCollectionTypeGeometry = @"GeometryCollection";
-
 #pragma mark Context Filters
 
 SGContextFilter const SGContextFilterQuery = @"query";

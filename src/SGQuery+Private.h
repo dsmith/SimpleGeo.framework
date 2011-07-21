@@ -1,8 +1,8 @@
 //
-//  NSArray+GeoJSON.h
+//  SGQuery+Private.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,34 +28,44 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
-#import "SGTypes.h"
+@interface SGQuery (SGQuery_Private)
 
-@interface NSArray (GeoJSON)
-
-#pragma mark SGGeometry -> GeoJSON
+#pragma mark Instantiation Methods
 
 /*!
- * Create an array of SGGeometry objects from
- * a GeoJSON GeometryCollection or FeatureCollection
- * @param collection A GeoJSON Collection
+ * Create a point-based API query
+ * @param point Point
  */
-+ (NSArray *)arrayWithGeoJSONCollection:(NSDictionary *)collection;
++ (id)queryWithPoint:(SGPoint *)point;
 
 /*!
- * Construct an array of SGGeometry objects from
- * a GeoJSON GeometryCollection or FeatureCollection
- * @param collection A GeoJSON Collection
+ * Create an address-based API query
+ * @param address Address
  */
-- (id)initWithGeoJSONCollection:(NSDictionary *)collection;
-
-#pragma mark GeoJSON -> SGGeometry
++ (id)queryWithAddress:(NSString *)address;
 
 /*!
- * A GeoJSON collection dictionary from
- * an array of SGGeometries, SGFeatures, or SGStoredRecords
- * @param collectionType    Type of geoJSON collection (Feature/Geometry)
+ * Create an a bounding box API query
+ * @param bounds Bounding box
  */
-- (NSDictionary *)asGeoJSONCollection:(GeoJSONCollectionType)collectionType;
++ (id)queryWithEnvelope:(SGEnvelope *)envelope;
+
+/*!
+ * Construct a point-based API query
+ * @param point Point
+ */
+- (id)initWithPoint:(SGPoint *)point;
+
+/*!
+ * Construct an address-based API query
+ * @param address Address
+ */
+- (id)initWithAddress:(NSString *)address;
+
+/*!
+ * Construct a bounding box API query
+ * @param bounds Bounding box
+ */
+- (id)initWithEnvelope:(SGEnvelope *)envelope;
 
 @end

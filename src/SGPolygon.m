@@ -83,12 +83,6 @@
     return nil;
 }
 
-- (void)dealloc
-{
-    [rings release];
-    [super dealloc];
-}
-
 #pragma mark Convenience Methods
 
 - (NSArray *)boundary
@@ -170,6 +164,14 @@
         [allRings addObject:thisRing];
     }
     return [self initWithRings:allRings];
+}
+
+#pragma mark Memory
+
+- (void)dealloc
+{
+    [rings release];
+    [super dealloc];
 }
 
 @end

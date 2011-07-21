@@ -52,8 +52,9 @@
 #import "SGStorageQuery.h"
 
 #import "SGTypes.h"
+#import "SGCategories.h"
 #import "SGCallback.h"
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 
 /*!
  * \mainpage

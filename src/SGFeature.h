@@ -26,54 +26,36 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 
-#import "SGGeometry.h"
+#import "SGObject.h"
+#import "SGObject+Private.h"
 
 /*!
  * SimpleGeo Feature representation
  */
-@interface SGFeature : NSObject
+@interface SGFeature : SGObject
 {
     // required
-    SGGeometry *geometry;
+    NSString *name;
     // optional
-    NSString *identifier;
-    NSDate *created;
-    NSMutableDictionary *properties;
-    // from API
-    NSDictionary *selfLink;
-    NSNumber *distance;
+    NSString *type;
+    NSString *category;
+    NSString *subcategory;
 }
 
-//! Feature ID
-@property (nonatomic, retain) NSString *identifier;
+//! Feature name
+@property (nonatomic, retain) NSString *name;
 
-//! Feature geometry
-@property (nonatomic, retain) SGGeometry *geometry;
+//! Feature type
+@property (nonatomic, retain) NSString *type;
 
-//! Created timestamp
-@property (nonatomic, retain) NSDate *created;
+//! Feature category
+@property (nonatomic, retain) NSString *category;
 
-//! Feature properties
-@property (nonatomic, retain) NSDictionary *properties;
-
-//! API URL for the feature.
-//! Only present if the feature originated from an API request
-@property (nonatomic, readonly) NSDictionary *selfLink;
-
-//! Distance (in meters) from the query point.
-//! Valid for SGFeatures with point geometry
-//! Only present if the feature originated from a nearby request
-@property (nonatomic, readonly) NSNumber *distance;
+//! Feature subcategory
+@property (nonatomic, retain) NSString *subcategory;
 
 #pragma mark Instantiation Methods
-
-/*!
- * Create an SGFeature with a geometry
- * @param geometry      Feature geometry
- */
-+ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry;
 
 /*!
  * Create an SGFeature from a dictionary that
@@ -81,33 +63,5 @@
  * @param feature       Feature dictionary
  */
 + (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-/*!
- * Construct an SGFeature a geometry
- * @param geometry      Feature geometry
- */
-- (id)initWithGeometry:(SGGeometry *)geometry;
-
-/*!
- * Construct an SGFeature from a dictionary that
- * abides by the GeoJSON Feature specification
- * @param feature       Feature dictionary
- */
-- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-#pragma mark Convenience Methods
-
-/*!
- * Set properties; creates a
- * deep mutable copy of the properties dictionary
- * @param properties    Feature properties
- */
-- (void)setProperties:(NSDictionary *)properties;
-
-/*!
- * Dictionary representation of the SGFeature that
- * conforms to the geoJSON Feature specification
- */
-- (NSDictionary *)asGeoJSON;
 
 @end

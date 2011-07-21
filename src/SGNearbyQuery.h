@@ -29,6 +29,7 @@
 //
 
 #import "SGQuery.h"
+#import "SGQuery+Private.h"
 
 /*!
  * Abstract class for a SimplGeo nearby API query

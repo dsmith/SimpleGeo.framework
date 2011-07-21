@@ -40,8 +40,8 @@
 - (void)testAddPlace
 {
     [self prepare];
-    SGPlace *place = [SGPlace placeWithFeature:[self feature]
-                                          name:@"Test Place #1"];
+    SGPlace *place = [SGPlace placeWithName:@"Test Place #1"
+                                      point:[self point]];
     [[self client] addPlace:place
                    callback:[SGCallback callbackWithSuccessBlock:
                              ^(NSDictionary *response) {
@@ -68,8 +68,8 @@
 - (void)testUpdatePlace
 {
     [self prepare];
-    SGPlace *place = [SGPlace placeWithFeature:[self feature]
-                                          name:@"Updated"];
+    SGPlace *place = [SGPlace placeWithName:@"Updated"
+                                      point:[self point]];
     [place setIsPrivate:YES];
     [[self client] updatePlace:[self.addedPlaceIDs objectAtIndex:1]
                      withPlace:place
@@ -120,7 +120,7 @@
                                    ^(NSDictionary *response) {
                                        GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
                                                                query.limit, @"Should return no more records than the limit");
-                                       [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeFeature];
+                                       [self checkSGCollectionConversion:response type:SGCollectionTypePlaces];
                                        [self successBlock](response);
                                    } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];

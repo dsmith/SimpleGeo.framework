@@ -26,116 +26,60 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 
 #import "SGFeature.h"
-#import "SGGeometry.h"
 
 @implementation SGFeature
 
-@synthesize identifier, geometry, properties, created, distance, selfLink;
+@synthesize name, type, category, subcategory;
 
 #pragma mark Instantiation Methods
-
-+ (SGFeature *)featureWithGeometry:(SGGeometry *)geometry
-{
-    return [[[SGFeature alloc] initWithGeometry:geometry] autorelease];
-}
 
 + (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
     return [[[SGFeature alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
-- (id)initWithGeometry:(SGGeometry *)aGeometry
-{
-    self = [super init];
-    if (self) {
-        geometry = [aGeometry retain];
-    }
-    return self;
-}
-
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    self = [self initWithGeometry:[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]]];
+    self = [super initWithGeoJSON:geoJSONFeature];
     if (self) {
-        // id
-        identifier = [[geoJSONFeature objectForKey:@"id"] retain];
-        // properties
-        [self setProperties:[geoJSONFeature objectForKey:@"properties"]];
-        // date
-        NSNumber *epoch = [geoJSONFeature objectForKey:@"created"];
-        if (epoch) created = [[NSDate alloc] initWithTimeIntervalSince1970:[epoch intValue]];
-        // link
-        NSDictionary *selfLinkDict = [geoJSONFeature objectForKey:@"selfLink"];
-        if (selfLinkDict) selfLink = [[selfLinkDict objectForKey:@"href"] retain];
-        // distance
-        distance = [[geoJSONFeature objectForKey:@"distance"] retain];
+        // self link
+        selfLink = [[properties objectForKey:@"href"] retain];
+        [properties removeObjectForKey:@"href"];
+        // subclasses should set distance
+        
+        // name
+        name = [[properties objectForKey:@"name"] retain];
+        [properties removeObjectForKey:@"name"];
+        // classifiers
+        NSDictionary *classifiers = [properties objectForKey:@"classifiers"];
+        type = [[classifiers objectForKey:@"type"] retain];
+        category = [[classifiers objectForKey:@"category"] retain];
+        subcategory = [[classifiers objectForKey:@"subcategory"] retain];
+        [properties removeObjectForKey:@"classifiers"];
     }
     return self;
 }
 
 #pragma mark Convenience Methods
 
-- (void)setProperties:(NSDictionary *)someProperties
-{
-    [properties release];
-    properties = [[NSMutableDictionary dictionaryWithDictionary:someProperties] retain];
-}
-
 - (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:@"Feature" forKey:@"type"];
-    [dictionary setValue:identifier forKey:@"id"];
-    [dictionary setValue:[geometry asGeoJSON] forKey:@"geometry"];
-    if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
-    if (selfLink) [dictionary setValue:[NSDictionary dictionaryWithObject:selfLink forKey:@"href"] forKey:@"selfLink"]; // TODO remove?
-    [dictionary setValue:distance forKey:@"distance"]; // TODO remove?
-    [dictionary setValue:[NSMutableDictionary dictionaryWithDictionary:properties] forKey:@"properties"];
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
+    
+    [[dictionary objectForKey:@"properties"] setValue:selfLink forKey:@"href"]; // self link
+    // subclasses should set distance
+    
+    [[dictionary objectForKey:@"properties"] setValue:name forKey:@"name"]; // name
+    // classifiers
+    NSMutableDictionary *classifiers = [NSMutableDictionary dictionary];
+    [classifiers setValue:type forKey:@"type"];
+    [classifiers setValue:type forKey:@"category"];
+    [classifiers setValue:type forKey:@"subcategory"];
+    [[dictionary objectForKey:@"properties"] setValue:classifiers forKey:@"classifiers"];
+    
     return dictionary;
-}
-
-- (NSString *)description
-{
-    return [[self asGeoJSON] description];
-}
-
-#pragma mark Comparison Methods
-
-- (BOOL)isEqual:(id)object
-{
-    if (object == self) return YES;
-    if (!object || ![object isKindOfClass:[self class]]) return NO;
-    return [identifier isEqual:[object identifier]] && [geometry isEqual:[object geometry]];
-}
-
-- (NSUInteger)hash
-{
-    return [identifier hash] + [geometry hash];
-}
-
-#pragma mark Memory
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    SGFeature *newFeature = [[SGFeature allocWithZone:zone] initWithGeometry:self.geometry];
-    [newFeature setIdentifier:identifier];
-    [newFeature setProperties:properties];
-    [newFeature setCreated:created];
-    return newFeature;
-}
-
-- (void)dealloc
-{
-    [identifier release];
-    [geometry release];
-    [properties release];
-    [created release];
-    [distance release];
-    [selfLink release];
-    [super dealloc];
 }
 
 @end

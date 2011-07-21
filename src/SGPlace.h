@@ -29,20 +29,20 @@
 //
 
 #import "SGFeature.h"
-#import "SGPoint.h"
+@class SGPoint;
 
 /*!
  * SimpleGeo Place representation
  */
 @interface SGPlace : SGFeature
 {
-    // required
-    NSString *name;
+    // optional
+    NSMutableArray *tags;
     BOOL isPrivate;
 }
 
-//! Place name
-@property (nonatomic, retain) NSString *name;
+//! Place tags
+@property (nonatomic, retain) NSMutableArray *tags;
 
 //! Place visibility
 @property (nonatomic, assign) BOOL isPrivate;
@@ -56,14 +56,6 @@
  */
 + (SGPlace *)placeWithName:(NSString *)name
                      point:(SGPoint *)point;
-
-/*!
- * Create an SGPlace with a point-feature and name
- * @param feature       Point feature
- * @param name          Place name
- */
-+ (SGPlace *)placeWithFeature:(SGFeature *)feature
-                         name:(NSString *)name;
 
 /*!
  * Construct an SGPlace from a dictionary that
@@ -81,13 +73,5 @@
  */
 - (id)initWithName:(NSString *)name
              point:(SGPoint *)point;
-
-/*!
- * Construct an SGPlace with a point-feature and name
- * @param feature       Point feature
- * @param name          Place name
- */
-- (id)initWithFeature:(SGFeature *)feature
-                 name:(NSString *)name;
 
 @end

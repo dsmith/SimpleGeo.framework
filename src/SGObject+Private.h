@@ -1,8 +1,8 @@
 //
-//  SGStoredRecord.h
+//  SGObject+Private.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -29,61 +29,38 @@
 //
 
 #import "SGObject.h"
-#import "SGObject+Private.h"
-@class SGPoint;
 
-/*!
- * SimpleGeo Stored Record representation
- */
-@interface SGStoredRecord : SGObject
-{
-    // required
-    NSString *layer;
-    // optional
-    NSDate *created;
-    // from API
-    NSDictionary *layerLink;
-}
-
-//! Layer name
-@property (nonatomic, retain) NSString *layer;
-
-//! Record timestamp
-@property (nonatomic, retain) NSDate *created;
-
-//! API URL for the record layer.
-// Only present if the record originated from an API request
-@property (nonatomic, readonly) NSDictionary *layerLink;
+@interface SGObject (Private)
 
 #pragma mark Instantiation Methods
 
 /*!
- * Create an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
+ * Create an SGObject from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature       Feature dictionary
  */
-+ (SGStoredRecord *)recordWithID:(NSString *)identifier
-                           point:(SGPoint *)point
-                           layer:(NSString *)layerName;
++ (SGObject *)objectWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 /*!
- * Create an SGStoredRecord from a dictionary that
- * abides by the GeoJSON Feature specification.
- * Note: geoJSON Feature must contain a "layer"
- * key and value in the property dictionary
- * @param feature   Feature dictionary
+ * Construct an SGObject from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature       Feature dictionary
  */
-+ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature;
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
+
+#pragma mark Convenience Methods
 
 /*!
- * Construct an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
+ * Set properties; creates a
+ * deep mutable copy of a properties dictionary
+ * @param properties    Feature properties
  */
-- (id)initWithID:(NSString *)identifier
-           point:(SGPoint *)point
-           layer:(NSString *)layerName;
+- (void)setProperties:(NSDictionary *)properties;
+
+/*!
+ * Dictionary representation of the SGObject that
+ * conforms to the geoJSON Feature specification
+ */
+- (NSDictionary *)asGeoJSON;
 
 @end

@@ -59,6 +59,4 @@
     return nil;
 }
 
-#pragma mark Comparison Methods
-
 @end

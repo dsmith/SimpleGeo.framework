@@ -1,5 +1,5 @@
 //
-//  SGStoredRecord.h
+//  NSArray+SGGeoJSON.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2011, SimpleGeo Inc.
@@ -28,62 +28,44 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGObject.h"
-#import "SGObject+Private.h"
-@class SGPoint;
+#import "SGTypes.h"
+
+@interface NSArray (SGGeoJSON)
+
+#pragma mark SGCollection -> SGObjects
+
+typedef enum {
+    SGCollectionTypePoints,
+    SGCollectionTypeFeatures,
+    SGCollectionTypePlaces,
+    SGCollectionTypeRecords,
+} SGCollectionType;
 
 /*!
- * SimpleGeo Stored Record representation
+ * Create an array of SGGeometry or SGFeature objects from
+ * a GeoJSON Collection returned from SimpleGeo
+ * @param collection    GeoJSON Collection
+ * @param type          Collection type
  */
-@interface SGStoredRecord : SGObject
-{
-    // required
-    NSString *layer;
-    // optional
-    NSDate *created;
-    // from API
-    NSDictionary *layerLink;
-}
-
-//! Layer name
-@property (nonatomic, retain) NSString *layer;
-
-//! Record timestamp
-@property (nonatomic, retain) NSDate *created;
-
-//! API URL for the record layer.
-// Only present if the record originated from an API request
-@property (nonatomic, readonly) NSDictionary *layerLink;
-
-#pragma mark Instantiation Methods
++ (NSArray *)arrayWithSGCollection:(NSDictionary *)collection
+                              type:(SGCollectionType)collectionType;
 
 /*!
- * Create an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
+ * Construct an array of SGGeometry or SGFeature objects from
+ * a GeoJSON Collection returned from SimpleGeo
+ * @param collection    GeoJSON Collection
+ * @param type          Collection type
  */
-+ (SGStoredRecord *)recordWithID:(NSString *)identifier
-                           point:(SGPoint *)point
-                           layer:(NSString *)layerName;
+- (id)initWithSGCollection:(NSDictionary *)collection
+                      type:(SGCollectionType)collectionType;
+
+#pragma mark SGObjects -> SGCollection
 
 /*!
- * Create an SGStoredRecord from a dictionary that
- * abides by the GeoJSON Feature specification.
- * Note: geoJSON Feature must contain a "layer"
- * key and value in the property dictionary
- * @param feature   Feature dictionary
+ * Create a GeoJSON Collection dictionary from
+ * an array of SGGeometries or SGFeatures
+ * @param collectionType    Type of geoJSON collection (Feature/Geometry)
  */
-+ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-/*!
- * Construct an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
- */
-- (id)initWithID:(NSString *)identifier
-           point:(SGPoint *)point
-           layer:(NSString *)layerName;
+- (NSDictionary *)asSGCollection:(SGCollectionType)collectionType;
 
 @end

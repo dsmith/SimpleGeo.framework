@@ -28,8 +28,8 @@
 		5D4A7BAD12F2174A00A2C443 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674B612909AAB006B7D51 /* SystemConfiguration.framework */; };
 		5D5AD28712DD1CF5008810F0 /* ASIBase64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D5AD28412DD1CF5008810F0 /* ASIBase64Transcoder.c */; };
 		5D5AD28812DD1CF5008810F0 /* ASIBase64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5AD28512DD1CF5008810F0 /* ASIBase64Transcoder.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		5D5B03701291BD4500399A50 /* SGFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B036D1291BD4500399A50 /* SGFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5D5B03711291BD4500399A50 /* SGFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B036E1291BD4500399A50 /* SGFeature.m */; };
+		5D5B03701291BD4500399A50 /* SGObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B036D1291BD4500399A50 /* SGObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5D5B03711291BD4500399A50 /* SGObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B036E1291BD4500399A50 /* SGObject.m */; };
 		5D7674B712909AAB006B7D51 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674B612909AAB006B7D51 /* SystemConfiguration.framework */; };
 		5D7674BD12909ACB006B7D51 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7674BC12909ACB006B7D51 /* CoreServices.framework */; };
 		5D7676171290EAE1006B7D51 /* SimpleGeo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7676141290EAE1006B7D51 /* SimpleGeo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -72,8 +72,6 @@
 		940F621513D0AE83004FA337 /* GHUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 940F621113D0AE66004FA337 /* GHUnit.framework */; };
 		940F621613D0AE85004FA337 /* GHUnit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 940F621113D0AE66004FA337 /* GHUnit.framework */; };
 		940F621813D0DA57004FA337 /* SGTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 940F621713D0DA57004FA337 /* SGTypes.m */; };
-		9426DD4E13C4082000C82030 /* SGNearbyQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4413C4082000C82030 /* SGNearbyQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9426DD4F13C4082000C82030 /* SGNearbyQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4513C4082000C82030 /* SGNearbyQuery.m */; };
 		9426DD5013C4082000C82030 /* SGPlacesQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4613C4082000C82030 /* SGPlacesQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9426DD5113C4082000C82030 /* SGPlacesQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 9426DD4713C4082000C82030 /* SGPlacesQuery.m */; };
 		9426DD5213C4082000C82030 /* SGQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 9426DD4813C4082000C82030 /* SGQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,8 +84,7 @@
 		942A69D413D5E795002F11FC /* SGCallback.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A69D213D5E795002F11FC /* SGCallback.m */; };
 		942A69D713D5E79F002F11FC /* SimpleGeo+Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 942A69D513D5E79E002F11FC /* SimpleGeo+Feature.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		942A69D813D5E79F002F11FC /* SimpleGeo+Feature.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A69D613D5E79E002F11FC /* SimpleGeo+Feature.m */; };
-		942A69DB13D5E7A7002F11FC /* NSArray+GeoJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 942A69D913D5E7A7002F11FC /* NSArray+GeoJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		942A69DC13D5E7A7002F11FC /* NSArray+GeoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A69DA13D5E7A7002F11FC /* NSArray+GeoJSON.m */; };
+		942A69DC13D5E7A7002F11FC /* NSArray+SGCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A69DA13D5E7A7002F11FC /* NSArray+SGCollection.m */; };
 		944FE58313CF4FA0009A1C2F /* SimpleGeo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* SimpleGeo.framework */; };
 		944FE58413CF4FB6009A1C2F /* SimpleGeo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* SimpleGeo.framework */; };
 		945DA1EC13C68C2E00D3984A /* SGTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 945DA1EB13C68C2E00D3984A /* SGTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -100,6 +97,14 @@
 		94925CD813D7A8730078F539 /* SGPoint+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 942A69E113D5FD23002F11FC /* SGPoint+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		94925CD913D7A8760078F539 /* SGPolygon+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 942A69E313D5FD3E002F11FC /* SGPolygon+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		94925CDA13D7A8820078F539 /* SimpleGeo+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D39921A12A48F3F00EB7B20 /* SimpleGeo+Internal.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		94925CF013D8A0120078F539 /* SGCategories.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CEF13D8A0120078F539 /* SGCategories.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94925CF213D8A0210078F539 /* SGQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CF113D8A0210078F539 /* SGQuery+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		94925CF413D8A02E0078F539 /* SGObject+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CF313D8A02E0078F539 /* SGObject+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		94925CF713D8A0350078F539 /* SGFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CF513D8A0340078F539 /* SGFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94925CF813D8A0350078F539 /* SGFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 94925CF613D8A0350078F539 /* SGFeature.m */; };
+		94925CFA13D8A1AA0078F539 /* NSArray+SGCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CF913D8A1A90078F539 /* NSArray+SGCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94925CFD13D8A2030078F539 /* SGNearbyQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94925CFB13D8A2020078F539 /* SGNearbyQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		94925CFE13D8A2030078F539 /* SGNearbyQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94925CFC13D8A2020078F539 /* SGNearbyQuery.m */; };
 		949AE6A813D344F40093C59E /* SimpleGeo.m in Sources */ = {isa = PBXBuildFile; fileRef = 949AE6A713D344F40093C59E /* SimpleGeo.m */; };
 		EA29A537131311B700979D1A /* SimpleGeoTest+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = EA29A536131311B700979D1A /* SimpleGeoTest+Storage.m */; };
 /* End PBXBuildFile section */
@@ -154,8 +159,8 @@
 		5D4A79B112F211CA00A2C443 /* Global.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Global.xcconfig; sourceTree = "<group>"; };
 		5D5AD28412DD1CF5008810F0 /* ASIBase64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ASIBase64Transcoder.c; path = ext/TouchFoundation/ASIBase64Transcoder.c; sourceTree = "<group>"; };
 		5D5AD28512DD1CF5008810F0 /* ASIBase64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ASIBase64Transcoder.h; path = ext/TouchFoundation/ASIBase64Transcoder.h; sourceTree = "<group>"; };
-		5D5B036D1291BD4500399A50 /* SGFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGFeature.h; path = src/SGFeature.h; sourceTree = "<group>"; };
-		5D5B036E1291BD4500399A50 /* SGFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGFeature.m; path = src/SGFeature.m; sourceTree = "<group>"; };
+		5D5B036D1291BD4500399A50 /* SGObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGObject.h; path = src/SGObject.h; sourceTree = "<group>"; };
+		5D5B036E1291BD4500399A50 /* SGObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGObject.m; path = src/SGObject.m; sourceTree = "<group>"; };
 		5D7674B612909AAB006B7D51 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5D7674BA12909ABA006B7D51 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5D7674BC12909ACB006B7D51 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
@@ -205,8 +210,6 @@
 		940F621113D0AE66004FA337 /* GHUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnit.framework; path = ext/GHUnit.framework; sourceTree = "<group>"; };
 		940F621213D0AE66004FA337 /* YAJL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAJL.framework; path = ext/YAJL.framework; sourceTree = "<group>"; };
 		940F621713D0DA57004FA337 /* SGTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGTypes.m; path = src/SGTypes.m; sourceTree = "<group>"; };
-		9426DD4413C4082000C82030 /* SGNearbyQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGNearbyQuery.h; path = src/SGNearbyQuery.h; sourceTree = "<group>"; };
-		9426DD4513C4082000C82030 /* SGNearbyQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGNearbyQuery.m; path = src/SGNearbyQuery.m; sourceTree = "<group>"; };
 		9426DD4613C4082000C82030 /* SGPlacesQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGPlacesQuery.h; path = src/SGPlacesQuery.h; sourceTree = "<group>"; };
 		9426DD4713C4082000C82030 /* SGPlacesQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGPlacesQuery.m; path = src/SGPlacesQuery.m; sourceTree = "<group>"; };
 		9426DD4813C4082000C82030 /* SGQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGQuery.h; path = src/SGQuery.h; sourceTree = "<group>"; };
@@ -219,8 +222,7 @@
 		942A69D213D5E795002F11FC /* SGCallback.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGCallback.m; path = src/SGCallback.m; sourceTree = "<group>"; };
 		942A69D513D5E79E002F11FC /* SimpleGeo+Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SimpleGeo+Feature.h"; path = "src/SimpleGeo+Feature.h"; sourceTree = "<group>"; };
 		942A69D613D5E79E002F11FC /* SimpleGeo+Feature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SimpleGeo+Feature.m"; path = "src/SimpleGeo+Feature.m"; sourceTree = "<group>"; };
-		942A69D913D5E7A7002F11FC /* NSArray+GeoJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+GeoJSON.h"; path = "src/NSArray+GeoJSON.h"; sourceTree = "<group>"; };
-		942A69DA13D5E7A7002F11FC /* NSArray+GeoJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+GeoJSON.m"; path = "src/NSArray+GeoJSON.m"; sourceTree = "<group>"; };
+		942A69DA13D5E7A7002F11FC /* NSArray+SGCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSArray+SGCollection.m"; path = "src/NSArray+SGCollection.m"; sourceTree = "<group>"; };
 		942A69E113D5FD23002F11FC /* SGPoint+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGPoint+Private.h"; path = "src/SGPoint+Private.h"; sourceTree = "<group>"; };
 		942A69E313D5FD3E002F11FC /* SGPolygon+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGPolygon+Private.h"; path = "src/SGPolygon+Private.h"; sourceTree = "<group>"; };
 		945DA1EB13C68C2E00D3984A /* SGTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGTypes.h; path = src/SGTypes.h; sourceTree = "<group>"; };
@@ -230,6 +232,14 @@
 		945DA1F313C68C4700D3984A /* SGEnvelope.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGEnvelope.m; path = src/SGEnvelope.m; sourceTree = "<group>"; };
 		946F0B3F13D69ADF00308E99 /* SGPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGPlace.h; path = src/SGPlace.h; sourceTree = "<group>"; };
 		946F0B4013D69ADF00308E99 /* SGPlace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGPlace.m; path = src/SGPlace.m; sourceTree = "<group>"; };
+		94925CEF13D8A0120078F539 /* SGCategories.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGCategories.h; path = src/SGCategories.h; sourceTree = "<group>"; };
+		94925CF113D8A0210078F539 /* SGQuery+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGQuery+Private.h"; path = "src/SGQuery+Private.h"; sourceTree = "<group>"; };
+		94925CF313D8A02E0078F539 /* SGObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SGObject+Private.h"; path = "src/SGObject+Private.h"; sourceTree = "<group>"; };
+		94925CF513D8A0340078F539 /* SGFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGFeature.h; path = src/SGFeature.h; sourceTree = "<group>"; };
+		94925CF613D8A0350078F539 /* SGFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGFeature.m; path = src/SGFeature.m; sourceTree = "<group>"; };
+		94925CF913D8A1A90078F539 /* NSArray+SGCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSArray+SGCollection.h"; path = "src/NSArray+SGCollection.h"; sourceTree = "<group>"; };
+		94925CFB13D8A2020078F539 /* SGNearbyQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGNearbyQuery.h; path = src/SGNearbyQuery.h; sourceTree = "<group>"; };
+		94925CFC13D8A2020078F539 /* SGNearbyQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGNearbyQuery.m; path = src/SGNearbyQuery.m; sourceTree = "<group>"; };
 		949AE6A713D344F40093C59E /* SimpleGeo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleGeo.m; path = src/SimpleGeo.m; sourceTree = "<group>"; };
 		94A6C00413D14BC900E205A0 /* SimpleGeoTestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleGeoTestSettings.h; path = test/SimpleGeoTestSettings.h; sourceTree = "<group>"; };
 		EA29A536131311B700979D1A /* SimpleGeoTest+Storage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SimpleGeoTest+Storage.m"; path = "test/SimpleGeoTest+Storage.m"; sourceTree = "<group>"; };
@@ -463,12 +473,13 @@
 		9426DD5913C4082600C82030 /* Query Object */ = {
 			isa = PBXGroup;
 			children = (
+				94925CF113D8A0210078F539 /* SGQuery+Private.h */,
 				9426DD4813C4082000C82030 /* SGQuery.h */,
 				9426DD4913C4082000C82030 /* SGQuery.m */,
+				94925CFB13D8A2020078F539 /* SGNearbyQuery.h */,
+				94925CFC13D8A2020078F539 /* SGNearbyQuery.m */,
 				945DA1EE13C68C3A00D3984A /* SGContextQuery.h */,
 				945DA1EF13C68C3A00D3984A /* SGContextQuery.m */,
-				9426DD4413C4082000C82030 /* SGNearbyQuery.h */,
-				9426DD4513C4082000C82030 /* SGNearbyQuery.m */,
 				9426DD4613C4082000C82030 /* SGPlacesQuery.h */,
 				9426DD4713C4082000C82030 /* SGPlacesQuery.m */,
 				9426DD4C13C4082000C82030 /* SGStorageQuery.h */,
@@ -499,8 +510,11 @@
 		949AE6C513D545890093C59E /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				5D5B036D1291BD4500399A50 /* SGFeature.h */,
-				5D5B036E1291BD4500399A50 /* SGFeature.m */,
+				94925CF313D8A02E0078F539 /* SGObject+Private.h */,
+				5D5B036D1291BD4500399A50 /* SGObject.h */,
+				5D5B036E1291BD4500399A50 /* SGObject.m */,
+				94925CF513D8A0340078F539 /* SGFeature.h */,
+				94925CF613D8A0350078F539 /* SGFeature.m */,
 				946F0B3F13D69ADF00308E99 /* SGPlace.h */,
 				946F0B4013D69ADF00308E99 /* SGPlace.m */,
 				5D30FF8C131F0A180089F563 /* SGStoredRecord.h */,
@@ -514,6 +528,7 @@
 			children = (
 				945DA1EB13C68C2E00D3984A /* SGTypes.h */,
 				940F621713D0DA57004FA337 /* SGTypes.m */,
+				94925CEF13D8A0120078F539 /* SGCategories.h */,
 				942A69D113D5E795002F11FC /* SGCallback.h */,
 				942A69D213D5E795002F11FC /* SGCallback.m */,
 				5D7676141290EAE1006B7D51 /* SimpleGeo.h */,
@@ -527,8 +542,8 @@
 		94E6A16113CE02FE004F0E45 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				942A69D913D5E7A7002F11FC /* NSArray+GeoJSON.h */,
-				942A69DA13D5E7A7002F11FC /* NSArray+GeoJSON.m */,
+				94925CF913D8A1A90078F539 /* NSArray+SGCollection.h */,
+				942A69DA13D5E7A7002F11FC /* NSArray+SGCollection.m */,
 				949AE6C413D545640093C59E /* Geometry */,
 				949AE6C513D545890093C59E /* Features */,
 			);
@@ -555,8 +570,9 @@
 				940F61FB13D09D60004FA337 /* ASIFormDataRequest+OAuth.h in Headers */,
 				940F60E113D09D40004FA337 /* ASIHTTPRequest.h in Headers */,
 				940F61FD13D09D60004FA337 /* ASIHTTPRequest+OAuth.h in Headers */,
-				942A69DB13D5E7A7002F11FC /* NSArray+GeoJSON.h in Headers */,
+				94925CFA13D8A1AA0078F539 /* NSArray+SGCollection.h in Headers */,
 				945DA1EC13C68C2E00D3984A /* SGTypes.h in Headers */,
+				94925CF013D8A0120078F539 /* SGCategories.h in Headers */,
 				942A69D313D5E795002F11FC /* SGCallback.h in Headers */,
 				5D7676171290EAE1006B7D51 /* SimpleGeo.h in Headers */,
 				942A69D713D5E79F002F11FC /* SimpleGeo+Feature.h in Headers */,
@@ -564,7 +580,7 @@
 				5D3991E712A489EF00EB7B20 /* SimpleGeo+Places.h in Headers */,
 				5D12248112F246AA00CB2CC2 /* SimpleGeo+Storage.h in Headers */,
 				9426DD5213C4082000C82030 /* SGQuery.h in Headers */,
-				9426DD4E13C4082000C82030 /* SGNearbyQuery.h in Headers */,
+				94925CFD13D8A2030078F539 /* SGNearbyQuery.h in Headers */,
 				945DA1F013C68C3A00D3984A /* SGContextQuery.h in Headers */,
 				9426DD5013C4082000C82030 /* SGPlacesQuery.h in Headers */,
 				9426DD5613C4082000C82030 /* SGStorageQuery.h in Headers */,
@@ -573,7 +589,8 @@
 				945DA1F413C68C4700D3984A /* SGEnvelope.h in Headers */,
 				5D3994EF12A8AB4300EB7B20 /* SGPolygon.h in Headers */,
 				5DF08A9D12AF644F007A8A60 /* SGMultiPolygon.h in Headers */,
-				5D5B03701291BD4500399A50 /* SGFeature.h in Headers */,
+				5D5B03701291BD4500399A50 /* SGObject.h in Headers */,
+				94925CF713D8A0350078F539 /* SGFeature.h in Headers */,
 				946F0B4113D69ADF00308E99 /* SGPlace.h in Headers */,
 				5D30FF8F131F0A180089F563 /* SGStoredRecord.h in Headers */,
 				5D5AD28812DD1CF5008810F0 /* ASIBase64Transcoder.h in Headers */,
@@ -582,6 +599,8 @@
 				94925CD913D7A8760078F539 /* SGPolygon+Private.h in Headers */,
 				940F620013D09D60004FA337 /* NSData+Base64.h in Headers */,
 				940F620213D09D60004FA337 /* NSString+URLEncode.h in Headers */,
+				94925CF213D8A0210078F539 /* SGQuery+Private.h in Headers */,
+				94925CF413D8A02E0078F539 /* SGObject+Private.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,7 +741,7 @@
 				940F620313D09D60004FA337 /* NSString+URLEncode.m in Sources */,
 				5D5AD28712DD1CF5008810F0 /* ASIBase64Transcoder.c in Sources */,
 				5DA3C346128E427C00E128DC /* SGPoint.m in Sources */,
-				5D5B03711291BD4500399A50 /* SGFeature.m in Sources */,
+				5D5B03711291BD4500399A50 /* SGObject.m in Sources */,
 				5D3991E812A489EF00EB7B20 /* SimpleGeo+Places.m in Sources */,
 				5D39921E12A48F3F00EB7B20 /* SimpleGeo+Internal.m in Sources */,
 				5D3994E912A8A8A700EB7B20 /* SGGeometry.m in Sources */,
@@ -731,7 +750,6 @@
 				5DF08A9E12AF644F007A8A60 /* SGMultiPolygon.m in Sources */,
 				5D12248212F246AA00CB2CC2 /* SimpleGeo+Storage.m in Sources */,
 				5D30FF90131F0A180089F563 /* SGStoredRecord.m in Sources */,
-				9426DD4F13C4082000C82030 /* SGNearbyQuery.m in Sources */,
 				9426DD5113C4082000C82030 /* SGPlacesQuery.m in Sources */,
 				9426DD5313C4082000C82030 /* SGQuery.m in Sources */,
 				9426DD5713C4082000C82030 /* SGStorageQuery.m in Sources */,
@@ -741,8 +759,10 @@
 				949AE6A813D344F40093C59E /* SimpleGeo.m in Sources */,
 				942A69D413D5E795002F11FC /* SGCallback.m in Sources */,
 				942A69D813D5E79F002F11FC /* SimpleGeo+Feature.m in Sources */,
-				942A69DC13D5E7A7002F11FC /* NSArray+GeoJSON.m in Sources */,
+				942A69DC13D5E7A7002F11FC /* NSArray+SGCollection.m in Sources */,
 				946F0B4213D69ADF00308E99 /* SGPlace.m in Sources */,
+				94925CF813D8A0350078F539 /* SGFeature.m in Sources */,
+				94925CFE13D8A2030078F539 /* SGNearbyQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

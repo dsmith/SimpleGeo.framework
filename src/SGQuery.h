@@ -50,42 +50,4 @@
 //! Envelope for a bounding box API query
 @property (nonatomic, readonly) SGEnvelope *envelope;
 
-#pragma mark Instantiation Methods
-
-/*!
- * Create a point-based API query
- * @param point Point
- */
-+ (id)queryWithPoint:(SGPoint *)point;
-
-/*!
- * Create an address-based API query
- * @param address Address
- */
-+ (id)queryWithAddress:(NSString *)address;
-
-/*!
- * Create an a bounding box API query
- * @param bounds Bounding box
- */
-+ (id)queryWithEnvelope:(SGEnvelope *)envelope;
-
-/*!
- * Construct a point-based API query
- * @param point Point
- */
-- (id)initWithPoint:(SGPoint *)point;
-
-/*!
- * Construct an address-based API query
- * @param address Address
- */
-- (id)initWithAddress:(NSString *)address;
-
-/*!
- * Construct a bounding box API query
- * @param bounds Bounding box
- */
-- (id)initWithEnvelope:(SGEnvelope *)envelope;
-
 @end

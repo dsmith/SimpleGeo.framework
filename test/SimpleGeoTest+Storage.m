@@ -30,7 +30,7 @@
 
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Storage.h"
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 
 #pragma mark Storage Add/Update Tests
 
@@ -63,8 +63,9 @@
 - (void)testAddRecord
 {
     [self prepare];
-    SGStoredRecord *record = [SGStoredRecord recordWithFeature:[self feature]
-                                                         layer:SGTestStoragePOSTLayer];
+    SGStoredRecord *record = [SGStoredRecord recordWithID:SGTestPOSTFeatureID
+                                                    point:[self point]
+                                                    layer:SGTestStoragePOSTLayer];
     [record setIdentifier:SGTestPOSTFeatureID];
     [[self client] addOrUpdateRecord:record
                             callback:SGTestCallback];
@@ -143,7 +144,7 @@
                                        ^(NSDictionary *response) {
                                            GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
                                                                    query.limit, @"Should return no more records than the limit");
-                                           [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeFeature];
+                                           [self checkSGCollectionConversion:response type:SGCollectionTypeRecords];
                                            [self successBlock](response);
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
@@ -215,7 +216,7 @@
                                         ^(NSDictionary *response) {
                                             GHAssertLessThanOrEqual((int)[[response objectForKey:@"geometries"] count],
                                                                    SGTestLimit, @"Should return no more history records than the limit");
-                                            [self checkGeoJSONCollectionConversion:response type:GeoJSONCollectionTypeGeometry];
+                                            [self checkSGCollectionConversion:response type:SGCollectionTypePoints];
                                             [self successBlock](response);
                                         } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];

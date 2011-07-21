@@ -45,7 +45,6 @@
 // Test objects
 - (SGPoint *)point;
 - (SGEnvelope *)envelope;
-- (SGFeature *)feature;
 
 // Test callbacks
 - (SGCallback *)blockCallback;
@@ -60,7 +59,7 @@
 - (void)requestDidFail:(NSError *)error;
 
 // Check Methods
-- (void)checkGeoJSONCollectionConversion:(NSDictionary *)response
-                                    type:(GeoJSONCollectionType)type;
+- (void)checkSGCollectionConversion:(NSDictionary *)response
+                               type:(SGCollectionType)type;
 
 @end

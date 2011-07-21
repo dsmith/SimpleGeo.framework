@@ -29,7 +29,7 @@
 //
 
 #import "SimpleGeoTest.h"
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 
 @implementation SimpleGeoTest
 
@@ -60,17 +60,6 @@
                                     west:SGTestEnvelopeWest
                                    south:SGTestEnvelopeSouth
                                     east:SGTestEnvelopeEast];
-}
-
-- (SGFeature *)feature
-{
-    NSDictionary *properties = [NSDictionary dictionaryWithObjectsAndKeys:
-                                SGTestPOSTPropStringValue, SGTestPOSTPropStringKey,
-                                SGTestPOSTPropNumberValue, SGTestPOSTPropNumberKey, nil];
-    SGFeature *feature = [SGFeature featureWithGeometry:[SGPoint pointWithLatitude:SGTestPOSTLatitude
-                                                                   longitude:SGTestPOSTLongitude]];
-    [feature setProperties:properties];
-    return feature;
 }
 
 #pragma mark Basic Callbacks
@@ -122,11 +111,11 @@
 
 #pragma mark Basic Check Methods
 
-- (void)checkGeoJSONCollectionConversion:(NSDictionary *)response
-                                    type:(GeoJSONCollectionType)type
+- (void)checkSGCollectionConversion:(NSDictionary *)response
+                               type:(SGCollectionType)type
 {
-    NSArray *features = [NSArray arrayWithGeoJSONCollection:response];
-    NSDictionary *featureCollection = [features asGeoJSONCollection:type];
+    NSArray *features = [NSArray arrayWithSGCollection:response type:type];
+    NSDictionary *featureCollection = [features asSGCollection:type];
     NSMutableDictionary *cleanResponse = [NSMutableDictionary dictionary];
     [cleanResponse setValue:[response objectForKey:@"type"] forKey:@"type"];
     [cleanResponse setValue:[response objectForKey:@"features"] forKey:@"features"];

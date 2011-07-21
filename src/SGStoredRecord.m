@@ -33,7 +33,7 @@
 
 @implementation SGStoredRecord
 
-@synthesize layer, layerLink;
+@synthesize layer, created, layerLink;
 
 #pragma mark Instantiation Methods
 
@@ -46,13 +46,6 @@
                                         layer:layerName] autorelease];
 }
 
-+ (SGStoredRecord *)recordWithFeature:(SGFeature *)feature
-                                layer:(NSString *)layerName
-{
-    return [[[SGStoredRecord alloc] initWithFeature:feature
-                                              layer:layerName] autorelease];
-}
-
 + (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
     return [[[SGStoredRecord alloc] initWithGeoJSON:geoJSONFeature] autorelease];
@@ -62,34 +55,30 @@
            point:(SGPoint *)point
            layer:(NSString *)layerName
 {
-    self = [super initWithGeometry:point];
     if (self) {
+        geometry = [point retain];
         identifier = [anIdentifier retain];
         layer = [layerName retain];
     }
     return self;
 }
 
-- (id)initWithFeature:(SGFeature *)feature
-                layer:(NSString *)layerName
-{
-    if ([feature.geometry isKindOfClass:[SGPoint class]]) {
-        self = [super initWithGeoJSON:[feature asGeoJSON]];
-        if (self) {
-            layer = [layerName retain];
-        }
-        return self;
-    }
-    return nil;
-}
-
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
     self = [super initWithGeoJSON:geoJSONFeature];
     if (self) {
+        // selfLink
+        NSDictionary *selfLinkDict = [geoJSONFeature objectForKey:@"selfLink"];
+        if (selfLinkDict) selfLink = [[selfLinkDict objectForKey:@"href"] retain];
+        // distance
+        distance = [[geoJSONFeature objectForKey:@"distance"] retain];
+        
         // layer
         layer = [[properties objectForKey:@"layer"] retain];
         [properties removeObjectForKey:@"layer"];
+        // created
+        NSNumber *epoch = [geoJSONFeature objectForKey:@"created"];
+        if (epoch) created = [[NSDate alloc] initWithTimeIntervalSince1970:[epoch intValue]];
         // layerLink
         NSDictionary *layerLinkDict = [geoJSONFeature objectForKey:@"layerLink"];
         if (layerLinkDict) layerLink = [[layerLinkDict objectForKey:@"href"] retain];
@@ -102,8 +91,13 @@
 - (NSDictionary *)asGeoJSON
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
-    [[dictionary objectForKey:@"properties"] setValue:layer forKey:@"layer"];
-    if (layerLink) [dictionary setValue:[NSDictionary dictionaryWithObject:layerLink forKey:@"href"] forKey:@"layerLink"];
+    
+    if (selfLink) [dictionary setValue:[NSDictionary dictionaryWithObject:selfLink forKey:@"href"] forKey:@"selfLink"]; // selfLink
+    [dictionary setValue:distance forKey:@"distance"]; // distance
+    
+    [[dictionary objectForKey:@"properties"] setValue:layer forKey:@"layer"]; // layer
+    if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"]; // created
+    if (layerLink) [dictionary setValue:[NSDictionary dictionaryWithObject:layerLink forKey:@"href"] forKey:@"layerLink"]; // layerLink
     return dictionary;
 }
 
@@ -127,6 +121,7 @@
 - (void)dealloc
 {
     [layer release];
+    [created release];
     [layerLink release];
     [super dealloc];
 }

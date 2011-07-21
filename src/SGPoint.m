@@ -132,4 +132,12 @@
                                    longitude:[[point objectAtIndex:0] doubleValue]];
 }
 
+#pragma mark Memory
+
+- (void)dealloc
+{
+    [created release];
+    [super dealloc];
+}
+
 @end

@@ -30,7 +30,7 @@
 
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Context.h"
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 
 @interface ContextTests : SimpleGeoTest
 @end

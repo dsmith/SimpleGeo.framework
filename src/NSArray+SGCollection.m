@@ -1,5 +1,5 @@
 //
-//  NSArray+GeoJSON.m
+//  NSArray+SGCollection.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2011, SimpleGeo Inc.
@@ -28,59 +28,72 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 #import "SGGeometry.h"
 #import "SGFeature.h"
+#import "SGPlace.h"
 #import "SGStoredRecord.h"
 
-@implementation NSArray (GeoJSON)
+@implementation NSArray (SGCollection)
 
-#pragma mark GeoJSON -> SGGeometry
+#pragma mark SGCollection -> SGObjects
 
-+ (NSArray *)arrayWithGeoJSONCollection:(NSDictionary *)collection
++ (NSArray *)arrayWithSGCollection:(NSDictionary *)collection
+                              type:(SGCollectionType)collectionType
 {
-    return [[[NSArray alloc] initWithGeoJSONCollection:collection] autorelease];
+    return [[NSArray alloc] initWithSGCollection:collection
+                                            type:collectionType];
 }
 
-- (id)initWithGeoJSONCollection:(NSDictionary *)featureCollection
+- (id)initWithSGCollection:(NSDictionary *)collection
+                      type:(SGCollectionType)collectionType
 {
-    NSString *type = [featureCollection objectForKey:@"type"];
-    BOOL isGeometryCollection = [type isEqual:GeoJSONCollectionTypeGeometry];
     NSArray *objects;
-    if (isGeometryCollection)
-        objects = [NSArray arrayWithArray:[featureCollection objectForKey:@"geometries"]];
-    else
-        objects = [NSArray arrayWithArray:[featureCollection objectForKey:@"features"]];
+    if (collectionType == SGCollectionTypePoints) objects = [collection objectForKey:@"geometries"];
+    else objects = [collection objectForKey:@"features"];
     
     NSMutableArray *output = [NSMutableArray arrayWithCapacity:[objects count]];
     for (NSDictionary *object in objects) {
-        if (isGeometryCollection)
-            [output addObject:[SGGeometry geometryWithGeoJSON:object]];
-        else {
-            NSDictionary *properties = [object objectForKey:@"properties"];
-            if (properties && [properties objectForKey:@"layer"])
-                [output addObject:[SGStoredRecord recordWithGeoJSON:object]];
-            else
+        switch (collectionType) {
+            case SGCollectionTypePoints:
+                [output addObject:[SGGeometry geometryWithGeoJSON:object]];
+                break;
+            case SGCollectionTypeFeatures:
                 [output addObject:[SGFeature featureWithGeoJSON:object]];
+                break;
+            case SGCollectionTypePlaces:
+                [output addObject:[SGPlace placeWithGeoJSON:object]];
+                break;
+            case SGCollectionTypeRecords:
+                [output addObject:[SGStoredRecord recordWithGeoJSON:object]];
+                break;
+            default:
+                break;
         }
     }
     return [self initWithArray:output];
 }
 
-#pragma mark SGGeometry -> GeoJSON
+#pragma mark SGObjects -> SGCollection
 
-- (NSDictionary *)asGeoJSONCollection:(GeoJSONCollectionType)collectionType
+- (NSDictionary *)asSGCollection:(SGCollectionType)collectionType
 {
     NSMutableArray *geoJSONObjects = [NSMutableArray arrayWithCapacity:[self count]];
     [self enumerateObjectsUsingBlock:^(id object, NSUInteger i, BOOL *stop) {
         [geoJSONObjects addObject:[object asGeoJSON]];
     }];
-    NSString *label;
-    if (collectionType == GeoJSONCollectionTypeFeature) label = @"features";
-    else label = @"geometries";
+    NSString *collectionLabel;
+    NSString *listLabel;
+    if (collectionType == SGCollectionTypePoints) {
+        listLabel = @"geometries";
+        collectionLabel = @"GeometryCollection";
+    } else {
+        listLabel = @"features";
+        collectionLabel = @"FeatureCollection";
+    }
     return [NSDictionary dictionaryWithObjectsAndKeys:
-            collectionType, @"type",
-            geoJSONObjects, label,
+            collectionLabel, @"type",
+            geoJSONObjects, listLabel,
             nil];
 }
 

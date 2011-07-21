@@ -1,8 +1,8 @@
 //
-//  SGStoredRecord.m
+//  SGObject.m
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,74 +28,80 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGPlace.h"
-#import "SGPoint.h"
+#import "SGObject.h"
+#import "SGObject+Private.h"
+#import "SGGeometry.h"
 
-@implementation SGPlace
+@implementation SGObject
 
-@synthesize name, tags, isPrivate;
+@synthesize identifier, geometry, properties, distance, selfLink;
 
 #pragma mark Instantiation Methods
 
-+ (SGPlace *)placeWithName:(NSString *)name
-                     point:(SGPoint *)point
++ (SGObject *)objectWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    return [[[SGPlace alloc] initWithName:name
-                                    point:point] autorelease];
-}
-
-+ (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature
-{
-    return [[[SGPlace alloc] initWithGeoJSON:geoJSONFeature] autorelease];
-}
-
-- (id)initWithName:(NSString *)aName
-             point:(SGPoint *)point
-{
-    if (self) {
-        geometry = [point retain];
-        name = [aName retain];
-    }
-    return self;
+    return [[[SGObject alloc] initWithGeoJSON:geoJSONFeature] autorelease];
 }
 
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    self = [super initWithGeoJSON:geoJSONFeature];
+    self = [super init];
     if (self) {
-        // distance
-        distance = [[properties objectForKey:@"distance"] retain];
-        [properties removeObjectForKey:@"distance"];
-        
-        // tags
-        tags = [[NSMutableArray arrayWithArray:[properties objectForKey:@"tags"]] retain];
-        [properties removeObjectForKey:@"tags"];
-        // visibility
-        NSString *visibility = [properties objectForKey:@"private"];
-        if ([visibility isEqual:@"true"]) isPrivate = YES;
-        [properties removeObjectForKey:@"private"];
+        geometry = [[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]] retain];
+        identifier = [[geoJSONFeature objectForKey:@"id"] retain];
+        [self setProperties:[geoJSONFeature objectForKey:@"properties"]];
+        // subclasses should set selfLink, distance
     }
     return self;
 }
 
 #pragma mark Convenience Methods
 
+- (void)setProperties:(NSDictionary *)someProperties
+{
+    [properties release];
+    properties = [[NSMutableDictionary dictionaryWithDictionary:someProperties] retain];
+}
+
 - (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
-    
-    [[dictionary objectForKey:@"properties"] setValue:distance forKey:@"distance"]; // distance
-    
-    [[dictionary objectForKey:@"properties"] setValue:tags forKey:@"tags"]; // tags
-    if (isPrivate) [[dictionary objectForKey:@"properties"] setValue:@"true" forKey:@"private"]; // visibility
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    [dictionary setObject:@"Feature" forKey:@"type"];
+    [dictionary setValue:[geometry asGeoJSON] forKey:@"geometry"];
+    [dictionary setValue:identifier forKey:@"id"];
+    [dictionary setValue:[NSMutableDictionary dictionaryWithDictionary:properties] forKey:@"properties"];
+    // subclasses should set selfLink, distance
     return dictionary;
+}
+
+- (NSString *)description
+{
+    return [[self asGeoJSON] description];
+}
+
+#pragma mark Comparison Methods
+
+- (BOOL)isEqual:(id)object
+{
+    if (object == self) return YES;
+    if (!object || ![object isKindOfClass:[self class]]) return NO;
+    return [identifier isEqual:[object identifier]];
+}
+
+- (NSUInteger)hash
+{
+    return [identifier hash];
 }
 
 #pragma mark Memory
 
 - (void)dealloc
 {
-    [tags release];
+    [geometry release];
+    [identifier release];
+    [properties release];
+    [distance release];
+    [selfLink release];
     [super dealloc];
 }
 

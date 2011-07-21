@@ -111,6 +111,8 @@
     return [polygons hash];
 }
 
+#pragma mark Memory
+
 - (void)dealloc
 {
     [polygons release];

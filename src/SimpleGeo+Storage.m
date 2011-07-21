@@ -31,7 +31,7 @@
 #import "SimpleGeo+Storage.h"
 #import "SimpleGeo+Internal.h"
 #import "SGStorageQuery.h"
-#import "NSArray+GeoJSON.h"
+#import "NSArray+SGCollection.h"
 #import "SGCallback.h"
 
 NSString * const SG_API_VERSION_STORAGE = @"0.1";
@@ -115,7 +115,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@.json",
                      SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
     
-    NSDictionary *featureCollection = [records asGeoJSONCollection:GeoJSONCollectionTypeFeature];
+    NSDictionary *featureCollection = [records asSGCollection:SGCollectionTypeRecords];
     
     [self sendHTTPRequest:@"POST"
                     toURL:url
