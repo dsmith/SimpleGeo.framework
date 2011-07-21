@@ -33,7 +33,7 @@
 
 @implementation SimpleGeoTest
 
-@synthesize addedPlaceID;
+@synthesize addedPlaceIDs;
 
 - (BOOL)shouldRunOnMainThread
 {

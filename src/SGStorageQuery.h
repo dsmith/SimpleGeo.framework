@@ -32,8 +32,8 @@
 #import "SGTypes.h"
 
 /*!
- * An SGStorageQuery object represents an API query for SimpleGeo Storage.
- * Call [getRecordsForQuery:] to make a Storage request with an SGStorageQuery object.
+ * API query for SimpleGeo Storage.
+ * Call getRecordsForQuery: to make a Storage request with an SGStorageQuery object.
  */
 @interface SGStorageQuery : SGNearbyQuery
 {
@@ -73,7 +73,7 @@
 @property (nonatomic, readonly) NSString *propertyName;
 
 //! Property value for property filtering
-@property (nonatomic, readonly) NSObject *propertyValue;
+@property (nonatomic, retain) NSObject *propertyValue;
 
 //! Property start value for range-based property filtering
 @property (nonatomic, retain) NSObject *propertyStartValue;

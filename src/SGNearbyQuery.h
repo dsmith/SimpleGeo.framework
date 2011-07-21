@@ -31,7 +31,7 @@
 #import "SGQuery.h"
 
 /*!
- * SGQuery is an abstract class for a SimplGeo nearby API query.
+ * Abstract class for a SimplGeo nearby API query
  */
 @interface SGNearbyQuery : SGQuery
 {

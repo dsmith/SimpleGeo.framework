@@ -29,7 +29,7 @@
 //
 
 /*!
- * Abstract Geometry class/factory
+ * Abstract class for a Geometry representation
  */
 @interface SGGeometry : NSObject
 

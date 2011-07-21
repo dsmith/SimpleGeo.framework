@@ -30,6 +30,9 @@
 
 #import <SimpleGeo/SimpleGeo.h>
 
+/*!
+ * Bounding box representation
+ */
 @interface SGEnvelope : SGGeometry
 {
     double north;

@@ -80,16 +80,7 @@
     return self;
 }
 
-#pragma mark Convenience Methods
-
-- (NSDictionary *)asDictionary
-{
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setValue:point forKey:@"point"];
-    [dictionary setValue:address forKey:@"address"];
-    [dictionary setValue:envelope forKey:@"envelope"];
-    return dictionary;
-}
+#pragma mark Memory
 
 - (void)dealloc {
     [point release];

@@ -33,7 +33,7 @@
 @class SGPoint;
 
 /*!
- * Polygon representation.
+ * Polygon representation
  */
 @interface SGPolygon : SGGeometry
 {

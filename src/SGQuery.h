@@ -32,7 +32,7 @@
 @class SGEnvelope;
 
 /*!
- * SGQuery is an abstract class for a SimplGeo API query.
+ * Abstract class for a SimpleGeo API query
  */
 @interface SGQuery : NSObject
 {
@@ -87,12 +87,5 @@
  * @param bounds Bounding box
  */
 - (id)initWithEnvelope:(SGEnvelope *)envelope;
-
-#pragma mark Convenience Methods
-
-/*!
- * A dictionary representation of the query
- */
-- (NSDictionary *)asDictionary;
 
 @end

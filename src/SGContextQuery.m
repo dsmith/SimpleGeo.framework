@@ -34,17 +34,7 @@
 
 @synthesize featureCategories, featureSubcategories, filters, acsTableIDs;
 
-#pragma mark Convenience Methods
-
-- (NSDictionary *)asDictionary
-{
-    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    [dictionary setValue:featureCategories forKey:@"featureCategories"];
-    [dictionary setValue:featureSubcategories forKey:@"featureSubcategories"];
-    [dictionary setValue:filters forKey:@"filters"];
-    [dictionary setValue:acsTableIDs forKey:@"acsTableIDs"];
-    return dictionary;
-}
+#pragma mark Memory
 
 - (void)dealloc
 {

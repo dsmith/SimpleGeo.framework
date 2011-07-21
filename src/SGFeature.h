@@ -46,7 +46,7 @@
     NSNumber *distance;
 }
 
-//! Feature handle (ID)
+//! Feature ID
 @property (nonatomic, retain) NSString *identifier;
 
 //! Feature geometry
@@ -59,12 +59,12 @@
 @property (nonatomic, retain) NSDictionary *properties;
 
 //! API URL for the feature.
-// Only present if the feature originated from an API request
+//! Only present if the feature originated from an API request
 @property (nonatomic, readonly) NSDictionary *selfLink;
 
 //! Distance (in meters) from the query point.
-// Valid for SGFeatures with point geometry
-// Only present if the feature originated from a nearby request
+//! Valid for SGFeatures with point geometry
+//! Only present if the feature originated from a nearby request
 @property (nonatomic, readonly) NSNumber *distance;
 
 #pragma mark Instantiation Methods

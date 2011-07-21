@@ -33,7 +33,7 @@
 #import "SGMultiPolygon.h"
 
 /*!
- * Point representation.
+ * Point representation
  */
 @interface SGPoint : SGGeometry
 {

@@ -32,12 +32,65 @@
 #import "SimpleGeo+Storage.h"
 #import "NSArray+GeoJSON.h"
 
-@interface StorageReadTests : SimpleGeoTest
+#pragma mark Storage Add/Update Tests
+
+@interface StorageAddTests : SimpleGeoTest
+@end
+@implementation StorageAddTests
+
+- (void)testAddLayer
+{
+    [self prepare];
+    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
+                              title:@"Temporary iOS Test Layer"
+                        description:@"SimpleGeo iOS client test layer"
+                       callbackURLs:nil
+                           callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testAddedLayerUpdate
+{
+    [self prepare];
+    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
+                              title:@"Temporary iOS Test Layer"
+                        description:@"updated!"
+                       callbackURLs:nil
+                           callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testAddRecord
+{
+    [self prepare];
+    SGStoredRecord *record = [SGStoredRecord recordWithFeature:[self feature]
+                                                         layer:SGTestStoragePOSTLayer];
+    [record setIdentifier:SGTestPOSTFeatureID];
+    [[self client] addOrUpdateRecord:record
+                            callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testAddUpdateRecords
+{
+    [self prepare];
+    SGStoredRecord *record = [SGStoredRecord recordWithID:SGTestPOSTFeatureID
+                                                    point:[self point]
+                                                    layer:SGTestStoragePOSTLayer];
+    NSArray *records = [NSArray arrayWithObjects:record, record, nil];
+    [[self client] addOrUpdateRecords:records
+                              inLayer:SGTestStoragePOSTLayer
+                             callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 @end
 
-@implementation StorageReadTests
+#pragma mark Storage Requests Tests
 
-#pragma mark Records Requests Tests
+@interface StorageGetTests : SimpleGeoTest
+@end
+@implementation StorageGetTests
 
 - (void)testGetRecordAndConvert
 {
@@ -101,7 +154,7 @@
     [self prepare];
     SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestStorageGETLayer];
     [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:SGTestStorageGETStart]];
-    [query setStartDate:[NSDate dateWithTimeIntervalSinceNow:SGTestStorageGETEnd]];
+    [query setEndDate:[NSDate dateWithTimeIntervalSinceNow:SGTestStorageGETEnd]];
     [query setSortType:SGSortOrderCreatedDescending];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
@@ -199,32 +252,18 @@
 
 @end
 
-@interface StorageWriteTests : SimpleGeoTest
+#pragma mark Storage Delete Tests
+
+@interface StorageRemoveTests : SimpleGeoTest
 @end
+@implementation StorageRemoveTests
 
-@implementation StorageWriteTests
-
-#pragma mark Layers Manipulation Tests
-
-- (void)testAddLayer
+- (void)test_DeleteRecord
 {
     [self prepare];
-    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
-                              title:@"Temporary iOS Test Layer"
-                        description:@"SimpleGeo iOS client test layer"
-                       callbackURLs:nil
-                           callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)testUpdateLayer
-{
-    [self prepare];
-    [[self client] addOrUpdateLayer:SGTestStoragePOSTLayer
-                              title:@"Temporary iOS Test Layer"
-                        description:@"updated!"
-                       callbackURLs:nil
-                           callback:SGTestCallback];
+    [[self client] deleteRecord:SGTestPOSTFeatureID
+                        inLayer:SGTestStoragePOSTLayer
+                       callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -233,39 +272,6 @@
     [self prepare];
     [[self client] deleteLayer:@"com.simplegeo.testing.ios"
                       callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-#pragma mark Records Manipulation Tests
-
-- (void)testAddRecord
-{
-    [self prepare];
-    SGStoredRecord *record = [SGStoredRecord recordWithFeature:[self feature]
-                                                         layer:SGTestStoragePOSTLayer];
-    [record setIdentifier:SGTestPOSTFeatureID];
-    [[self client] addOrUpdateRecord:record
-                            callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)testAddUpdateRecords
-{
-    [self prepare];
-    SGStoredRecord *record = [SGStoredRecord recordWithID:SGTestPOSTFeatureID
-                                                    point:[self point]
-                                                    layer:SGTestStoragePOSTLayer];
-    [[self client] addOrUpdateRecord:record
-                            callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)test_DeleteRecord
-{
-    [self prepare];
-    [[self client] deleteRecord:SGTestPOSTFeatureID
-                        inLayer:SGTestStoragePOSTLayer
-                       callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 

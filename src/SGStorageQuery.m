@@ -109,13 +109,7 @@
     propertyValue = [value retain];
 }
 
-- (NSDictionary *)asDictionary
-{
-    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asDictionary];
-    [dictionary setValue:layer forKey:@"layer"];
-    [dictionary setValue:cursor forKey:@"cursor"];
-    return dictionary;
-}
+#pragma mark Memory
 
 - (void)dealloc
 {
