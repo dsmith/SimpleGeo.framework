@@ -74,10 +74,11 @@
                 layer:(NSString *)layerName
 {
     if ([feature.geometry isKindOfClass:[SGPoint class]]) {
-        self = [feature copy];
+        self = [super initWithGeoJSON:[feature asGeoJSON]];
         if (self) {
-            layer = layerName;
+            layer = [layerName retain];
         }
+        return self;
     }
     return nil;
 }

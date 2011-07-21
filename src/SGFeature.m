@@ -118,6 +118,15 @@
 
 #pragma mark Memory
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    SGFeature *newFeature = [[SGFeature allocWithZone:zone] initWithGeometry:self.geometry];
+    [newFeature setIdentifier:identifier];
+    [newFeature setProperties:properties];
+    [newFeature setCreated:created];
+    return newFeature;
+}
+
 - (void)dealloc
 {
     [identifier release];

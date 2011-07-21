@@ -69,10 +69,11 @@
                  name:(NSString *)aName
 {
     if ([feature.geometry isKindOfClass:[SGPoint class]]) {
-        self = [feature copy];
+        self = [super initWithGeoJSON:[feature asGeoJSON]];
         if (self) {
-            name = aName;
+            name = [aName retain];
         }
+        return self;
     }
     return nil;
 }
@@ -97,8 +98,10 @@
 - (NSDictionary *)asGeoJSON
 {
     NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];
+    NSLog(@"%@",dictionary);
     [[dictionary objectForKey:@"properties"] setValue:name forKey:@"name"];
     if (isPrivate) [[dictionary objectForKey:@"properties"] setValue:@"true" forKey:@"private"];
+    NSLog(@"%@",dictionary);
     return dictionary;
 }
 

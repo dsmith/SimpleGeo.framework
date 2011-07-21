@@ -90,7 +90,7 @@
 {
     NSMutableDictionary *geoJSON = [NSMutableDictionary dictionaryWithCapacity:3];
     [geoJSON setValue:@"Point" forKey:@"type"];
-    [geoJSON setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
+    if (created) [geoJSON setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
     [geoJSON setValue:[NSArray arrayWithObjects:
                        [NSNumber numberWithDouble:longitude],
                        [NSNumber numberWithDouble:latitude],
