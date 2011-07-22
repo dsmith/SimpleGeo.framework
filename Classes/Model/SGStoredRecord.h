@@ -33,7 +33,7 @@
 @class SGPoint;
 
 /*!
- * SimpleGeo Stored Record representation
+ * Stored Record representation
  */
 @interface SGStoredRecord : SGObject
 {

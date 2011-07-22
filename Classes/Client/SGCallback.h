@@ -14,6 +14,9 @@ typedef void (^SGFailureBlock)(NSError *error);
 typedef void (^SGSuccessBlock)(NSDictionary *response);
 #endif
 
+/*!
+ * Callback object for requests
+ */
 @interface SGCallback : NSObject
 {
     @private

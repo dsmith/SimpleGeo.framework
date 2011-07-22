@@ -31,8 +31,9 @@
 #import "SGQuery.h"
 
 /*!
- * API query for SimpleGeo Context.
+ * API query for Context.
  * Call getContextForQuery: to make a Context request with an SGContextQuery object.
+ * @ingroup Queries
  */
 @interface SGContextQuery : SGQuery
 {

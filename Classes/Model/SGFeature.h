@@ -31,7 +31,7 @@
 #import "SGObject+Private.h"
 
 /*!
- * SimpleGeo Feature representation
+ * Feature representation
  */
 @interface SGFeature : SGObject
 {

@@ -32,7 +32,8 @@
 #import "SGQuery+Private.h"
 
 /*!
- * Abstract class for a SimplGeo nearby API query
+ * Abstract class for a nearby API query
+ * @ingroup Queries
  */
 @interface SGNearbyQuery : SGQuery
 {

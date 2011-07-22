@@ -31,9 +31,6 @@
 #import "SimpleGeo+Feature.h"
 #import "SimpleGeo+Internal.h"
 
-/*!
- * Client support for Basic API requests
- */
 @implementation SimpleGeo (Feature)
 
 #pragma mark Feature Request Methods

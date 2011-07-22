@@ -36,7 +36,7 @@
 extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
- * Client support for the Storage API
+ * Client support for Storage API
  */
 @interface SimpleGeo (Storage)
 

@@ -32,7 +32,8 @@
 @class SGEnvelope;
 
 /*!
- * Abstract class for a SimpleGeo API query
+ * Abstract class for an API query
+ * @ingroup Queries
  */
 @interface SGQuery : NSObject
 {

@@ -31,8 +31,9 @@
 #import "SGNearbyQuery.h"
 
 /*!
- * API query for SimpleGeo Places.
+ * API query for Places.
  * Call getPlacesForQuery: to make a Places request with an SGPlacesQuery object.
+ * @ingroup Queries
  */
 @interface SGPlacesQuery : SGNearbyQuery
 {

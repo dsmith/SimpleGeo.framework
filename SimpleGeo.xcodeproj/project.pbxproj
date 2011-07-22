@@ -72,7 +72,6 @@
 		9405B7F913D8F56A0088D7DF /* GHUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77413D8F3C90088D7DF /* GHUnitTestMain.m */; };
 		9405B7FA13D8F56B0088D7DF /* SGFeatureTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77513D8F3C90088D7DF /* SGFeatureTest.m */; };
 		9405B7FB13D8F56D0088D7DF /* SGGeometryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77613D8F3C90088D7DF /* SGGeometryTest.m */; };
-		9405B7FC13D8F5710088D7DF /* SGPointTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77713D8F3C90088D7DF /* SGPointTest.m */; };
 		9405B7FD13D8F5720088D7DF /* SimpleGeoTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77813D8F3C90088D7DF /* SimpleGeoTest.h */; };
 		9405B7FE13D8F5740088D7DF /* SimpleGeoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77913D8F3C90088D7DF /* SimpleGeoTest.m */; };
 		9405B7FF13D8F5750088D7DF /* SimpleGeoTest+Context.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77A13D8F3C90088D7DF /* SimpleGeoTest+Context.m */; };
@@ -160,7 +159,6 @@
 		9405B77413D8F3C90088D7DF /* GHUnitTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GHUnitTestMain.m; path = Tests/GHUnitTestMain.m; sourceTree = "<group>"; };
 		9405B77513D8F3C90088D7DF /* SGFeatureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGFeatureTest.m; path = Tests/SGFeatureTest.m; sourceTree = "<group>"; };
 		9405B77613D8F3C90088D7DF /* SGGeometryTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGGeometryTest.m; path = Tests/SGGeometryTest.m; sourceTree = "<group>"; };
-		9405B77713D8F3C90088D7DF /* SGPointTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGPointTest.m; path = Tests/SGPointTest.m; sourceTree = "<group>"; };
 		9405B77813D8F3C90088D7DF /* SimpleGeoTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleGeoTest.h; path = Tests/SimpleGeoTest.h; sourceTree = "<group>"; };
 		9405B77913D8F3C90088D7DF /* SimpleGeoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleGeoTest.m; path = Tests/SimpleGeoTest.m; sourceTree = "<group>"; };
 		9405B77A13D8F3C90088D7DF /* SimpleGeoTest+Context.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SimpleGeoTest+Context.m"; path = "Tests/SimpleGeoTest+Context.m"; sourceTree = "<group>"; };
@@ -389,11 +387,10 @@
 				9405B77413D8F3C90088D7DF /* GHUnitTestMain.m */,
 				9405B77513D8F3C90088D7DF /* SGFeatureTest.m */,
 				9405B77613D8F3C90088D7DF /* SGGeometryTest.m */,
-				9405B77713D8F3C90088D7DF /* SGPointTest.m */,
 				9405B77813D8F3C90088D7DF /* SimpleGeoTest.h */,
 				9405B77913D8F3C90088D7DF /* SimpleGeoTest.m */,
-				9405B77A13D8F3C90088D7DF /* SimpleGeoTest+Context.m */,
 				9405B77B13D8F3C90088D7DF /* SimpleGeoTest+Feature.m */,
+				9405B77A13D8F3C90088D7DF /* SimpleGeoTest+Context.m */,
 				9405B77C13D8F3C90088D7DF /* SimpleGeoTest+Places.m */,
 				9405B77D13D8F3C90088D7DF /* SimpleGeoTest+Storage.m */,
 			);
@@ -403,10 +400,10 @@
 		5DE3488C12A9B477004E320D /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				9405B7B613D8F4230088D7DF /* SimpleGeo+Context.h */,
-				9405B7B713D8F4230088D7DF /* SimpleGeo+Context.m */,
 				9405B7B813D8F4230088D7DF /* SimpleGeo+Feature.h */,
 				9405B7B913D8F4230088D7DF /* SimpleGeo+Feature.m */,
+				9405B7B613D8F4230088D7DF /* SimpleGeo+Context.h */,
+				9405B7B713D8F4230088D7DF /* SimpleGeo+Context.m */,
 				9405B7BA13D8F4230088D7DF /* SimpleGeo+Places.h */,
 				9405B7BB13D8F4230088D7DF /* SimpleGeo+Places.m */,
 				9405B7BC13D8F4230088D7DF /* SimpleGeo+Storage.h */,
@@ -498,15 +495,15 @@
 		9426DD5913C4082600C82030 /* Queries */ = {
 			isa = PBXGroup;
 			children = (
+				9405B7A813D8F41E0088D7DF /* SGQuery+Private.h */,
+				9405B7A613D8F41E0088D7DF /* SGQuery.h */,
+				9405B7A713D8F41E0088D7DF /* SGQuery.m */,
 				9405B7A013D8F41E0088D7DF /* SGContextQuery.h */,
 				9405B7A113D8F41E0088D7DF /* SGContextQuery.m */,
 				9405B7A213D8F41E0088D7DF /* SGNearbyQuery.h */,
 				9405B7A313D8F41E0088D7DF /* SGNearbyQuery.m */,
 				9405B7A413D8F41E0088D7DF /* SGPlacesQuery.h */,
 				9405B7A513D8F41E0088D7DF /* SGPlacesQuery.m */,
-				9405B7A613D8F41E0088D7DF /* SGQuery.h */,
-				9405B7A713D8F41E0088D7DF /* SGQuery.m */,
-				9405B7A813D8F41E0088D7DF /* SGQuery+Private.h */,
 				9405B7A913D8F41E0088D7DF /* SGStorageQuery.h */,
 				9405B7AA13D8F41E0088D7DF /* SGStorageQuery.m */,
 			);
@@ -516,18 +513,18 @@
 		949AE6C413D545640093C59E /* Geometries */ = {
 			isa = PBXGroup;
 			children = (
-				9405B7C613D8F47C0088D7DF /* SGEnvelope.h */,
-				9405B7C713D8F47C0088D7DF /* SGEnvelope.m */,
 				9405B7C813D8F47C0088D7DF /* SGGeometry.h */,
 				9405B7C913D8F47C0088D7DF /* SGGeometry.m */,
-				9405B7CA13D8F47C0088D7DF /* SGMultiPolygon.h */,
-				9405B7CB13D8F47C0088D7DF /* SGMultiPolygon.m */,
+				9405B7CE13D8F47C0088D7DF /* SGPoint+Private.h */,
 				9405B7CC13D8F47C0088D7DF /* SGPoint.h */,
 				9405B7CD13D8F47C0088D7DF /* SGPoint.m */,
-				9405B7CE13D8F47C0088D7DF /* SGPoint+Private.h */,
+				9405B7C613D8F47C0088D7DF /* SGEnvelope.h */,
+				9405B7C713D8F47C0088D7DF /* SGEnvelope.m */,
+				9405B7D113D8F47C0088D7DF /* SGPolygon+Private.h */,
 				9405B7CF13D8F47C0088D7DF /* SGPolygon.h */,
 				9405B7D013D8F47C0088D7DF /* SGPolygon.m */,
-				9405B7D113D8F47C0088D7DF /* SGPolygon+Private.h */,
+				9405B7CA13D8F47C0088D7DF /* SGMultiPolygon.h */,
+				9405B7CB13D8F47C0088D7DF /* SGMultiPolygon.m */,
 			);
 			name = Geometries;
 			sourceTree = "<group>";
@@ -551,11 +548,11 @@
 		94E6A16113CE02FE004F0E45 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				9405B7E713D8F4980088D7DF /* SGFeature.h */,
-				9405B7E813D8F4980088D7DF /* SGFeature.m */,
+				9405B7EB13D8F4980088D7DF /* SGObject+Private.h */,
 				9405B7E913D8F4980088D7DF /* SGObject.h */,
 				9405B7EA13D8F4980088D7DF /* SGObject.m */,
-				9405B7EB13D8F4980088D7DF /* SGObject+Private.h */,
+				9405B7E713D8F4980088D7DF /* SGFeature.h */,
+				9405B7E813D8F4980088D7DF /* SGFeature.m */,
 				9405B7EC13D8F4980088D7DF /* SGPlace.h */,
 				9405B7ED13D8F4980088D7DF /* SGPlace.m */,
 				9405B7EE13D8F4980088D7DF /* SGStoredRecord.h */,
@@ -732,7 +729,6 @@
 				9405B7F913D8F56A0088D7DF /* GHUnitTestMain.m in Sources */,
 				9405B7FA13D8F56B0088D7DF /* SGFeatureTest.m in Sources */,
 				9405B7FB13D8F56D0088D7DF /* SGGeometryTest.m in Sources */,
-				9405B7FC13D8F5710088D7DF /* SGPointTest.m in Sources */,
 				9405B7FD13D8F5720088D7DF /* SimpleGeoTest.h in Sources */,
 				9405B7FE13D8F5740088D7DF /* SimpleGeoTest.m in Sources */,
 				9405B7FF13D8F5750088D7DF /* SimpleGeoTest+Context.m in Sources */,

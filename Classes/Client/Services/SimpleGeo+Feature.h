@@ -32,7 +32,7 @@
 @class SGCallback;
 
 /*!
- * Client support for Basic API requests
+ * Client support for Feature API
  */
 @interface SimpleGeo (Feature)
 

@@ -31,8 +31,13 @@
 #import "SGNearbyQuery.h"
 #import "SGTypes.h"
 
+/*! \defgroup Queries
+ Documentation for cisCommon. 
+ */
+
 /*!
- * API query for SimpleGeo Storage.
+ * \ingroup Queries
+ * API query for Storage.
  * Call getRecordsForQuery: to make a Storage request with an SGStorageQuery object.
  */
 @interface SGStorageQuery : SGNearbyQuery

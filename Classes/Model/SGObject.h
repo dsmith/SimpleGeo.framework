@@ -31,7 +31,7 @@
 #import "SGGeometry.h"
 
 /*!
- * Abstract SimpleGeo Object representation
+ * Abstract object representation
  */
 @interface SGObject : NSObject
 {

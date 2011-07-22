@@ -32,7 +32,7 @@
 @class SGPoint;
 
 /*!
- * SimpleGeo Place representation
+ * Place representation
  */
 @interface SGPlace : SGFeature
 {

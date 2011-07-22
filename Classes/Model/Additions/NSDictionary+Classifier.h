@@ -28,16 +28,16 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
+#import "SGCategories.h"
 
 @interface NSDictionary (Classifier)
 
-+ (NSDictionary *)classifierWithType:(NSString *)type
-                            category:(NSString *)category
-                         subcategory:(NSString *)subcategory;
++ (NSDictionary *)classifierWithType:(SGFeatureType)type
+                            category:(SGFeatureCategory)category
+                         subcategory:(SGFeatureSubcategory)subcategory;
 
-- (NSString *)SGClassifierType;
-- (NSString *)SGClassifierCategory;
-- (NSString *)SGClassifierSubcategory;
+- (SGFeatureType)SGClassifierType;
+- (SGFeatureCategory)SGClassifierCategory;
+- (SGFeatureSubcategory)SGClassifierSubcategory;
 
 @end

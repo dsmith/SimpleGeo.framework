@@ -63,19 +63,23 @@
  * \section intro_sec Introduction
  *
  * You've reached the documentation for SimpleGeo's Objective-C client.
+ * This framework makes it easy to add location-aware features to your app.
  *
- * For more information, please look at the Class documentation.
+ * Need help embedding the framework in your app?
+ * Follow the <a href="https://github.com/simplegeo/SimpleGeo.framework/blob/master/README.md">README</a> on Github
  *
- * You can also
- * <a href="https://github.com/simplegeo/SimpleGeo.framework/downloads">download
- * an Xcode docset.</a>
+ * Need help getting started?
+ * Check out our iOS <a href="https://simplegeo.com/docs/tutorials/objective-c)">tutorial.</a>
+ *
+ * Want easier access to these docs while developing?
+ * Download an <a href="https://github.com/simplegeo/SimpleGeo.framework/downloads">Xcode docset.</a>
  */
 
 extern NSString * const SG_API_VERSION;
 extern NSString * const SG_URL_PREFIX;
 
 /*!
- * SimpleGeo client interface
+ * Client interface
  */
 @interface SimpleGeo : NSObject
 {
