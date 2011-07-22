@@ -109,6 +109,15 @@
     propertyValue = [value retain];
 }
 
+- (void)setDateRangeFrom:(NSDate *)aStartDate
+                      to:(NSDate *)anEndDate
+{
+    [startDate release];
+    [endDate release];
+    startDate = [aStartDate retain];
+    endDate = [anEndDate retain];
+}
+
 #pragma mark Memory
 
 - (void)dealloc

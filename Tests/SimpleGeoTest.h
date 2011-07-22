@@ -44,6 +44,7 @@
 
 // Test objects
 - (SGPoint *)point;
+- (SGPoint *)outlierPoint;
 - (SGEnvelope *)envelope;
 
 // Test callbacks

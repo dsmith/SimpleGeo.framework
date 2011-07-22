@@ -31,9 +31,12 @@
 #import "SimpleGeoTest.h"
 #import "SimpleGeo+Feature.h"
 
+#define SGTestFeatureHandlePoint @"SG_2AziTafTLNReeHpRRkfipn_37.766713_-122.428938@1291796505"
+#define SGTestFeatureHandlePolygon @"SG_09n1rkpq25DU5aZeaCAHtG_37.775330_-122.402276"
+#define SGTestFeatureHandleMultiPolygon @"SG_1mNfKHr5aXH7LWgmZL8Uq7_37.759717_-122.693971"
+
 @interface FeaturesTests : SimpleGeoTest
 @end
-
 @implementation FeaturesTests
 
 #pragma mark Feature Request & Conversion Tests

@@ -41,8 +41,8 @@
 + (NSArray *)arrayWithSGCollection:(NSDictionary *)collection
                               type:(SGCollectionType)collectionType
 {
-    return [[NSArray alloc] initWithSGCollection:collection
-                                            type:collectionType];
+    return [[[NSArray alloc] initWithSGCollection:collection
+                                            type:collectionType] autorelease];
 }
 
 - (id)initWithSGCollection:(NSDictionary *)collection

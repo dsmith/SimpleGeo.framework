@@ -32,12 +32,45 @@
 #import "SimpleGeo+Context.h"
 #import "NSArray+SGCollection.h"
 
-@interface ContextTests : SimpleGeoTest
+#pragma mark Context Test Data
+
+@interface SimpleGeoTest (ContextData)
+
+- (NSMutableArray *)contextFilters;
+- (NSMutableArray *)contextCategories;
+- (NSMutableArray *)contextSubcategories;
+- (NSMutableArray *)contextDemographicsTables;
+
+@end
+@implementation SimpleGeoTest (StorageData)
+
+- (NSMutableArray *)contextFilters
+{
+    return [NSMutableArray arrayWithObjects:SGContextFilterWeather, SGContextFilterIntersections, nil];
+}
+
+- (NSArray *)contextCategories
+{
+    return [NSMutableArray arrayWithObjects:SGFeatureCategoryNational, SGFeatureCategoryTimeZone, nil];
+}
+
+- (NSArray *)contextSubcategories
+{
+    return [NSMutableArray arrayWithObjects:SGFeatureSubcategoryCounty, SGFeatureSubcategoryState, nil];
+}
+
+- (NSArray *)contextDemographicsTables
+{
+    return [NSMutableArray arrayWithObjects:@"B01001", @"B01002", nil];
+}
+
 @end
 
-@implementation ContextTests
-
 #pragma mark Context Requests Tests
+
+@interface ContextTests : SimpleGeoTest
+@end
+@implementation ContextTests
 
 - (void)testGetContextForPoint
 {
@@ -67,10 +100,11 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setFilters:SGTestContextFilters];
+    [query setFilters:[self contextFilters]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
+                                           // TODO
                                            GHAssertEquals([query.filters count], [response count],
                                                           @"Response should contain only filtered parts");
                                            [self successBlock](response);
@@ -82,7 +116,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setFeatureCategories:SGTestContextCategories];
+    [query setFeatureCategories:[self contextCategories]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
@@ -93,16 +127,34 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
+- (void)testGetContextWithFeatureSubcategories
+{
+    [self prepare];
+    SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
+    [query setFeatureSubcategories:[self contextSubcategories]];
+    [[self client] getContextForQuery:query
+                             callback:[SGCallback callbackWithSuccessBlock:
+                                       ^(NSDictionary *response) {
+                                           GHAssertEquals([query.featureSubcategories count], [[response objectForKey:@"features"] count],
+                                                          @"Response should contain only features with specified subcategories");
+                                           [self successBlock](response);
+                                       } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
 - (void)testGetContextWithDemographics
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [query setAcsTableIDs:SGTestContextDemographicsTables];
+    [query setAcsTableIDs:[self contextDemographicsTables]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
-                                           GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:[query.acsTableIDs objectAtIndex:0]],
-                                                          @"Response should contain specified demographics tables");
+                                           // TODO
+                                           for (NSString *table in [query acsTableIDs]) {
+                                               GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:table],
+                                                              @"Response should contain specified demographics tables");
+                                           }
                                            [self successBlock](response);
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];

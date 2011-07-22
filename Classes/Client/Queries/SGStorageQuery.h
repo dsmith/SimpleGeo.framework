@@ -61,10 +61,10 @@
 @property (nonatomic, retain) SGSortOrder sortType;
 
 //! Start date for query
-@property (nonatomic, retain) NSDate *startDate;
+@property (nonatomic, readonly) NSDate *startDate;
 
 //! End date for query
-@property (nonatomic, retain) NSDate *endDate;
+@property (nonatomic, readonly) NSDate *endDate;
 
 //! Property type for property filtering
 @property (nonatomic, readonly) SGStoredPropertyType propertyType;
@@ -73,7 +73,7 @@
 @property (nonatomic, readonly) NSString *propertyName;
 
 //! Property value for property filtering
-@property (nonatomic, retain) NSObject *propertyValue;
+@property (nonatomic, readonly) NSObject *propertyValue;
 
 //! Property start value for range-based property filtering
 @property (nonatomic, retain) NSObject *propertyStartValue;
@@ -150,5 +150,13 @@
 - (void)setProperty:(NSString *)property
              ofType:(SGStoredPropertyType)type
              equals:(NSObject *)value;
+
+/*!
+ * Set a date range
+ * @param startDate Start date
+ * @param endDate   End date
+ */
+- (void)setDateRangeFrom:(NSDate *)startDate
+                      to:(NSDate *)endDate;
 
 @end

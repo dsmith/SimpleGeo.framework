@@ -1,5 +1,5 @@
 //
-//  SGFeature.h
+//  SimpleGeoTestSettings.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -26,42 +26,29 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
-#import "SGObject.h"
-#import "SGObject+Private.h"
+/* AUTHENTICATION */
 
-/*!
- * SimpleGeo Feature representation
- */
-@interface SGFeature : SGObject
-{
-    // required
-    NSString *name;
-    // optional
-    NSString *type;
-    NSString *category;
-    NSString *subcategory;
-}
+#define SGTestKey @"qctGDJ9jMLfUDgX8jDkgTWkxw5PfLnxF"
+#define SGTestSecret @"J9y6yQVReNTHcWr8mdJh2AzFf7Jm7Vcm"
 
-//! Feature name
-@property (nonatomic, retain) NSString *name;
+/* REQUEST HANDLING */
 
-//! Feature type
-@property (nonatomic, retain) NSString *type;
+#define SGTestTimeout 2.5
+#define SGTestCallback [self delegateCallback]
 
-//! Feature category
-@property (nonatomic, retain) NSString *category;
+/* LOCATIONS */
 
-//! Feature subcategory
-@property (nonatomic, retain) NSString *subcategory;
+#define SGTestLatitude 37.772445
+#define SGTestLongitude -122.405698
+#define SGTestAddress @"41 Decatur Street, San Francisco, CA"
+#define SGTestEnvelopeNorth 37.798255
+#define SGTestEnvelopeWest -122.436533
+#define SGTestEnvelopeSouth 37.772445
+#define SGTestEnvelopeEast -122.405698
 
-#pragma mark Instantiation Methods
+/* NEARBY */
 
-/*!
- * Create an SGFeature from a dictionary that
- * abides by the GeoJSON Feature specification
- * @param feature       Feature dictionary
- */
-+ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-@end
+#define SGTestRadius 1.0
+#define SGTestLimit 1

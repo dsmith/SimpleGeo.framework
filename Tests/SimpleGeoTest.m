@@ -40,7 +40,7 @@
     return NO;
 }
 
-#pragma mark Utility Methods
+#pragma mark Test Objects
 
 - (SimpleGeo *)client
 {
@@ -51,6 +51,12 @@
 - (SGPoint *)point
 {
     return [SGPoint pointWithLatitude:SGTestLatitude
+                            longitude:SGTestLongitude];
+}
+
+- (SGPoint *)outlierPoint
+{
+    return [SGPoint pointWithLatitude:SGTestLatitude+SGTestRadius/50.0f
                             longitude:SGTestLongitude];
 }
 

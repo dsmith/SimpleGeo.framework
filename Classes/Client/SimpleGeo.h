@@ -55,6 +55,7 @@
 #import "SGCategories.h"
 #import "SGCallback.h"
 #import "NSArray+SGCollection.h"
+#import "NSDictionary+Classifier.h"
 
 /*!
  * \mainpage

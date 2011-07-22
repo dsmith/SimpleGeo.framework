@@ -13,9 +13,6 @@ build/*
 xcuserdata
 profile
 *.moved-aside
-ext/
-iOS/ext/
-test/SimpleGeoTestSettings.h
 
 # OS X
 .DS_Store
@@ -29,4 +26,7 @@ Icon?
 .Trashes
 
 # Project-specific ignores
-docs/
+Documentation/
+ext/
+iOS/ext/
+Tests/SimpleGeoTestSettings.h

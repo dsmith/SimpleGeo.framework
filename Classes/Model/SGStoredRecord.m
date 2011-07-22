@@ -33,7 +33,7 @@
 
 @implementation SGStoredRecord
 
-@synthesize layer, created, layerLink;
+@synthesize layer, created, history, layerLink;
 
 #pragma mark Instantiation Methods
 
@@ -122,6 +122,7 @@
 {
     [layer release];
     [created release];
+    [history release];
     [layerLink release];
     [super dealloc];
 }

@@ -28,8 +28,57 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SimpleGeoTest.h"
+/*#import "SimpleGeoTest.h"
 #import "SimpleGeo+Places.h"
+
+#pragma mark Places Test Data
+
+@interface SimpleGeoTest (StorageData)
+
+- (SGPlace *)placeSimple;
+- (SGPlace *)placeTaggedOutlier;
+- (SGPlace *)placeClassified;
+- (SGPlace *)placePrivate;
+
+@end
+
+@implementation SimpleGeoTest (StorageData)
+
+- (SGPlace *)placeSimple
+{
+    return [SGPlace placeWithName:@"Simple Place"
+                            point:[self point]];
+}
+
+- (SGPlace *)placeTaggedOutlier
+{
+    SGPlace *place = [SGPlace placeWithName:@"Tagged Place"
+                                      point:[self outlierPoint]];
+    [place setTags:[NSMutableArray arrayWithObjects:@"tag1", @"tag2", nil]];
+    return place;
+}
+
+- (SGPlace *)placeClassified
+{
+    SGPlace *place = [SGPlace placeWithName:@"Classified Place"
+                                      point:[self point]];
+    NSDictionary *classifier1 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
+                                                        category:SGPlacesCategoryArtsCenter
+                                                     subcategory:SGPlacesCategoryArtMuseum];
+    NSDictionary *classifier2 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
+                                                        category:SGPlacesCategoryPark
+                                                     subcategory:SGPlacesCategoryStadium];
+    [place setClassifiers:[NSMutableArray arrayWithObjects:classifier1, classifier2, nil]];
+    return place;
+}
+
+- (SGPlace *)placePrivate
+{
+    return [SGPlace placeWithName:@"Private Place"
+                            point:[self point]];
+}
+
+@end
 
 #pragma mark Places Add/Update Tests
 
@@ -40,9 +89,7 @@
 - (void)testAddPlace
 {
     [self prepare];
-    SGPlace *place = [SGPlace placeWithName:@"Test Place #1"
-                                      point:[self point]];
-    [[self client] addPlace:place
+    [[self client] addPlace:[self placeSimple]
                    callback:[SGCallback callbackWithSuccessBlock:
                              ^(NSDictionary *response) {
                                  [self setAddedPlaceIDs:[NSMutableArray arrayWithObject:[response objectForKey:@"id"]]];
@@ -51,28 +98,35 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testAddPlaceFromFeature
+- (void)testAddPlaceWithTags
 {
     [self prepare];
-    SGPlace *place = [SGPlace placeWithName:@"Test Place #2"
-                                      point:[self point]];
-    [[self client] addPlace:place
+    [[self client] addPlace:[self placeTaggedOutlier]
                    callback:[SGCallback callbackWithSuccessBlock:
                              ^(NSDictionary *response) {
-                                 [self.addedPlaceIDs addObject:[response objectForKey:@"id"]];
+                                 [addedPlaceIDs addObject:[response objectForKey:@"id"]];
                                  [self successBlock](response);
                              } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-- (void)testUpdatePlace
+- (void)testAddPlaceWithClassifiers
 {
     [self prepare];
-    SGPlace *place = [SGPlace placeWithName:@"Updated"
-                                      point:[self point]];
-    [place setIsPrivate:YES];
-    [[self client] updatePlace:[self.addedPlaceIDs objectAtIndex:1]
-                     withPlace:place
+    [[self client] addPlace:[self placeClassified]
+                   callback:[SGCallback callbackWithSuccessBlock:
+                             ^(NSDictionary *response) {
+                                 [addedPlaceIDs addObject:[response objectForKey:@"id"]];
+                                 [self successBlock](response);
+                             } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testUpdatePlaceWithPrivacy
+{
+    [self prepare];
+    [[self client] updatePlace:[self.addedPlaceIDs objectAtIndex:0]
+                     withPlace:[self placePrivate]
                       callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -160,4 +214,4 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
-@end
+@end*/

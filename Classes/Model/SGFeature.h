@@ -1,8 +1,8 @@
 //
-//  SGStoredRecord.h
+//  SGFeature.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -26,64 +26,34 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 
 #import "SGObject.h"
 #import "SGObject+Private.h"
-@class SGPoint;
 
 /*!
- * SimpleGeo Stored Record representation
+ * SimpleGeo Feature representation
  */
-@interface SGStoredRecord : SGObject
+@interface SGFeature : SGObject
 {
     // required
-    NSString *layer;
+    NSString *name;
     // optional
-    NSDate *created;
-    // from API
-    NSDictionary *layerLink;
+    NSMutableArray *classifiers;
 }
 
-//! Layer name
-@property (nonatomic, retain) NSString *layer;
+//! Feature name
+@property (nonatomic, retain) NSString *name;
 
-//! Record timestamp
-@property (nonatomic, retain) NSDate *created;
-
-//! API URL for the record layer.
-// Only present if the record originated from an API request
-@property (nonatomic, readonly) NSDictionary *layerLink;
+//! Feature classifiers
+@property (nonatomic, retain) NSMutableArray *classifiers;
 
 #pragma mark Instantiation Methods
 
 /*!
- * Create an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
+ * Create an SGFeature from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature       Feature dictionary
  */
-+ (SGStoredRecord *)recordWithID:(NSString *)identifier
-                           point:(SGPoint *)point
-                           layer:(NSString *)layerName;
-
-/*!
- * Create an SGStoredRecord from a dictionary that
- * abides by the GeoJSON Feature specification.
- * Note: geoJSON Feature must contain a "layer"
- * key and value in the property dictionary
- * @param feature   Feature dictionary
- */
-+ (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-/*!
- * Construct an SGStoredRecord with an ID, point, and layer
- * @param identifier    Record ID
- * @param point         Record location
- * @param layerName     Record layer
- */
-- (id)initWithID:(NSString *)identifier
-           point:(SGPoint *)point
-           layer:(NSString *)layerName;
++ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 @end

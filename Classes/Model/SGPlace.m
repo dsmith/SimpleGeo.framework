@@ -30,6 +30,7 @@
 
 #import "SGPlace.h"
 #import "SGPoint.h"
+#import "NSDictionary+Classifier.h"
 
 @implementation SGPlace
 
@@ -68,7 +69,8 @@
         [properties removeObjectForKey:@"distance"];
         
         // tags
-        tags = [[NSMutableArray arrayWithArray:[properties objectForKey:@"tags"]] retain];
+        tags = [[NSMutableArray alloc] init];
+        [tags addObjectsFromArray:[properties objectForKey:@"tags"]];
         [properties removeObjectForKey:@"tags"];
         // visibility
         NSString *visibility = [properties objectForKey:@"private"];

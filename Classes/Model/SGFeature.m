@@ -31,7 +31,7 @@
 
 @implementation SGFeature
 
-@synthesize name, type, category, subcategory;
+@synthesize name, classifiers;
 
 #pragma mark Instantiation Methods
 
@@ -53,10 +53,8 @@
         name = [[properties objectForKey:@"name"] retain];
         [properties removeObjectForKey:@"name"];
         // classifiers
-        NSDictionary *classifiers = [properties objectForKey:@"classifiers"];
-        type = [[classifiers objectForKey:@"type"] retain];
-        category = [[classifiers objectForKey:@"category"] retain];
-        subcategory = [[classifiers objectForKey:@"subcategory"] retain];
+        NSArray *someClassifiers = [properties objectForKey:@"classifiers"];
+        if (someClassifiers) classifiers = [[NSMutableArray arrayWithArray:[properties objectForKey:@"classifiers"]] retain];
         [properties removeObjectForKey:@"classifiers"];
     }
     return self;
@@ -72,12 +70,7 @@
     // subclasses should set distance
     
     [[dictionary objectForKey:@"properties"] setValue:name forKey:@"name"]; // name
-    // classifiers
-    NSMutableDictionary *classifiers = [NSMutableDictionary dictionary];
-    [classifiers setValue:type forKey:@"type"];
-    [classifiers setValue:type forKey:@"category"];
-    [classifiers setValue:type forKey:@"subcategory"];
-    [[dictionary objectForKey:@"properties"] setValue:classifiers forKey:@"classifiers"];
+    [[dictionary objectForKey:@"properties"] setValue:classifiers forKey:@"classifiers"]; // classifiers
     
     return dictionary;
 }

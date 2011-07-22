@@ -66,7 +66,10 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     if (query.endDate) [parameters setValue:[NSString stringWithFormat:@"%f", [query.endDate timeIntervalSince1970]] forKey:@"end"];
     [parameters setValue:query.propertyType forKey:@"prop.type"];
     [parameters setValue:query.propertyName forKey:@"prop.name"];
-    [parameters setValue:query.propertyValue forKey:@"prop.equals"];
+    if ([query.propertyType isEqual:@"boolean"])
+        if ([(NSNumber *)query.propertyValue boolValue]) [parameters setValue:@"true" forKey:@"prop.equals"];
+        else [parameters setValue:@"false" forKey:@"prop.equals"];        
+    else [parameters setValue:query.propertyValue forKey:@"prop.equals"];
     [parameters setValue:query.propertyStartValue forKey:@"prop.start"];
     [parameters setValue:query.propertyEndValue forKey:@"prop.end"];
     
