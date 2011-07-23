@@ -32,5 +32,9 @@
     <true/>
     <key>--create-html</key>
     <true/>
+    <key>--prefix-merged-sections</key>
+    <true/>
+    <key>--keep-intermediate-files</key>
+    <true/>
 </dict>
 </plist>

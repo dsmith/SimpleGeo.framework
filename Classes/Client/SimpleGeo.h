@@ -81,7 +81,7 @@ extern NSString * const SG_URL_PREFIX;
 /*!
  * Client interface
  */
-@interface SimpleGeo : NSObject
+@interface SimpleGeo: NSObject
 {
     NSString *userAgent;
     NSString *consumerKey;

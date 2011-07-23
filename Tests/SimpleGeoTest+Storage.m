@@ -32,6 +32,7 @@
 #import "SimpleGeo+Storage.h"
 #import "NSArray+SGCollection.h"
 
+#define SGTestRecordID @"Simple Test Record"
 #define SGTestLayer @"com.simplegeo.testing.ios"
 #define SGTestPropStringKey @"stringKey"
 #define SGTestPropStringValue @"stringValue"
@@ -39,29 +40,25 @@
 #define SGTestPropNumberValue [NSNumber numberWithDouble:1.2345]
 #define SGTestPropBooleanKey @"boolKey"
 #define SGTestPropBooleanValue [NSNumber numberWithBool:YES]
-#define SGTestNumRecords 5
+#define SGTestNumRecords 4
 #define SGTestLayersCursor @"ImVkdS5jb2x1bWJpYS5jaWVzaW4uZ3B3My5wZGVucy4yMDEwYSI="
 
 #pragma mark Storage Test Data
 
 @interface SimpleGeoTest (StorageData)
-
-- (SGStoredRecord *)recordSimple;
-- (SGStoredRecord *)recordOutlier;
-
 @end
 @implementation SimpleGeoTest (StorageData)
 
 - (SGStoredRecord *)recordSimple
 {
-    return [SGStoredRecord recordWithID:@"Simple Test Record"
+    return [SGStoredRecord recordWithID:SGTestRecordID
                                   point:[self point]
                                   layer:SGTestLayer];
 }
 
-- (SGStoredRecord *)recordOutlier
+- (SGStoredRecord *)recordSimpleMoved
 {
-    return [SGStoredRecord recordWithID:@"Simple Test Record Outlier"
+    return [SGStoredRecord recordWithID:SGTestRecordID
                                   point:[self outlierPoint]
                                   layer:SGTestLayer];
 }
@@ -143,8 +140,7 @@
 {
     [self prepare];
     NSArray *records = [NSArray arrayWithObjects:
-                        [self recordSimple],
-                        [self recordOutlier],
+                        [self recordSimpleMoved],
                         [self recordWithCreationDate],
                         [self recordWithProperties],
                         [self recordWithFakeProperties],
@@ -331,12 +327,16 @@
 - (void)testGetRecordHistoryAndConvertGeometryCollection
 {
     [self prepare];
-    [[self client] getHistoryForRecord:[self recordSimple].identifier
+    [[self client] getHistoryForRecord:SGTestRecordID
                                inLayer:SGTestLayer
-                                 limit:[NSNumber numberWithInt:SGTestLimit]
+                                 limit:[NSNumber numberWithInt:1]
                                 cursor:nil
                               callback:[SGCallback callbackWithSuccessBlock:
                                         ^(NSDictionary *response) {
+                                            NSObject *cursor = [response objectForKey:@"next_cursor"];
+                                            if ([cursor isKindOfClass:[NSString class]]) [self setRecordHistoryCursor:(NSString *)cursor];
+                                            GHAssertGreaterThan((int)[[response objectForKey:@"geometries"] count], 0,
+                                                                @"Should return at least one geometry");
                                             GHAssertLessThanOrEqual((int)[[response objectForKey:@"geometries"] count],
                                                                    SGTestLimit, @"Should return no more history records than the limit");
                                             [self checkSGCollectionConversion:response type:SGCollectionTypePoints];
@@ -347,8 +347,18 @@
 
 - (void)testGetRecordHistoryWithCursor
 {
-    // TODO
-    GHAssertNotNil(nil, @"history pagination");
+    [self prepare];
+    [[self client] getHistoryForRecord:SGTestRecordID
+                               inLayer:SGTestLayer
+                                 limit:nil
+                                cursor:self.recordHistoryCursor
+                              callback:[SGCallback callbackWithSuccessBlock:
+                                        ^(NSDictionary *response) {
+                                            GHAssertGreaterThan((int)[[response objectForKey:@"geometries"] count], 0,
+                                                                @"Should return at least one geometry");
+                                            [self successBlock](response);
+                                        } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 #pragma mark Layers Request Tests
@@ -385,7 +395,7 @@
 - (void)test_DeleteRecord
 {
     [self prepare];
-    [[self client] deleteRecord:[self recordSimple].identifier
+    [[self client] deleteRecord:SGTestRecordID
                         inLayer:SGTestLayer
                        callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];

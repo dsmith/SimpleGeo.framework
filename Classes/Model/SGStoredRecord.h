@@ -76,7 +76,7 @@
  * abides by the GeoJSON Feature specification.
  * Note: geoJSON Feature must contain a "layer"
  * key and value in the property dictionary
- * @param feature   Feature dictionary
+ * @param geoJSONFeature    Feature dictionary
  */
 + (SGStoredRecord *)recordWithGeoJSON:(NSDictionary *)geoJSONFeature;
 

@@ -33,7 +33,6 @@
 
 /*!
  * Abstract class for an API query
- * @ingroup Queries
  */
 @interface SGQuery : NSObject
 {

@@ -35,9 +35,11 @@
 @interface SimpleGeoTest : GHAsyncTestCase
 {
     NSMutableArray *addedPlaceIDs;
+    NSString *recordHistoryCursor;
 }
 
 @property (nonatomic, retain) NSMutableArray *addedPlaceIDs;
+@property (nonatomic, retain) NSString *recordHistoryCursor;
 
 // Test client
 - (SimpleGeo *)client;

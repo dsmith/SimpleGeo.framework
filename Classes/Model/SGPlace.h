@@ -62,7 +62,7 @@
  * abides by the GeoJSON Feature specification.
  * Note: geoJSON Feature must contain a "name"
  * key and value in the property dictionary
- * @param feature       Feature dictionary
+ * @param geoJSONFeature    Feature dictionary
  */
 + (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature;
 

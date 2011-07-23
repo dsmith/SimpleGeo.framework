@@ -133,10 +133,11 @@ extern NSString * const SG_API_VERSION_STORAGE;
 
 /*!
  * Add or update a layer
- * @param layerName         Layer name
- * @param layerTitle        Layer title
- * @param layerDescription  Layer description
- * @param callbac           Request callback
+ * @param name          Layer name
+ * @param title         Layer title
+ * @param description   Layer description
+ * @param callbackURLs  List of callback URLs
+ * @param callback      Request callback
  */
 - (void)addOrUpdateLayer:(NSString *)name
                    title:(NSString *)title

@@ -30,14 +30,35 @@
 
 #import "SGCategories.h"
 
+/*!
+ * Category for the Classifier dictionary protocol
+ */
 @interface NSDictionary (Classifier)
 
+/*!
+ * Create a dictionary that conforms to the SimpleGeo
+ * classifier protocol for Features
+ * @param type          Feature type
+ * @param category      Feature category
+ * @param subcategory   Feature subcategory
+ */
 + (NSDictionary *)classifierWithType:(SGFeatureType)type
                             category:(SGFeatureCategory)category
                          subcategory:(SGFeatureSubcategory)subcategory;
 
+/*!
+ * Retreive the feature type
+ */
 - (SGFeatureType)SGClassifierType;
+
+/*!
+ * Retreive the feature category
+ */
 - (SGFeatureCategory)SGClassifierCategory;
+
+/*!
+ * Retreive the feature subcategory
+ */
 - (SGFeatureSubcategory)SGClassifierSubcategory;
 
 @end

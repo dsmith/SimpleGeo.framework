@@ -52,7 +52,7 @@
 /*!
  * Create an SGFeature from a dictionary that
  * abides by the GeoJSON Feature specification
- * @param feature       Feature dictionary
+ * @param geoJSONFeature    Feature dictionary
  */
 + (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
 

@@ -68,7 +68,7 @@
         self = [self initWithArray:coordinates];
         if (self) {
             NSNumber *epoch = [geoJSONGeometry objectForKey:@"created"];
-            if (epoch) created = [NSDate dateWithTimeIntervalSince1970:[epoch doubleValue]];
+            if (epoch) created = [[NSDate alloc] initWithTimeIntervalSince1970:[epoch doubleValue]];
         }
         return self;
     }

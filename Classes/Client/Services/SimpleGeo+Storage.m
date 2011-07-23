@@ -89,7 +89,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                    callback:(SGCallback *)callback
 {
     NSDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setValue:[NSString stringWithFormat:@"%d", [limit intValue]] forKey:@"limit"];
+    if (limit) [parameters setValue:[NSString stringWithFormat:@"%d", [limit intValue]] forKey:@"limit"];
     [parameters setValue:cursor forKey:@"cursor"];
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@/history.json",

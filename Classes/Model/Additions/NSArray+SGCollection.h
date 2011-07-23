@@ -30,7 +30,10 @@
 
 #import "SGTypes.h"
 
-@interface NSArray (SGGeoJSON)
+/*!
+ * Category for GeoJSON Feature Collection conversions
+ */
+@interface NSArray (SGCollection)
 
 #pragma mark SGCollection -> SGObjects
 
@@ -44,8 +47,8 @@ typedef enum {
 /*!
  * Create an array of SGGeometry or SGFeature objects from
  * a GeoJSON Collection returned from SimpleGeo
- * @param collection    GeoJSON Collection
- * @param type          Collection type
+ * @param collection        GeoJSON Collection
+ * @param collectionType    Collection type
  */
 + (NSArray *)arrayWithSGCollection:(NSDictionary *)collection
                               type:(SGCollectionType)collectionType;
@@ -53,8 +56,8 @@ typedef enum {
 /*!
  * Construct an array of SGGeometry or SGFeature objects from
  * a GeoJSON Collection returned from SimpleGeo
- * @param collection    GeoJSON Collection
- * @param type          Collection type
+ * @param collection        GeoJSON Collection
+ * @param collectionType    Collection type
  */
 - (id)initWithSGCollection:(NSDictionary *)collection
                       type:(SGCollectionType)collectionType;
@@ -64,7 +67,7 @@ typedef enum {
 /*!
  * Create a GeoJSON Collection dictionary from
  * an array of SGGeometries or SGFeatures
- * @param collectionType    Type of geoJSON collection (Feature/Geometry)
+ * @param collectionType    Collection type
  */
 - (NSDictionary *)asSGCollection:(SGCollectionType)collectionType;
 

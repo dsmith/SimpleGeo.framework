@@ -161,6 +161,7 @@
 
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters
 {
+    NSLog(@"%@",parameters);
     NSMutableArray *paramPairs = [NSMutableArray array];
     NSArray *paramNames = [parameters allKeys];
     for (NSString *paramName in paramNames) {

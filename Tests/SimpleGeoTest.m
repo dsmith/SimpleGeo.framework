@@ -33,7 +33,7 @@
 
 @implementation SimpleGeoTest
 
-@synthesize addedPlaceIDs;
+@synthesize addedPlaceIDs, recordHistoryCursor;
 
 - (BOOL)shouldRunOnMainThread
 {
@@ -105,13 +105,13 @@
 
 - (void)requestDidSucceed:(NSDictionary *)response
 {
-    NSLog(@"%@", response);
+    GHTestLog(@"%@", response);
     [self notify:kGHUnitWaitStatusSuccess];
 }
 
 - (void)requestDidFail:(NSError *)error
 {
-    NSLog(@"%@", error.description);
+    GHTestLog(@"%@", error.description);
     [self notify:kGHUnitWaitStatusFailure];
 }
 

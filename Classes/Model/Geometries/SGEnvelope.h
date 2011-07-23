@@ -57,10 +57,10 @@
 
 /*!
  * Create a bounding box from edge coordinates
- * @param north Northern latitude
- * @param west  Western longitude
- * @param south Southern latitude
- * @param east  Eastern longitude
+ * @param northernLat   Northern latitude
+ * @param westernLon    Western longitude
+ * @param southernLat   Southern latitude
+ * @param easternLon    Eastern longitude
  */
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
                              west:(double)westernLon
@@ -69,10 +69,10 @@
 
 /*!
  * Construct a bounding box from edge coordinates
- * @param north Northern latitude
- * @param west  Western longitude
- * @param south Southern latitude
- * @param east  Eastern longitude
+ * @param northernLat   Northern latitude
+ * @param westernLon    Western longitude
+ * @param southernLat   Southern latitude
+ * @param easternLon    Eastern longitude
  */
 - (id)initWithWithNorth:(double)northernLat
                    west:(double)westernLon

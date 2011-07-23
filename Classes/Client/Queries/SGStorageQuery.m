@@ -42,7 +42,7 @@
     return [[[SGStorageQuery alloc] initWithPoint:point
                                             layer:layer] autorelease];
 }
-    
+
 + (id)queryWithAddress:(NSString *)address
                  layer:(NSString *)layer
 {

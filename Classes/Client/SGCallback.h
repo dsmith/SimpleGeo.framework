@@ -70,8 +70,8 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
  * @param failureMethod Method called upon a failed request
  */
 - (id)initWithDelegate:(id)delegate
-         successMethod:(SEL)method
-         failureMethod:(SEL)method;
+         successMethod:(SEL)successMethod
+         failureMethod:(SEL)failureMethod;
 
 #if NS_BLOCKS_AVAILABLE
 

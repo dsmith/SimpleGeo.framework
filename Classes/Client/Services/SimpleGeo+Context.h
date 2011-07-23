@@ -42,7 +42,7 @@
 /*!
  * Get Context matching an SGContextQuery
  * @param query     Query for the request
- * @param handler   Completion handler block
+ * @param callback  Request callback
  */
 - (void)getContextForQuery:(SGContextQuery *)query
                   callback:(SGCallback *)callback;
