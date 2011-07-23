@@ -69,7 +69,7 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 /*!
  * Create a delegate-based callback
  * @param delegate      Delegate object
- * @param successMethod Method called upon a finished request
+ * @param method        Method called upon a finished request
  */
 + (SGCallback *)callbackWithDelegate:(id)delegate
                               method:(SEL)method;
@@ -87,7 +87,7 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 /*!
  * Construct a delegate-based callback
  * @param delegate      Delegate object
- * @param successMethod Method called upon a finished request
+ * @param method        Method called upon a finished request
  */
 - (id)initWithDelegate:(id)delegate
                 method:(SEL)method;
@@ -106,7 +106,7 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 
 /*!
  * Create a block-based callback
- * @param block Block called upon a finished request
+ * @param block     Block called upon a finished request
  */
 + (SGCallback *)callbackWithBlock:(SGResponseBlock)block;
 
@@ -120,7 +120,7 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 
 /*!
  * Construct a block-based callback
- * @param block Block called upon a finished request
+ * @param block     Block called upon a finished request
  */
 - (id)initWithBlock:(SGResponseBlock)block;
 

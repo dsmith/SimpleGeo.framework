@@ -1,5 +1,5 @@
 //
-//  SGStoredRecord.m
+//  SGPlace.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2011, SimpleGeo Inc.
@@ -30,11 +30,10 @@
 
 #import "SGPlace.h"
 #import "SGPoint.h"
-#import "NSDictionary+Classifier.h"
 
 @implementation SGPlace
 
-@synthesize name, tags, isPrivate;
+@synthesize tags, isPrivate;
 
 #pragma mark Instantiation Methods
 

@@ -31,7 +31,7 @@
 #import "SimpleGeo+Places.h"
 #import "SimpleGeo+Internal.h"
 #import "SGPlacesQuery.h"
-#import "SGFeature.h"
+#import "SGPlace.h"
 
 @implementation SimpleGeo (Places)
 

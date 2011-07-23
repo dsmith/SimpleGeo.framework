@@ -30,7 +30,7 @@
 
 #import "SimpleGeo.h"
 @class SGPlacesQuery;
-@class SGFeature;
+@class SGPlace;
 @class SGCallback;
 
 /*!

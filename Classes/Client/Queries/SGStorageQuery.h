@@ -128,8 +128,8 @@
  * @param envelope  Envelope
  * @param layer     Layer
  */
-- (id)initWithEnvelope:(SGEnvelope *)anEnvelope
-                 layer:(NSString *)aLayer;
+- (id)initWithEnvelope:(SGEnvelope *)envelope
+                 layer:(NSString *)layer;
 
 #pragma mark Convenience Methods
 
