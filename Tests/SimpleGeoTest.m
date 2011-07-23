@@ -50,14 +50,14 @@
 
 - (SGPoint *)point
 {
-    return [SGPoint pointWithLatitude:SGTestLatitude
-                            longitude:SGTestLongitude];
+    return [SGPoint pointWithLat:SGTestLatitude
+                             lon:SGTestLongitude];
 }
 
 - (SGPoint *)outlierPoint
 {
-    return [SGPoint pointWithLatitude:SGTestLatitude+SGTestRadius/50.0f
-                            longitude:SGTestLongitude];
+    return [SGPoint pointWithLat:SGTestLatitude+SGTestRadius/50.0f
+                             lon:SGTestLongitude];
 }
 
 - (SGEnvelope *)envelope

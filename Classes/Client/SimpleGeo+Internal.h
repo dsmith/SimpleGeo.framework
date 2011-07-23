@@ -48,8 +48,8 @@
 
 #pragma mark Dispatcher Methods
 
-- (void)handleSuccess:(ASIHTTPRequest *)request;
-- (void)handleFailure:(ASIHTTPRequest *)request;
+- (void) handleResponse:(ASIHTTPRequest *)response
+                 failed:(BOOL)failed;
 
 #pragma Helper Methods for Requests
 

@@ -37,11 +37,11 @@
 
 #pragma mark Instantiation Methods
 
-+ (SGPoint *)pointWithLatitude:(double)latitude
-                     longitude:(double)longitude
++ (SGPoint *)pointWithLat:(double)latitude
+                      lon:(double)longitude
 {
-    return [[[SGPoint alloc] initWithLatitude:latitude
-                                    longitude:longitude] autorelease];
+    return [[[SGPoint alloc] initWithLat:latitude
+                                     lon:longitude] autorelease];
 }
 
 + (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
@@ -49,13 +49,13 @@
     return [[[SGPoint alloc] initWithGeoJSON:geoJSONGeometry] autorelease];
 }
 
-- (id)initWithLatitude:(double)lat
-             longitude:(double)lon
+- (id)initWithLat:(double)aLatitude
+              lon:(double)aLongitude
 {
     self = [super init];
     if (self) {
-        latitude = lat;
-        longitude = lon;
+        latitude = aLatitude;
+        longitude = aLongitude;
     }
     return self;
 }
@@ -128,8 +128,8 @@
 
 - (id)initWithArray:(NSArray *)point
 {
-    return [[SGPoint alloc] initWithLatitude:[[point objectAtIndex:1] doubleValue]
-                                   longitude:[[point objectAtIndex:0] doubleValue]];
+    return [[SGPoint alloc] initWithLat:[[point objectAtIndex:1] doubleValue]
+                                    lon:[[point objectAtIndex:0] doubleValue]];
 }
 
 #pragma mark Memory

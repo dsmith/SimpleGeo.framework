@@ -77,60 +77,56 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {    
     if(200 <= [request responseStatusCode] && [request responseStatusCode] < 300)
-        [self handleSuccess:request];
+        [self handleResponse:request failed:NO];
     else
-        [self handleFailure:request];
+        [self handleResponse:request failed:YES];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    [self handleFailure:request];
+    [self handleResponse:request failed:YES];
 }
 
 #pragma mark Dispatcher Methods
 
-- (void)handleSuccess:(ASIHTTPRequest *)request
+- (void)handleResponse:(ASIHTTPRequest *)response
+                failed:(BOOL)failed
 {
-    NSLog(@"Request succeeded");
-    
-    NSDictionary* userInfo = [request userInfo];
+    NSDictionary* userInfo = [response userInfo];
     if(userInfo) {
         SGCallback *callback = [userInfo objectForKey:@"callback"];
-        NSDictionary *response = [self jsonObjectForResponseData:[request responseData]];
-        if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.successMethod])
-            [callback.delegate performSelector:callback.successMethod 
-                                    withObject:response];    
-        #if NS_BLOCKS_AVAILABLE
-        if(callback.successBlock)
-            callback.successBlock(response);
-        #endif
-    }
-}
-
-- (void)handleFailure:(ASIHTTPRequest *)request
-{
-    NSLog(@"Request failed");
-    
-    NSDictionary* userInfo = [request userInfo];
-    if(userInfo) {
-        SGCallback *callback = [userInfo objectForKey:@"callback"];
-        if(callback) {
-            NSDictionary *userInfo = (NSDictionary*)[self jsonObjectForResponseData:[request responseData]];
-            if(!userInfo || ![userInfo isKindOfClass:[NSDictionary class]])
-                userInfo = [NSDictionary dictionary];
-            
-            NSError* error = [NSError errorWithDomain:[request.url description]
-                                                 code:[request responseStatusCode]
-                                             userInfo:userInfo];
-            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.failureMethod])
-                [callback.delegate performSelector:callback.failureMethod withObject:error];  
+        NSDictionary *responseData = [self jsonObjectForResponseData:[response responseData]];
+        NSError *error = nil;
+        if (failed) {            
+            error = [NSError errorWithDomain:[response.url description]
+                                        code:[response responseStatusCode]
+                                    userInfo:nil];
             NSLog(@"request failed - %@", [error localizedDescription]);
-            
+            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.failureMethod]) {
+                [callback.delegate performSelector:callback.failureMethod withObject:error];
+            }
             #if NS_BLOCKS_AVAILABLE
-            if(callback.failureBlock)
+            if(callback.failureBlock) {
                 callback.failureBlock(error);
+            }
+            #endif
+        } else {
+            NSLog(@"Request succeeded");
+            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.successMethod]) {
+                [callback.delegate performSelector:callback.successMethod withObject:responseData];
+            }
+            #if NS_BLOCKS_AVAILABLE
+            if(callback.successBlock) {
+                callback.successBlock(responseData);
+            }
             #endif
         }
+        if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.method])
+            [callback.delegate performSelector:callback.method withObject:responseData withObject:error];
+        #if NS_BLOCKS_AVAILABLE
+        if(callback.block)
+            callback.block(responseData, error);
+        #endif
     }
 }
 

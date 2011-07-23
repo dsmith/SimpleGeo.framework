@@ -59,16 +59,16 @@
  * @param latitude Latitude
  * @param longitude Longitude
  */
-+ (SGPoint *)pointWithLatitude:(double)latitude
-                     longitude:(double)longitude;
++ (SGPoint *)pointWithLat:(double)latitude
+                      lon:(double)longitude;
 
 /*!
  * Construct a point from a pair of coordinates
  * @param latitude Latitude
  * @param longitude Longitude
  */
-- (id)initWithLatitude:(double)latitude
-             longitude:(double)longitude;
+- (id)initWithLat:(double)latitude
+              lon:(double)longitude;
 
 #pragma mark Convenience Methods
 
