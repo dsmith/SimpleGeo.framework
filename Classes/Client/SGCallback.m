@@ -16,18 +16,11 @@
 
 @implementation SGCallback
 
-@synthesize delegate, method, successMethod, failureMethod;
+@synthesize delegate, successMethod, failureMethod;
 
 #if NS_BLOCKS_AVAILABLE
-@synthesize block, successBlock, failureBlock;
+@synthesize successBlock, failureBlock;
 #endif
-
-+ (SGCallback *)callbackWithDelegate:(id)delegate
-                              method:(SEL)method
-{
-    return [[[SGCallback alloc] initWithDelegate:delegate
-                                          method:method] autorelease];
-}
 
 + (SGCallback *) callbackWithDelegate:(id)delegate
                         successMethod:(SEL)successMethod
@@ -36,17 +29,6 @@
     return [[[SGCallback alloc] initWithDelegate:delegate
                                    successMethod:successMethod
                                    failureMethod:failureMethod] autorelease];
-}
-
-- (id)initWithDelegate:(id)aDelegate
-                method:(SEL)aMethod
-{
-    self = [super init];
-    if(self) {
-        delegate = aDelegate;
-        method = aMethod;
-    }
-    return self;
 }
 
 - (id)initWithDelegate:(id)aDelegate
@@ -64,25 +46,11 @@
 
 #if NS_BLOCKS_AVAILABLE
 
-+ (SGCallback *)callbackWithBlock:(SGResponseBlock)block
-{
-    return [[[SGCallback alloc] initWithBlock:block] autorelease];
-}
-
 + (SGCallback *)callbackWithSuccessBlock:(SGSuccessBlock)successBlock
                             failureBlock:(SGFailureBlock)failureBlock
 {
     return [[[SGCallback alloc] initWithSuccessBlock:successBlock
                                         failureBlock:failureBlock] autorelease];
-}
-
-- (id)initWithBlock:(SGResponseBlock)aBlock
-{
-    self = [super init];
-    if(self) {
-        block = [aBlock copy];
-    }
-    return self;
 }
 
 - (id)initWithSuccessBlock:(SGSuccessBlock)sBlock
@@ -102,11 +70,6 @@
 {
     #if NS_BLOCKS_AVAILABLE
 	NSMutableArray *blocks = [NSMutableArray array];
-    if(block) {
-		[blocks addObject:block];
-		[block release];
-		block = nil;
-	}
 	if(successBlock) {
 		[blocks addObject:successBlock];
 		[successBlock release];

@@ -36,7 +36,7 @@
 /* REQUEST HANDLING */
 
 #define SGTestTimeout 2.5
-#define SGTestCallback [self delegateCallback]
+#define SGTestCallback [self delegateCallbacks]
 
 /* LOCATIONS */
 

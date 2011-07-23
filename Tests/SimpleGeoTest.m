@@ -70,21 +70,10 @@
 
 #pragma mark Basic Callbacks
 
-- (SGCallback *)blockCallback
-{
-    return [SGCallback callbackWithBlock:[self mainBlock]];
-}
-
 - (SGCallback *)blockCallbacks
 {
     return [SGCallback callbackWithSuccessBlock:[self successBlock]
                                    failureBlock:[self failureBlock]];
-}
-
-- (SGCallback *)delegateCallback
-{
-    return [SGCallback callbackWithDelegate:self
-                                     method:@selector(requestDidFinish:failed:)];
 }
 
 - (SGCallback *)delegateCallbacks
@@ -95,14 +84,6 @@
 }
 
 #pragma mark Basic Handler Blocks
-
-- (SGResponseBlock)mainBlock
-{    
-    return [[^(NSDictionary *response, NSError *error) {
-        if (error) [self failureBlock](error);
-        else [self successBlock](response);
-    } copy] autorelease];
-}
 
 - (SGSuccessBlock)successBlock
 {
@@ -121,13 +102,6 @@
 }
 
 #pragma mark Basic Handler Delegate Methods
-
-- (void)requestDidFinish:(NSDictionary *)response
-                  failed:(NSError *)error
-{
-    if (error) [self requestDidFail:error];
-    else [self requestDidSucceed:response];
-}
 
 - (void)requestDidSucceed:(NSDictionary *)response
 {

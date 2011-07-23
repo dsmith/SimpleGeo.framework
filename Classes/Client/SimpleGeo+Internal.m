@@ -121,12 +121,6 @@
             }
             #endif
         }
-        if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.method])
-            [callback.delegate performSelector:callback.method withObject:responseData withObject:error];
-        #if NS_BLOCKS_AVAILABLE
-        if(callback.block)
-            callback.block(responseData, error);
-        #endif
     }
 }
 
