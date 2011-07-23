@@ -79,9 +79,9 @@
 - (NSDictionary *)asSGCollection:(SGCollectionType)collectionType
 {
     NSMutableArray *geoJSONObjects = [NSMutableArray arrayWithCapacity:[self count]];
-    [self enumerateObjectsUsingBlock:^(id object, NSUInteger i, BOOL *stop) {
-        [geoJSONObjects addObject:[object asGeoJSON]];
-    }];
+    for (id object in self)
+        if ([object respondsToSelector:@selector(asGeoJSON)])
+            [geoJSONObjects addObject:[object asGeoJSON]];
     NSString *collectionLabel;
     NSString *listLabel;
     if (collectionType == SGCollectionTypePoints) {
