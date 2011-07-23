@@ -60,7 +60,7 @@ NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
         NSString *OSName;
         #if TARGET_OS_IPHONE
         deviceName = [[UIDevice currentDevice] model];
-        OSName = [[device systemName] systemVersion];
+        OSName = [[UIDevice currentDevice] systemVersion];
         #else
         deviceName = @"Macintosh";
         OSName = @"Mac OS X";
