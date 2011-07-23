@@ -51,6 +51,32 @@
                  callback:callback];
 }
 
+- (void)getAnnotationsForFeature:(NSString *)handle
+                        callback:(SGCallback *)callback
+{
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
+}
+
+- (void)annotateFeature:(NSString *)handle
+         withAnnotation:(NSDictionary *)annotation
+              isPrivate:(BOOL)isPrivate
+               callback:(SGCallback *)callback
+{    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"POST"
+                    toURL:url
+               withParams:annotation
+                 callback:callback];
+}
+
 - (void)getCategoriesWithCallback:(SGCallback *)callback
 {    
     NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",

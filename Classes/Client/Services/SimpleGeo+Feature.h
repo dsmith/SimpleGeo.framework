@@ -49,6 +49,26 @@
                     callback:(SGCallback *)callback;
 
 /*!
+ * Get annotations attached to a feature
+ * @param handle        Feature handle
+ * @param callback  Request callback
+ */
+- (void)getAnnotationsForFeature:(NSString *)handle
+                        callback:(SGCallback *)callback;
+
+/*!
+ * Annotate a feature
+ * @param handle        Feature handle
+ * @param annotation    Annotation list
+ * @param isPrivate     Annotation privacy
+ * @param callback  Request callback
+ */
+- (void)annotateFeature:(NSString *)handle
+         withAnnotation:(NSDictionary *)annotation
+              isPrivate:(BOOL)isPrivate
+               callback:(SGCallback *)callback;
+
+/*!
  * Get the overall list of categories
  * @param callback  Request callback
  */

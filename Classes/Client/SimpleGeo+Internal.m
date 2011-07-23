@@ -63,7 +63,7 @@
                                      usingMethod:ASIOAuthHMAC_SHA1SignatureMethod];
     }
     
-    NSLog(@"Sending %@ to %@", type, url);
+    SGLog(@"Sending %@ to %@", type, url);
     
     request.userInfo = [NSDictionary dictionaryWithObject:callback forKey:@"callback"];    
     [request setDelegate:self];
@@ -101,7 +101,7 @@
             error = [NSError errorWithDomain:[response.url description]
                                         code:[response responseStatusCode]
                                     userInfo:nil];
-            NSLog(@"request failed - %@", [error localizedDescription]);
+            SGLog(@"request failed - %@", [error localizedDescription]);
             if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.failureMethod]) {
                 [callback.delegate performSelector:callback.failureMethod withObject:error];
             }
@@ -111,7 +111,7 @@
             }
             #endif
         } else {
-            NSLog(@"Request succeeded");
+            SGLog(@"Request succeeded");
             if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.successMethod]) {
                 [callback.delegate performSelector:callback.successMethod withObject:responseData];
             }
@@ -157,7 +157,6 @@
 
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters
 {
-    NSLog(@"%@",parameters);
     NSMutableArray *paramPairs = [NSMutableArray array];
     NSArray *paramNames = [parameters allKeys];
     for (NSString *paramName in paramNames) {
