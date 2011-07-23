@@ -33,7 +33,7 @@
 #import "SimpleGeo+Internal.h"
 
 NSString * const SG_API_VERSION = @"1.0";
-NSString * const SG_URL_PREFIX = @"http://production-api-8fba84e3.ck.simplegeo.com";
+NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
 
 @implementation SimpleGeo
 

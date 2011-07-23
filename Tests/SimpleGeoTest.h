@@ -51,13 +51,18 @@
 
 // Test callbacks
 - (SGCallback *)blockCallback;
+- (SGCallback *)blockCallbacks;
 - (SGCallback *)delegateCallback;
+- (SGCallback *)delegateCallbacks;
 
 // Test blocks
+- (SGResponseBlock)mainBlock;
 - (SGSuccessBlock)successBlock;
 - (SGFailureBlock)failureBlock;
 
 // Test delegate methods
+- (void)requestDidFinish:(NSDictionary *)response
+                  failed:(NSError *)error;
 - (void)requestDidSucceed:(NSDictionary *)response;
 - (void)requestDidFail:(NSError *)error;
 

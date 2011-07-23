@@ -56,7 +56,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 - (void)getRecordsForQuery:(SGStorageQuery *)query
                   callback:(SGCallback *)callback
 {
-    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.cursor forKey:@"cursor"];
     [parameters setValue:query.sortType forKey:@"order"];
@@ -88,7 +88,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                      cursor:(NSString *)cursor
                    callback:(SGCallback *)callback
 {
-    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     if (limit) [parameters setValue:[NSString stringWithFormat:@"%d", [limit intValue]] forKey:@"limit"];
     [parameters setValue:cursor forKey:@"cursor"];
     
@@ -162,7 +162,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 - (void)getLayersWithCursor:(NSString *)cursor
                    callback:(SGCallback *)callback
 {
-    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:cursor forKey:@"cursor"];
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/layers.json",

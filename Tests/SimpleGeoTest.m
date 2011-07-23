@@ -72,11 +72,22 @@
 
 - (SGCallback *)blockCallback
 {
+    return [SGCallback callbackWithBlock:[self mainBlock]];
+}
+
+- (SGCallback *)blockCallbacks
+{
     return [SGCallback callbackWithSuccessBlock:[self successBlock]
                                    failureBlock:[self failureBlock]];
 }
 
 - (SGCallback *)delegateCallback
+{
+    return [SGCallback callbackWithDelegate:self
+                                     method:@selector(requestDidFinish:failed:)];
+}
+
+- (SGCallback *)delegateCallbacks
 {
     return [SGCallback callbackWithDelegate:self
                               successMethod:@selector(requestDidSucceed:)
@@ -85,10 +96,18 @@
 
 #pragma mark Basic Handler Blocks
 
+- (SGResponseBlock)mainBlock
+{    
+    return [[^(NSDictionary *response, NSError *error) {
+        if (error) [self failureBlock](error);
+        else [self successBlock](response);
+    } copy] autorelease];
+}
+
 - (SGSuccessBlock)successBlock
 {
     return [[^(NSDictionary *response) {
-        NSLog(@"%@", response);
+        SGLog(@"%@", response);
         [self notify:kGHUnitWaitStatusSuccess];
     } copy] autorelease];
 }
@@ -96,12 +115,19 @@
 - (SGFailureBlock)failureBlock
 {
     return [[^(NSError *error) {
-        NSLog(@"%@", error.description);
+        SGLog(@"%@", error.description);
         [self notify:kGHUnitWaitStatusFailure];
     } copy] autorelease];
 }
 
 #pragma mark Basic Handler Delegate Methods
+
+- (void)requestDidFinish:(NSDictionary *)response
+                  failed:(NSError *)error
+{
+    if (error) [self requestDidFail:error];
+    else [self requestDidSucceed:response];
+}
 
 - (void)requestDidSucceed:(NSDictionary *)response
 {

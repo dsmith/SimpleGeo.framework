@@ -40,7 +40,7 @@
 - (void)getPlacesForQuery:(SGPlacesQuery *)query
                  callback:(SGCallback *)callback
 {  
-    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.searchString forKey:@"q"];
     [parameters setValue:query.categories forKey:@"category"];

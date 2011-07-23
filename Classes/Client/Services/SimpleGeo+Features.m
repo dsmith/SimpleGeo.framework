@@ -1,5 +1,5 @@
 //
-//  SimpleGeo+Feature.h
+//  SimpleGeo+Features.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -28,50 +28,67 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SimpleGeo.h"
-@class SGCallback;
+#import "SimpleGeo+Features.h"
+#import "SimpleGeo+Internal.h"
 
-/*!
- * Client support for Feature API
- */
-@interface SimpleGeo (Feature)
+@implementation SimpleGeo (Features)
 
 #pragma mark Feature Request Methods
 
-/*!
- * Get a feature with a specific handle
- * @param handle    Feature handle
- * @param zoom      Zoom (complexity of returned geometry) (optional)
- * @param callback  Request callback
- */
 - (void)getFeatureWithHandle:(NSString *)handle
                         zoom:(NSNumber *)zoom
-                    callback:(SGCallback *)callback;
+                    callback:(SGCallback *)callback
+{    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    [parameters setValue:[NSString stringWithFormat:@"%d",[zoom intValue]] forKey:@"zoom"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:parameters
+                 callback:callback];
+}
 
-/*!
- * Get annotations attached to a feature
- * @param handle        Feature handle
- * @param callback  Request callback
- */
 - (void)getAnnotationsForFeature:(NSString *)handle
-                        callback:(SGCallback *)callback;
+                        callback:(SGCallback *)callback
+{
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
+}
 
-/*!
- * Annotate a feature
- * @param handle        Feature handle
- * @param annotation    Annotation list
- * @param isPrivate     Annotation privacy
- * @param callback  Request callback
- */
 - (void)annotateFeature:(NSString *)handle
          withAnnotation:(NSDictionary *)annotation
               isPrivate:(BOOL)isPrivate
-               callback:(SGCallback *)callback;
+               callback:(SGCallback *)callback
+{    
+    NSMutableDictionary *annotationDict = [NSMutableDictionary dictionaryWithDictionary:annotation];
+    if (isPrivate) [annotationDict setValue:[NSNumber numberWithBool:YES] forKey:@"private"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
+                     SG_URL_PREFIX, SG_API_VERSION, handle];
+    
+    [self sendHTTPRequest:@"POST"
+                    toURL:url
+               withParams:annotationDict
+                 callback:callback];
+}
 
-/*!
- * Get the overall list of categories
- * @param callback  Request callback
- */
-- (void)getCategoriesWithCallback:(SGCallback *)callback;
+- (void)getCategoriesWithCallback:(SGCallback *)callback
+{    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",
+                     SG_URL_PREFIX, SG_API_VERSION];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
+}
 
 @end

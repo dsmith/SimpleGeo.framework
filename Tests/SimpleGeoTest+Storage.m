@@ -167,7 +167,7 @@
                     callback:[SGCallback callbackWithSuccessBlock:
                               ^(NSDictionary *response) {
                                   SGStoredRecord *record = [SGStoredRecord recordWithGeoJSON:response];
-                                  NSLog(@"SGStoredRecord: %@", record);
+                                  SGLog(@"SGStoredRecord: %@", record);
                                   GHAssertEqualObjects(response, [record asGeoJSON],
                                                        @"Record's GeoJSON should match response geoJSON");
                                   [self successBlock](response);

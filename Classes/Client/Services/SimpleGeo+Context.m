@@ -39,7 +39,7 @@
 - (void)getContextForQuery:(SGContextQuery *)query
                   callback:(SGCallback *)callback
 {
-    NSDictionary *parameters = [NSMutableDictionary dictionary];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.filters forKey:@"filter"];
     [parameters setValue:query.featureCategories forKey:@"features__category"];

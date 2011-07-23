@@ -29,9 +29,9 @@
 //
 
 #import "SimpleGeoTest.h"
-#import "SimpleGeo+Feature.h"
+#import "SimpleGeo+Features.h"
 
-#define SGTestFeatureHandlePoint @"SG_2AziTafTLNReeHpRRkfipn_37.766713_-122.428938@1291796505"
+#define SGTestFeatureHandlePoint @"SG_1y80O57DAwt4gGaFV8OPaG_37.772381_-122.405827"
 #define SGTestFeatureHandlePolygon @"SG_09n1rkpq25DU5aZeaCAHtG_37.775330_-122.402276"
 #define SGTestFeatureHandleMultiPolygon @"SG_1mNfKHr5aXH7LWgmZL8Uq7_37.759717_-122.693971"
 
@@ -49,7 +49,7 @@
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {
                                              SGFeature *feature = [SGFeature featureWithGeoJSON:response];
-                                             NSLog(@"SGFeature: %@", feature);
+                                             SGLog(@"SGFeature: %@", feature);
                                              GHAssertEqualObjects(response, [feature asGeoJSON],
                                                                   @"Feature's GeoJSON should match response geoJSON");
                                              [self successBlock](response);
@@ -65,7 +65,7 @@
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {
                                              SGFeature *feature = [SGFeature featureWithGeoJSON:response];
-                                             NSLog(@"SGFeature: %@", feature);
+                                             SGLog(@"SGFeature: %@", feature);
                                              GHAssertEqualObjects(response, [feature asGeoJSON],
                                                                   @"Feature's GeoJSON should match response geoJSON");
                                              [self successBlock](response);
@@ -81,11 +81,44 @@
                                callback:[SGCallback callbackWithSuccessBlock:
                                          ^(NSDictionary *response) {
                                              SGFeature *feature = [SGFeature featureWithGeoJSON:response];
-                                             NSLog(@"SGFeature: %@", feature);
+                                             SGLog(@"SGFeature: %@", feature);
                                              GHAssertEqualObjects(response, [feature asGeoJSON],
                                                                   @"Feature's GeoJSON should match response geoJSON");
                                              [self successBlock](response);
                                          } failureBlock:[self failureBlock]]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testGetAnnotationsForFeature
+{
+    [self prepare];
+    [[self client] getAnnotationsForFeature:SGTestFeatureHandlePolygon
+                                   callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testAnnotateFeature
+{
+    [self prepare];
+    NSDictionary *testAnnotations = [NSDictionary dictionaryWithObject:@"testing"
+                                                                forKey:@"testAnnotations"];
+    [[self client] annotateFeature:SGTestFeatureHandlePoint
+                    withAnnotation:testAnnotations
+                         isPrivate:YES
+                          callback:SGTestCallback];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+}
+
+- (void)testCheckAnnotationsForFeature
+{
+    [self prepare];
+    [[self client] getAnnotationsForFeature:SGTestFeatureHandlePoint
+                                   callback:[SGCallback callbackWithSuccessBlock:
+                                             ^(NSDictionary *response) {
+                                                 GHAssertEqualObjects([[response objectForKey:@"private"] objectForKey:@"testAnnotations"],
+                                                                      @"testing", @"Feature's annotation should contain our annotation");
+                                                 [self successBlock](response);
+                                             } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
