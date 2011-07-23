@@ -63,4 +63,28 @@
 //! Only present if the Object originated from a nearby request
 @property (nonatomic, readonly) NSNumber *distance;
 
+#pragma mark Instantiation Methods
+
+/*!
+ * Construct an SGObject from a dictionary that
+ * abides by the GeoJSON Feature specification
+ * @param feature       Feature dictionary
+ */
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
+
+#pragma mark Convenience Methods
+
+/*!
+ * Set properties; creates a
+ * deep mutable copy of a properties dictionary
+ * @param properties    Feature properties
+ */
+- (void)setProperties:(NSDictionary *)properties;
+
+/*!
+ * Dictionary representation of the SGObject that
+ * conforms to the geoJSON Feature specification
+ */
+- (NSDictionary *)asGeoJSON;
+
 @end

@@ -29,7 +29,6 @@
 //
 
 #import "SGQuery.h"
-#import "SGQuery+Private.h"
 
 /*!
  * API query for Context.

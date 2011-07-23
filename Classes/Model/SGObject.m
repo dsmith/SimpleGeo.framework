@@ -29,7 +29,6 @@
 //
 
 #import "SGObject.h"
-#import "SGObject+Private.h"
 #import "SGGeometry.h"
 
 @implementation SGObject
@@ -37,11 +36,6 @@
 @synthesize identifier, geometry, properties, distance, selfLink;
 
 #pragma mark Instantiation Methods
-
-+ (SGObject *)objectWithGeoJSON:(NSDictionary *)geoJSONFeature
-{
-    return [[[SGObject alloc] initWithGeoJSON:geoJSONFeature] autorelease];
-}
 
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {

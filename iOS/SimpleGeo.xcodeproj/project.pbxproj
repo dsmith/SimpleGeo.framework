@@ -49,7 +49,6 @@
 		94572E9813DB877A003F35DC /* SGNearbyQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E5F13DB877A003F35DC /* SGNearbyQuery.m */; };
 		94572E9913DB877A003F35DC /* SGPlacesQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E6013DB877A003F35DC /* SGPlacesQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		94572E9A13DB877A003F35DC /* SGPlacesQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E6113DB877A003F35DC /* SGPlacesQuery.m */; };
-		94572E9B13DB877A003F35DC /* SGQuery+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E6213DB877A003F35DC /* SGQuery+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		94572E9C13DB877A003F35DC /* SGQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E6313DB877A003F35DC /* SGQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		94572E9D13DB877A003F35DC /* SGQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E6413DB877A003F35DC /* SGQuery.m */; };
 		94572E9E13DB877A003F35DC /* SGStorageQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E6513DB877A003F35DC /* SGStorageQuery.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -86,7 +85,6 @@
 		94572EBD13DB877A003F35DC /* SGPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E8813DB877A003F35DC /* SGPolygon.m */; };
 		94572EBE13DB877A003F35DC /* SGFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E8913DB877A003F35DC /* SGFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		94572EBF13DB877A003F35DC /* SGFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E8A13DB877A003F35DC /* SGFeature.m */; };
-		94572EC013DB877A003F35DC /* SGObject+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E8B13DB877A003F35DC /* SGObject+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		94572EC113DB877A003F35DC /* SGObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E8C13DB877A003F35DC /* SGObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		94572EC213DB877A003F35DC /* SGObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 94572E8D13DB877A003F35DC /* SGObject.m */; };
 		94572EC313DB877A003F35DC /* SGPlace.h in Headers */ = {isa = PBXBuildFile; fileRef = 94572E8E13DB877A003F35DC /* SGPlace.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -153,7 +151,6 @@
 		94572E5F13DB877A003F35DC /* SGNearbyQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGNearbyQuery.m; sourceTree = "<group>"; };
 		94572E6013DB877A003F35DC /* SGPlacesQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGPlacesQuery.h; sourceTree = "<group>"; };
 		94572E6113DB877A003F35DC /* SGPlacesQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGPlacesQuery.m; sourceTree = "<group>"; };
-		94572E6213DB877A003F35DC /* SGQuery+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SGQuery+Private.h"; sourceTree = "<group>"; };
 		94572E6313DB877A003F35DC /* SGQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGQuery.h; sourceTree = "<group>"; };
 		94572E6413DB877A003F35DC /* SGQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGQuery.m; sourceTree = "<group>"; };
 		94572E6513DB877A003F35DC /* SGStorageQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGStorageQuery.h; sourceTree = "<group>"; };
@@ -190,7 +187,6 @@
 		94572E8813DB877A003F35DC /* SGPolygon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGPolygon.m; sourceTree = "<group>"; };
 		94572E8913DB877A003F35DC /* SGFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGFeature.h; sourceTree = "<group>"; };
 		94572E8A13DB877A003F35DC /* SGFeature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGFeature.m; sourceTree = "<group>"; };
-		94572E8B13DB877A003F35DC /* SGObject+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SGObject+Private.h"; sourceTree = "<group>"; };
 		94572E8C13DB877A003F35DC /* SGObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGObject.h; sourceTree = "<group>"; };
 		94572E8D13DB877A003F35DC /* SGObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SGObject.m; sourceTree = "<group>"; };
 		94572E8E13DB877A003F35DC /* SGPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGPlace.h; sourceTree = "<group>"; };
@@ -402,7 +398,6 @@
 				94572E5F13DB877A003F35DC /* SGNearbyQuery.m */,
 				94572E6013DB877A003F35DC /* SGPlacesQuery.h */,
 				94572E6113DB877A003F35DC /* SGPlacesQuery.m */,
-				94572E6213DB877A003F35DC /* SGQuery+Private.h */,
 				94572E6313DB877A003F35DC /* SGQuery.h */,
 				94572E6413DB877A003F35DC /* SGQuery.m */,
 				94572E6513DB877A003F35DC /* SGStorageQuery.h */,
@@ -433,7 +428,6 @@
 				94572E7C13DB877A003F35DC /* Geometries */,
 				94572E8913DB877A003F35DC /* SGFeature.h */,
 				94572E8A13DB877A003F35DC /* SGFeature.m */,
-				94572E8B13DB877A003F35DC /* SGObject+Private.h */,
 				94572E8C13DB877A003F35DC /* SGObject.h */,
 				94572E8D13DB877A003F35DC /* SGObject.m */,
 				94572E8E13DB877A003F35DC /* SGPlace.h */,
@@ -554,11 +548,9 @@
 				94572EC113DB877A003F35DC /* SGObject.h in Headers */,
 				94572EC313DB877A003F35DC /* SGPlace.h in Headers */,
 				94572EC513DB877A003F35DC /* SGStoredRecord.h in Headers */,
-				94572E9B13DB877A003F35DC /* SGQuery+Private.h in Headers */,
 				94572EAA13DB877A003F35DC /* SimpleGeo+Internal.h in Headers */,
 				94572EB813DB877A003F35DC /* SGPoint+Private.h in Headers */,
 				94572EBB13DB877A003F35DC /* SGPolygon+Private.h in Headers */,
-				94572EC013DB877A003F35DC /* SGObject+Private.h in Headers */,
 				5D1DA89012DD2AC300556B20 /* ASIBase64Transcoder.h in Headers */,
 				9430711513D13C150097C21A /* NSData+Base64.h in Headers */,
 				9430711713D13C150097C21A /* NSString+URLEncode.h in Headers */,

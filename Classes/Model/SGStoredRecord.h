@@ -29,7 +29,6 @@
 //
 
 #import "SGObject.h"
-#import "SGObject+Private.h"
 @class SGPoint;
 
 /*!
