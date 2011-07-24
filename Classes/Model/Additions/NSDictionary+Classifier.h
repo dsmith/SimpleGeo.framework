@@ -49,16 +49,16 @@
 /*!
  * Retreive the feature type
  */
-- (SGFeatureType)SGClassifierType;
+- (SGFeatureType)classifierType;
 
 /*!
  * Retreive the feature category
  */
-- (SGFeatureCategory)SGClassifierCategory;
+- (SGFeatureCategory)classifierCategory;
 
 /*!
  * Retreive the feature subcategory
  */
-- (SGFeatureSubcategory)SGClassifierSubcategory;
+- (SGFeatureSubcategory)classifierSubcategory;
 
 @end

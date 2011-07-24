@@ -32,6 +32,11 @@
 #import "SGPolygon+Mapkit.h"
 #import "SGPoint.h"
 
+@interface SGPolygon (Private)
++ (MKPolygon *)makeMKPolygon:(NSArray *)points
+         withInteriorRegions:(NSArray *)holes;
+@end
+
 @implementation SGPolygon (Mapkit)
 
 - (MKPolygon *)asMKPolygon
@@ -46,10 +51,6 @@
 {
     return [NSArray arrayWithObject:[self asMKPolygon]];
 }
-
-@end
-
-@implementation SGPolygon (Private)
 
 + (MKPolygon*)makeMKPolygon:(NSArray*)points
         withInteriorRegions:(NSArray*)holes

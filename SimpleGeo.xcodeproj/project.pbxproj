@@ -76,7 +76,6 @@
 		9405B80013D8F5780088D7DF /* SimpleGeoTest+Features.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77B13D8F3C90088D7DF /* SimpleGeoTest+Features.m */; };
 		9405B80113D8F5810088D7DF /* SimpleGeoTest+Places.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77C13D8F3C90088D7DF /* SimpleGeoTest+Places.m */; };
 		9405B80213D8F5830088D7DF /* SimpleGeoTest+Storage.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77D13D8F3C90088D7DF /* SimpleGeoTest+Storage.m */; };
-		9405B80313D8F5850088D7DF /* SimpleGeoTestSettings.h in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77F13D8F3C90088D7DF /* SimpleGeoTestSettings.h */; };
 		940F60D813D09D40004FA337 /* ASICacheDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 940F601C13D09D40004FA337 /* ASICacheDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		940F60D913D09D40004FA337 /* ASIDataCompressor.h in Headers */ = {isa = PBXBuildFile; fileRef = 940F601D13D09D40004FA337 /* ASIDataCompressor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		940F60DA13D09D40004FA337 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 940F601E13D09D40004FA337 /* ASIDataCompressor.m */; };
@@ -727,7 +726,6 @@
 				9405B80113D8F5810088D7DF /* SimpleGeoTest+Places.m in Sources */,
 				9405B80013D8F5780088D7DF /* SimpleGeoTest+Features.m in Sources */,
 				9405B80213D8F5830088D7DF /* SimpleGeoTest+Storage.m in Sources */,
-				9405B80313D8F5850088D7DF /* SimpleGeoTestSettings.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,13 +31,13 @@
 #import "SGGeometry.h"
 
 /*!
- * Category for SGGeometry;
- * Adds Mapkit features for iOS.
+ * Category for SGGeometry.
+ * Adds Mapkit features for iOS
  */
 @interface SGGeometry (Mapkit)
 
 /*!
- * Return the geometry as an array of MKOverlays
+ * The Geometry as an array of MKOverlays
  */
 - (NSArray *)overlays;
 

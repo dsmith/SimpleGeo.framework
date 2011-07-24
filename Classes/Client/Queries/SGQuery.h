@@ -66,7 +66,7 @@
 
 /*!
  * Create an a bounding box API query
- * @param bounds Bounding box
+ * @param envelope Bounding box
  */
 + (id)queryWithEnvelope:(SGEnvelope *)envelope;
 
@@ -84,7 +84,7 @@
 
 /*!
  * Construct a bounding box API query
- * @param bounds Bounding box
+ * @param envelope Bounding box
  */
 - (id)initWithEnvelope:(SGEnvelope *)envelope;
 

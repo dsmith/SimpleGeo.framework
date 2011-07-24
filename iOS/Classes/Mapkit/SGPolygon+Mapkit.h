@@ -32,19 +32,14 @@
 #import "SGPolygon.h"
 
 /*!
- * Category for SGPolygon;
- * Adds Mapkit features for iOS.
+ * Category for SGPolygon.
+ * Adds Mapkit features for iOS
  */
 @interface SGPolygon (Mapkit)
 
 /*!
- * Return an equivalent MKPolygon
+ * An equivalent MKPolygon
  */
 - (MKPolygon *)asMKPolygon;
 
-@end
-
-@interface SGPolygon (Private)
-+ (MKPolygon *)makeMKPolygon:(NSArray *)points
-        withInteriorRegions:(NSArray *)holes;
 @end

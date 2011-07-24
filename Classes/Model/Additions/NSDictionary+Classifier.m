@@ -43,15 +43,15 @@
              nil] autorelease];
 }
 
-- (SGFeatureType)SGClassifierType {
+- (SGFeatureType)classifierType {
     return [self objectForKey:@"type"];
 }
 
-- (SGFeatureCategory)SGClassifierCategory {
+- (SGFeatureCategory)classifierCategory {
     return [self objectForKey:@"category"];
 }
 
-- (SGFeatureSubcategory)SGClassifierSubcategory {
+- (SGFeatureSubcategory)classifierSubcategory {
     return [self objectForKey:@"subcategory"];
 }
 

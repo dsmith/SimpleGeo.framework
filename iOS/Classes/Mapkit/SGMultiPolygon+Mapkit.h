@@ -31,13 +31,13 @@
 #import "SGMultiPolygon.h"
 
 /*!
- * Category for SGMultiPolygon;
- * Adds Mapkit features for iOS.
+ * Category for SGMultiPolygon.
+ * Adds Mapkit features for iOS
  */
 @interface SGMultiPolygon (Mapkit)
 
 /*!
- * Return an equivalent array of MKPolygons
+ * An equivalent array of MKPolygons
  */
 - (NSArray *)asMKPolygons;
 
