@@ -28,12 +28,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
-#import "SGGeometry+Mapkit.h"
 #import "SGPolygon.h"
-#import "SGPoint.h"
 
 /*!
  * Category for SGPolygon;

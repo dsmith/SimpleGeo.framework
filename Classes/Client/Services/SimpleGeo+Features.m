@@ -40,7 +40,7 @@
                     callback:(SGCallback *)callback
 {    
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setValue:[NSString stringWithFormat:@"%d",[zoom intValue]] forKey:@"zoom"];
+    if (zoom) [parameters setValue:[NSString stringWithFormat:@"%d",[zoom intValue]] forKey:@"zoom"];
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
                      SG_URL_PREFIX, SG_API_VERSION, handle];

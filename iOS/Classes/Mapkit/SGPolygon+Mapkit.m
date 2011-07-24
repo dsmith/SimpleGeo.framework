@@ -28,18 +28,18 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#import <CoreLocation/CoreLocation.h>
 #import "SGPolygon+Mapkit.h"
+#import "SGPoint.h"
 
 @implementation SGPolygon (Mapkit)
 
 - (MKPolygon *)asMKPolygon
 {
-    NSMutableArray *holes = [[[NSMutableArray alloc] init] autorelease];
-    for (int i=1; i<[rings count]; i++)
-        [holes addObject:[SGPolygon makeMKPolygon:[rings objectAtIndex:i]
-                              withInteriorRegions:nil]];
-    return [SGPolygon makeMKPolygon:[rings objectAtIndex:0]
-                withInteriorRegions:holes];
+    NSMutableArray *holePolygons = [NSMutableArray array];
+    for (NSArray *hole in [self holes])
+        [holePolygons addObject:[SGPolygon makeMKPolygon:hole withInteriorRegions:nil]];
+    return [SGPolygon makeMKPolygon:[self boundary] withInteriorRegions:holePolygons];
 }
 
 - (NSArray *)overlays
@@ -59,7 +59,7 @@
     CLLocationCoordinate2D* coordinates = malloc(sizeof(CLLocationCoordinate2D) * numPoints);
     for (int i=0; i<numPoints; i++) {
         SGPoint *point = [points objectAtIndex:i];
-        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([point latitude], [point longitude]);
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(point.latitude, point.longitude);
         coordinates[i] = coordinate;
     }
     // make the MKPolygon

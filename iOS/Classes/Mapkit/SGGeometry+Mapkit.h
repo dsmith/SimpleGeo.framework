@@ -28,16 +28,13 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
 #import "SGGeometry.h"
-#import "SGPolygon+Mapkit.h"
-#import "SGMultiPolygon+Mapkit.h"
 
 /*!
  * Category for SGGeometry;
  * Adds Mapkit features for iOS.
  */
-@interface SGGeometry (SGGeometry_Mapkit)
+@interface SGGeometry (Mapkit)
 
 /*!
  * Return the geometry as an array of MKOverlays

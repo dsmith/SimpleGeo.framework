@@ -30,7 +30,7 @@
 
 #import "SGPoint+Mapkit.h"
 
-@implementation SGPoint (SGPoint_Mapkit)
+@implementation SGPoint (Mapkit)
 
 - (CLLocationCoordinate2D)coordinate
 {

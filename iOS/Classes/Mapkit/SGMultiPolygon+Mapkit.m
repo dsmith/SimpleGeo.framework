@@ -29,17 +29,18 @@
 //
 
 #import "SGMultiPolygon+Mapkit.h"
+#import "SGPolygon+Mapkit.h"
 
-@implementation SGMultiPolygon (SGMultiPolygon_Mapkit)
+@implementation SGMultiPolygon (Mapkit)
 
 - (NSArray *)asMKPolygons
 {
-    NSMutableArray *mkPolygons = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *mkPolygons = [NSMutableArray array];
     // for each polygon, get the MKPolygon and add it to the array
     for (SGPolygon *polygon in polygons) {
         [mkPolygons addObject:[polygon asMKPolygon]];
     }
-    return [NSArray arrayWithArray:mkPolygons];
+    return mkPolygons;
 }
 
 - (NSArray *)overlays

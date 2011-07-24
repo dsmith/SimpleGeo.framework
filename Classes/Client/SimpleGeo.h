@@ -115,5 +115,6 @@ extern NSString * const SG_URL_PREFIX;
 @end
 
 #import "SimpleGeo+Context.h"
+#import "SimpleGeo+Features.h"
 #import "SimpleGeo+Places.h"
 #import "SimpleGeo+Storage.h"

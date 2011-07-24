@@ -30,11 +30,12 @@
 
 #import "SGGeometry+Mapkit.h"
 
-@implementation SGGeometry (SGGeometry_Mapkit)
+@implementation SGGeometry (Mapkit)
 
 - (NSArray *)overlays
 {
     return nil;
+    // subclasses must implement
 }
 
 @end
