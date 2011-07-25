@@ -67,7 +67,7 @@
 
 /*!
  * Construct an SGObject from a dictionary that
- * abides by the GeoJSON    Feature specification
+ * abides by the GeoJSON Feature specification
  * @param geoJSONFeature    Feature dictionary
  */
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;

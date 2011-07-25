@@ -70,7 +70,6 @@
 		9405B7F913D8F56A0088D7DF /* GHUnitTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77413D8F3C90088D7DF /* GHUnitTestMain.m */; };
 		9405B7FA13D8F56B0088D7DF /* SGFeatureTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77513D8F3C90088D7DF /* SGFeatureTest.m */; };
 		9405B7FB13D8F56D0088D7DF /* SGGeometryTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77613D8F3C90088D7DF /* SGGeometryTest.m */; };
-		9405B7FD13D8F5720088D7DF /* SimpleGeoTest.h in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77813D8F3C90088D7DF /* SimpleGeoTest.h */; };
 		9405B7FE13D8F5740088D7DF /* SimpleGeoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77913D8F3C90088D7DF /* SimpleGeoTest.m */; };
 		9405B7FF13D8F5750088D7DF /* SimpleGeoTest+Context.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77A13D8F3C90088D7DF /* SimpleGeoTest+Context.m */; };
 		9405B80013D8F5780088D7DF /* SimpleGeoTest+Features.m in Sources */ = {isa = PBXBuildFile; fileRef = 9405B77B13D8F3C90088D7DF /* SimpleGeoTest+Features.m */; };
@@ -105,6 +104,8 @@
 		940F621413D0AE66004FA337 /* YAJL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 940F621213D0AE66004FA337 /* YAJL.framework */; };
 		940F621513D0AE83004FA337 /* GHUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 940F621113D0AE66004FA337 /* GHUnit.framework */; };
 		940F621613D0AE85004FA337 /* GHUnit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 940F621113D0AE66004FA337 /* GHUnit.framework */; };
+		9429289713DD273B00FA4614 /* SGLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 9429289513DD273B00FA4614 /* SGLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9429289813DD273B00FA4614 /* SGLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9429289613DD273B00FA4614 /* SGLayer.m */; };
 		944FE58313CF4FA0009A1C2F /* SimpleGeo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* SimpleGeo.framework */; };
 		944FE58413CF4FB6009A1C2F /* SimpleGeo.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* SimpleGeo.framework */; };
 /* End PBXBuildFile section */
@@ -242,6 +243,8 @@
 		940F61CA13D09D60004FA337 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
 		940F621113D0AE66004FA337 /* GHUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GHUnit.framework; path = ext/GHUnit.framework; sourceTree = "<group>"; };
 		940F621213D0AE66004FA337 /* YAJL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = YAJL.framework; path = ext/YAJL.framework; sourceTree = "<group>"; };
+		9429289513DD273B00FA4614 /* SGLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SGLayer.h; path = Classes/Model/SGLayer.h; sourceTree = "<group>"; };
+		9429289613DD273B00FA4614 /* SGLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SGLayer.m; path = Classes/Model/SGLayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -542,6 +545,8 @@
 		94E6A16113CE02FE004F0E45 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9429289513DD273B00FA4614 /* SGLayer.h */,
+				9429289613DD273B00FA4614 /* SGLayer.m */,
 				9405B7E913D8F4980088D7DF /* SGObject.h */,
 				9405B7EA13D8F4980088D7DF /* SGObject.m */,
 				9405B7E713D8F4980088D7DF /* SGFeature.h */,
@@ -599,6 +604,7 @@
 				9405B7F013D8F4980088D7DF /* SGFeature.h in Headers */,
 				9405B7F213D8F4980088D7DF /* SGObject.h in Headers */,
 				9405B7F513D8F4980088D7DF /* SGPlace.h in Headers */,
+				9429289713DD273B00FA4614 /* SGLayer.h in Headers */,
 				9405B7F713D8F4980088D7DF /* SGStoredRecord.h in Headers */,
 				9405B79E13D8F4070088D7DF /* SimpleGeo+Internal.h in Headers */,
 				9405B7DA13D8F47C0088D7DF /* SGPoint+Private.h in Headers */,
@@ -720,7 +726,6 @@
 				9405B7F913D8F56A0088D7DF /* GHUnitTestMain.m in Sources */,
 				9405B7FA13D8F56B0088D7DF /* SGFeatureTest.m in Sources */,
 				9405B7FB13D8F56D0088D7DF /* SGGeometryTest.m in Sources */,
-				9405B7FD13D8F5720088D7DF /* SimpleGeoTest.h in Sources */,
 				9405B7FE13D8F5740088D7DF /* SimpleGeoTest.m in Sources */,
 				9405B7FF13D8F5750088D7DF /* SimpleGeoTest+Context.m in Sources */,
 				9405B80113D8F5810088D7DF /* SimpleGeoTest+Places.m in Sources */,
@@ -769,6 +774,7 @@
 				9405B7F313D8F4980088D7DF /* SGObject.m in Sources */,
 				9405B7F613D8F4980088D7DF /* SGPlace.m in Sources */,
 				9405B7F813D8F4980088D7DF /* SGStoredRecord.m in Sources */,
+				9429289813DD273B00FA4614 /* SGLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

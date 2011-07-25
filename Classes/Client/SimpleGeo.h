@@ -36,6 +36,7 @@
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
 
+#import "SGLayer.h"
 #import "SGFeature.h"
 #import "SGPlace.h"
 #import "SGStoredRecord.h"

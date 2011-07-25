@@ -21,7 +21,6 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 {
     @private
     id delegate;
-    SEL method;
     SEL successMethod;
     SEL failureMethod;
     

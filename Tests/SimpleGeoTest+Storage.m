@@ -98,6 +98,14 @@
     return record;
 }
 
+- (SGLayer *)layer
+{
+    return [SGLayer layerWithName:SGTestLayer
+                            title:@"Temporary iOS Test Layer"
+                      description:@"SimpleGeo iOS client test layer"
+                      callackURLs:[NSArray arrayWithObject:@"http://appthat.com"]];
+}
+
 @end
 
 #pragma mark Storage Add/Update Tests
@@ -109,22 +117,17 @@
 - (void)testAddLayer
 {
     [self prepare];
-    [[self client] addOrUpdateLayer:SGTestLayer
-                              title:@"Temporary iOS Test Layer"
-                        description:@"SimpleGeo iOS client test layer"
-                       callbackURLs:nil
-                           callback:SGTestCallback];
+    [[self client] addOrUpdateLayer:[self layer] callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testAddedLayerUpdate
 {
     [self prepare];
-    [[self client] addOrUpdateLayer:SGTestLayer
-                              title:@"Temporary iOS Test Layer"
-                        description:@"updated!"
-                       callbackURLs:nil
-                           callback:SGTestCallback];
+    SGLayer *layer = [self layer];
+    [layer setDescription:@"updated!"];
+    [layer setCallbackURLs:nil];
+    [[self client] addOrUpdateLayer:layer callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 

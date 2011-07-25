@@ -33,6 +33,7 @@
 #import "SGStorageQuery.h"
 #import "NSArray+SGCollection.h"
 #import "SGCallback.h"
+#import "SGLayer.h"
 
 NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
@@ -176,25 +177,15 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
 #pragma mark Layer Manipulation Methods
 
-- (void)addOrUpdateLayer:(NSString *)name
-                   title:(NSString *)title
-             description:(NSString *)description
-            callbackURLs:(NSArray *)callbackURLs
+- (void)addOrUpdateLayer:(SGLayer *)layer
                 callback:(SGCallback *)callback
-{
-    NSDictionary *layerDict = [NSMutableDictionary dictionary];
-    [layerDict setValue:name forKey:@"name"];
-    [layerDict setValue:title forKey:@"title"];
-    [layerDict setValue:description forKey:@"description"];
-    [layerDict setValue:@"false" forKey:@"public"];
-    [layerDict setValue:callbackURLs forKey:@"callbackURLs"];
-    
+{    
     NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, name];
+                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layer.name];
     
     [self sendHTTPRequest:@"PUT"
                     toURL:url
-               withParams:layerDict
+               withParams:[layer asDictionary]
                  callback:callback];
 }
 
