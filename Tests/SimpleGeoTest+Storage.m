@@ -103,7 +103,7 @@
     return [SGLayer layerWithName:SGTestLayer
                             title:@"Temporary iOS Test Layer"
                       description:@"SimpleGeo iOS client test layer"
-                      callackURLs:[NSArray arrayWithObject:@"http://appthat.com"]];
+                     callbackURLs:[NSArray arrayWithObject:@"http://simplegeo.com"]];
 }
 
 @end

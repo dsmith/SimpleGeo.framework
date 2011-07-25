@@ -76,7 +76,7 @@
 + (SGLayer *)layerWithName:(NSString *)name
                      title:(NSString *)title
                description:(NSString *)description
-               callackURLs:(NSArray *)callbackURLs;
+              callbackURLs:(NSArray *)callbackURLs;
 
 /*!
  * Construct an SGLayer
@@ -88,7 +88,7 @@
 - (id)initWithName:(NSString *)name
              title:(NSString *)title
        description:(NSString *)description
-       callackURLs:(NSArray *)callbackURLs;
+      callbackURLs:(NSArray *)callbackURLs;
 
 /*!
  * Create an SGLayer from a dictionary

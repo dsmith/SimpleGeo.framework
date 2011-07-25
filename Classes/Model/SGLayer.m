@@ -39,12 +39,12 @@
 + (SGLayer *)layerWithName:(NSString *)name
                      title:(NSString *)title
                description:(NSString *)description
-               callackURLs:(NSArray *)callbackURLs
+               callbackURLs:(NSArray *)callbackURLs
 {
    return [[[SGLayer alloc] initWithName:name
                                    title:title
                              description:description
-                             callackURLs:callbackURLs] autorelease];
+                            callbackURLs:callbackURLs] autorelease];
 }
 
 + (SGLayer *)layerWithDictionary:(NSDictionary *)layerDictionary
@@ -55,14 +55,14 @@
 - (id)initWithName:(NSString *)aName
              title:(NSString *)aTitle
        description:(NSString *)aDescription
-       callackURLs:(NSArray *)someCallbackURLs
+       callbackURLs:(NSArray *)someCallbackURLs
 {
     self = [super init];
     if (self) {
         name = [aName retain];
         title = [aTitle retain];
         description = [aDescription retain];
-        callbackURLs = [callbackURLs retain];
+        callbackURLs = [someCallbackURLs mutableCopy];
     }
     return self;
 }
