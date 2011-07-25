@@ -91,7 +91,7 @@
 /*!
  * Bounding box
  */
-- (SGEnvelope *)bbox;
+- (SGEnvelope *)envelope;
 
 /*!
  * Determine if a given point lies within the bounds of the polygon

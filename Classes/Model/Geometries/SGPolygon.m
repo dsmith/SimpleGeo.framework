@@ -98,20 +98,20 @@
     return holesArray;
 }
 
-- (SGEnvelope *)bbox
+- (SGEnvelope *)envelope
 {
     double northernLat = -90.0;
     double southernLat = 90;
-    double westerLon = 180.0;
+    double westernLon = 180.0;
     double easternLon = -180.0;
     for (SGPoint *point in [self boundary]) {
         if (point.latitude > northernLat) northernLat = point.latitude;
         if (point.latitude < southernLat) southernLat = point.latitude;
-        if (point.longitude < westerLon) westerLon = point.longitude;
+        if (point.longitude < westernLon) westernLon = point.longitude;
         if (point.longitude > easternLon) easternLon = point.longitude;
     }
     return [SGEnvelope envelopeWithNorth:northernLat
-                                    west:westerLon
+                                    west:westernLon
                                    south:southernLat
                                     east:easternLon];
 }

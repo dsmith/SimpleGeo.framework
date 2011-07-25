@@ -83,21 +83,21 @@
     return NO;
 }
 
-- (SGEnvelope *)bbox
+- (SGEnvelope *)envelope
 {
     double northernLat = -90.0;
     double southernLat = 90;
-    double westerLon = 180.0;
+    double westernLon = 180.0;
     double easternLon = -180.0;    
     for (SGPolygon *polygon in polygons) {
-        SGEnvelope *envelope = [polygon bbox];
+        SGEnvelope *envelope = [polygon envelope];
         if (envelope.north > northernLat) northernLat = envelope.north;
         if (envelope.south < southernLat) southernLat = envelope.south;
-        if (envelope.west < westerLon) westerLon = envelope.west;
+        if (envelope.west < westernLon) westernLon = envelope.west;
         if (envelope.east > easternLon) easternLon = envelope.east;
     }
     return [SGEnvelope envelopeWithNorth:northernLat
-                                    west:westerLon
+                                    west:westernLon
                                    south:southernLat
                                     east:easternLon];
 }

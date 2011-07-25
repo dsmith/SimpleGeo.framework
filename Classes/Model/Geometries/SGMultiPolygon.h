@@ -68,6 +68,6 @@
 /*!
  * Bounding box
  */
-- (SGEnvelope *)bbox;
+- (SGEnvelope *)envelope;
 
 @end
