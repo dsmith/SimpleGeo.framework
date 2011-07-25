@@ -32,7 +32,7 @@
 
 @implementation SGLayer
 
-@synthesize name, title, description, callbackURLs, created, updated;
+@synthesize name, title, description, callbackURLs, isPublic, created, updated;
 
 #pragma mark Instantiation Methods
 
@@ -75,6 +75,8 @@
         title = [[layerDictionary objectForKey:@"title"] retain];
         description = [[layerDictionary objectForKey:@"description"] retain];
         callbackURLs = [[layerDictionary objectForKey:@"callback_urls"] mutableCopy];
+        NSNumber *publicValue = [layerDictionary objectForKey:@"public"];
+        if (publicValue) isPublic = [publicValue boolValue];
         NSNumber *createdEpoch = [layerDictionary objectForKey:@"created"];
         if (createdEpoch) created = [[NSDate dateWithTimeIntervalSince1970:[createdEpoch doubleValue]] retain];
         NSNumber *updatedEpoch = [layerDictionary objectForKey:@"updated"];
@@ -88,13 +90,19 @@
 - (NSDictionary *)asDictionary
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:name forKey:@"name"];
+    [dictionary setValue:name forKey:@"name"];
     [dictionary setValue:title forKey:@"title"];
     [dictionary setValue:description forKey:@"description"];
     [dictionary setValue:callbackURLs forKey:@"callback_urls"];
+    [dictionary setValue:[NSNumber numberWithBool:isPublic] forKey:@"public"];
     if (created) [dictionary setValue:[NSNumber numberWithDouble:[created timeIntervalSince1970]] forKey:@"created"];
     if (updated) [dictionary setValue:[NSNumber numberWithDouble:[updated timeIntervalSince1970]] forKey:@"updated"];
     return dictionary;
+}
+
+- (NSString *)description
+{
+    return [[self asDictionary] description];
 }
 
 #pragma mark Memory

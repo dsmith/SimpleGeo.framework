@@ -38,6 +38,7 @@
     NSString *description;
     NSMutableArray *callbackURLs;
     // from API request
+    BOOL isPublic;
     NSDate *created;
     NSDate *updated;
 }
@@ -53,6 +54,9 @@
 
 //! Callback URLs for the layer
 @property (nonatomic, retain) NSArray *callbackURLs;
+
+//! Privacy of the layer
+@property (nonatomic, readonly) BOOL isPublic;
 
 //! Date the layer was created
 @property (nonatomic, readonly) NSDate *created;

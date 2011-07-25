@@ -369,7 +369,14 @@
 - (void)testGetLayer
 {
     [self prepare];
-    [[self client] getLayer:SGTestLayer callback:SGTestCallback];
+    [[self client] getLayer:SGTestLayer callback:[SGCallback callbackWithSuccessBlock:
+                                                  ^(NSDictionary *response) {
+                                                      SGLayer *layer = [SGLayer layerWithDictionary:response];
+                                                      SGLog(@"SGLayer: %@", layer);
+                                                      GHAssertEqualObjects(response, [layer asDictionary],
+                                                                           @"Layers's JSON should match response JSON");
+                                                      [self successBlock](response);
+                                                  } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
