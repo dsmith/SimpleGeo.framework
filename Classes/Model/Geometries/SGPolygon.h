@@ -31,6 +31,7 @@
 #import "SGGeometry.h"
 
 @class SGPoint;
+@class SGEnvelope;
 
 /*!
  * Polygon representation
@@ -86,6 +87,11 @@
  * Array of hole rings
  */
 - (NSArray *)holes;
+
+/*!
+ * Bounding box
+ */
+- (SGEnvelope *)bbox;
 
 /*!
  * Determine if a given point lies within the bounds of the polygon

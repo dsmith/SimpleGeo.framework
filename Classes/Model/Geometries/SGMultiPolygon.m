@@ -32,6 +32,7 @@
 #import "SGPolygon.h"
 #import "SGPolygon+Private.h"
 #import "SGPoint.h"
+#import "SGEnvelope.h"
 
 @implementation SGMultiPolygon
 
@@ -80,6 +81,25 @@
         if ([polygon containsPoint:point])
             return YES;
     return NO;
+}
+
+- (SGEnvelope *)bbox
+{
+    double northernLat = -90.0;
+    double southernLat = 90;
+    double westerLon = 180.0;
+    double easternLon = -180.0;    
+    for (SGPolygon *polygon in polygons) {
+        SGEnvelope *envelope = [polygon bbox];
+        if (envelope.north > northernLat) northernLat = envelope.north;
+        if (envelope.south < southernLat) southernLat = envelope.south;
+        if (envelope.west < westerLon) westerLon = envelope.west;
+        if (envelope.east > easternLon) easternLon = envelope.east;
+    }
+    return [SGEnvelope envelopeWithNorth:northernLat
+                                    west:westerLon
+                                   south:southernLat
+                                    east:easternLon];
 }
 
 - (NSDictionary *)asGeoJSON

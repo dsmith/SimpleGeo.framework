@@ -31,6 +31,7 @@
 #import "SGGeometry.h"
 
 @class SGPoint;
+@class SGEnvelope;
 
 /*!
  * MultiPolygon representation
@@ -63,5 +64,10 @@
  * @param point Point to check
  */
 - (BOOL)containsPoint:(SGPoint *)point;
+
+/*!
+ * Bounding box
+ */
+- (SGEnvelope *)bbox;
 
 @end
