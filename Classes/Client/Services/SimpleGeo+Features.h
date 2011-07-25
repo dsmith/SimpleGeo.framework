@@ -69,7 +69,7 @@
                callback:(SGCallback *)callback;
 
 /*!
- * Get the overall list of categories
+ * Get the overall list of SimpleGeo categories
  * @param callback  Request callback
  */
 - (void)getCategoriesWithCallback:(SGCallback *)callback;

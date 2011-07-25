@@ -48,14 +48,41 @@
 
 #pragma mark Dispatcher Methods
 
+/*!
+ * Handle an API response;
+ * Dispatch the response data (or error) appropriately
+ * depending on the specified callback mechanism
+ * @param response  Finished HTTP request object
+ * @param failed    Whether or not the request failed
+ */
 - (void) handleResponse:(ASIHTTPRequest *)response
                  failed:(BOOL)failed;
 
 #pragma Helper Methods for Requests
 
+/*!
+ * Generate the base endpoint for a query, depending
+ * on whether it is a point, address, or envelope query
+ * @param query     Query object
+ */
 - (NSString *)baseEndpointForQuery:(SGQuery *)query;
-- (NSURL *)encodeURLString:(NSString *)string;
+
+/*!
+ * Encode a URL string
+ * @param urlString     String to encode
+ */
+- (NSURL *)encodeURLString:(NSString *)urlString;
+
+/*!
+ * Normalize an array of request parameters into a URL string
+ * @param parameters    Parameter array
+ */
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
+
+/*!
+ * Generate a JSON Dictionary from an NSData object
+ * @param data          Data object
+ */
 - (NSDictionary *)jsonObjectForResponseData:(NSData *)data;
 
 @end

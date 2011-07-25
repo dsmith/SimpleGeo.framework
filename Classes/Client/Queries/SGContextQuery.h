@@ -31,8 +31,8 @@
 #import "SGQuery.h"
 
 /*!
- * API query for Context.
- * Call getContextForQuery: to make a Context request with an SGContextQuery object.
+ * API query for Context; Call getContextForQuery: to
+ * make a Context request with an SGContextQuery object.
  * @ingroup Queries
  */
 @interface SGContextQuery : SGQuery
@@ -52,8 +52,7 @@
 //! Filters for returning only part of a Context response
 @property (nonatomic, retain) NSMutableArray *filters;
 
-//! ACS demographics tables to include in the Context response
-// (see https://simplegeo.com/docs/api-endpoints/simplegeo-context#demographics for a complete list of available tables)
+//! ACS [demographics tables](https://simplegeo.com/docs/api-endpoints/simplegeo-context#demographics) to include in the Context response;
 @property (nonatomic, retain) NSMutableArray *acsTableIDs;
 
 @end

@@ -104,7 +104,6 @@
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
-                                           // TODO
                                            GHAssertEquals([query.filters count], [response count],
                                                           @"Response should contain only filtered parts");
                                            [self successBlock](response);
@@ -150,7 +149,6 @@
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
-                                           // TODO
                                            for (NSString *table in [query acsTableIDs]) {
                                                GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:table],
                                                               @"Response should contain specified demographics tables");

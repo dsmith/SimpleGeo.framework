@@ -139,10 +139,10 @@
     else return [NSString stringWithFormat:@"address.json"];
 }
 
-- (NSURL *)encodeURLString:(NSString *)string
+- (NSURL *)encodeURLString:(NSString *)urlString
 {
     NSString *result = (NSString *) [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-                                                                                              (CFStringRef)string,
+                                                                                              (CFStringRef)urlString,
                                                                                               NULL,
                                                                                               CFSTR("!*'();:@&=+$,/?#[]"),
                                                                                               kCFStringEncodingUTF8)) autorelease];

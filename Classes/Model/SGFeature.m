@@ -76,4 +76,13 @@
     return dictionary;
 }
 
+#pragma mark Memory
+
+- (void)dealloc
+{
+    [name release];
+    [classifiers release];
+    [super dealloc];
+}
+
 @end

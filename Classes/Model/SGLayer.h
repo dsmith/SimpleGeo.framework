@@ -91,14 +91,14 @@
       callbackURLs:(NSArray *)callbackURLs;
 
 /*!
- * Create an SGLayer from a dictionary
+ * Create an SGLayer from a dictionary;
  * Dictionary should contain "name" and "title" keys
  * @param layerDictionary   Layer dictionary
  */
 + (SGLayer *)layerWithDictionary:(NSDictionary *)layerDictionary;
 
 /*!
- * Construct an SGLayer from a dictionary
+ * Construct an SGLayer from a dictionary;
  * Dictionary should contain "name" and "title" keys
  * @param layerDictionary   Layer dictionary
  */

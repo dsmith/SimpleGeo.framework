@@ -98,7 +98,7 @@ extern NSString * const SG_URL_PREFIX;
 #pragma mark Instantiation Methods
 
 /*!
- * Create a client
+ * Create a client for making requests
  * @param consumerKey    OAuth consumer key
  * @param consumerSecret OAuth consumer secret
  */
@@ -106,7 +106,7 @@ extern NSString * const SG_URL_PREFIX;
                       consumerSecret:(NSString *)consumerSecret;
 
 /*!
- * Construct a client
+ * Construct a client for making requests
  * @param consumerKey    OAuth consumer key
  * @param consumerSecret OAuth consumer secret
  */

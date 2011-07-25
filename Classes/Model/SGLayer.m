@@ -105,6 +105,20 @@
     return [[self asDictionary] description];
 }
 
+#pragma mark Comparison Methods
+
+- (BOOL)isEqual:(id)object
+{
+    if (object == self) return YES;
+    if (!object || ![object isKindOfClass:[self class]]) return NO;
+    return [name isEqual:[object name]];
+}
+
+- (NSUInteger)hash
+{
+    return [name hash];
+}
+
 #pragma mark Memory
 
 - (void)dealloc

@@ -77,7 +77,7 @@ extern NSString * const SG_API_VERSION_STORAGE;
 #pragma mark Record Manipulation Methods
 
 /*!
- * Add or update a record. If a record already exists with the provided ID, it
+ * Add or update a record; If a record already exists with the provided ID, it
  * will be updated, otherwise it will be added
  * @param record    Record to add or update
  * @param callback  Request callback

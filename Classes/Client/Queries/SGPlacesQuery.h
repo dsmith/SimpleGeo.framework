@@ -31,9 +31,8 @@
 #import "SGNearbyQuery.h"
 
 /*!
- * API query for Places.
- * Call getPlacesForQuery: to make a Places request with an SGPlacesQuery object.
- * @ingroup Queries
+ * API query for Places; Call getPlacesForQuery: to
+ * make a Places request with an SGPlacesQuery object.
  */
 @interface SGPlacesQuery : SGNearbyQuery
 {

@@ -32,7 +32,6 @@
 
 /*!
  * Abstract class for a nearby API query
- * @ingroup Queries
  */
 @interface SGNearbyQuery : SGQuery
 {
