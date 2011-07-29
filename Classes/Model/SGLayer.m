@@ -34,7 +34,8 @@
 
 @synthesize name, title, description, callbackURLs, isPublic, created, updated;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SGLayer *)layerWithName:(NSString *)name
                      title:(NSString *)title
@@ -85,7 +86,8 @@
     return self;
 }
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 - (NSDictionary *)asDictionary
 {
@@ -105,7 +107,8 @@
     return [[self asDictionary] description];
 }
 
-#pragma mark Comparison Methods
+#pragma mark -
+#pragma mark Comparison
 
 - (BOOL)isEqual:(id)object
 {
@@ -119,6 +122,7 @@
     return [name hash];
 }
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

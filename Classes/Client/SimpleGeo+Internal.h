@@ -32,7 +32,8 @@
 
 @interface SimpleGeo (Internal)
 
-#pragma mark Master Request Method
+#pragma mark -
+#pragma mark Request
 
 /*!
  * Send an API request
@@ -46,7 +47,8 @@
              withParams:(NSDictionary *)parameters 
                callback:(SGCallback *)callback;
 
-#pragma mark Dispatcher Methods
+#pragma mark -
+#pragma mark Dispatcher
 
 /*!
  * Handle an API response;
@@ -58,7 +60,8 @@
 - (void) handleResponse:(ASIHTTPRequest *)response
                  failed:(BOOL)failed;
 
-#pragma Helper Methods for Requests
+#pragma mark -
+#pragma mark Helpers
 
 /*!
  * Generate the base endpoint for a query, depending
@@ -78,11 +81,5 @@
  * @param parameters    Parameter array
  */
 - (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
-
-/*!
- * Generate a JSON Dictionary from an NSData object
- * @param data          Data object
- */
-- (NSDictionary *)jsonObjectForResponseData:(NSData *)data;
 
 @end

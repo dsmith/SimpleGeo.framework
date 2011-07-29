@@ -28,11 +28,15 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+@class SGPoint;
+@class SGEnvelope;
+
 /*!
  * Abstract Geometry representation
  */
 @interface SGGeometry : NSObject
 
+#pragma mark -
 #pragma mark GeoJSON -> SGGeometry
 
 /*!
@@ -49,11 +53,30 @@
  */
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry;
 
+#pragma mark -
 #pragma mark SGGeometry -> GeoJSON
 
 /*!
  * SGGeometry object as a GeoJSON Geometry dictionary
  */
 - (NSDictionary *)asGeoJSON;
+
+@end
+
+#pragma mark -
+#pragma mark Region Geometry Protocol
+
+/*!
+ * (Multi)Polygon geometry protocol
+ */
+@protocol SGRegionGeometry <NSObject>
+
+- (SGEnvelope *)envelope;
+
+/*!
+ * Determine if a given point lies within the bounds of the polygon
+ * @param point Point to check
+ */
+- (BOOL)containsPoint:(SGPoint *)point;
 
 @end

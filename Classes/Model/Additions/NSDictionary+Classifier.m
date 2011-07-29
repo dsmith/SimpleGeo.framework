@@ -44,15 +44,21 @@
 }
 
 - (SGFeatureType)classifierType {
-    return [self objectForKey:@"type"];
+    if ([self objectForKey:@"type"] != (id)[NSNull null])
+        return [self objectForKey:@"type"];
+    return nil;
 }
 
 - (SGFeatureCategory)classifierCategory {
-    return [self objectForKey:@"category"];
+    if ([self objectForKey:@"category"] != (id)[NSNull null])
+        return [self objectForKey:@"category"];
+    return nil;
 }
 
 - (SGFeatureSubcategory)classifierSubcategory {
-    return [self objectForKey:@"subcategory"];
+    if ([self objectForKey:@"subcategory"] != (id)[NSNull null])
+        return [self objectForKey:@"subcategory"];
+    return nil;
 }
 
 @end

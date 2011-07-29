@@ -99,17 +99,9 @@ Building from the command-line will create an über-Universal framework, built f
 
 ### Docs
 
-To generate docs, make sure `doxygen` is installed (`brew install doxygen`, for example), then:
+To generate html docs and install a handy Xcode docset:
 
-    $ cd docs/html/
-    $ doxygen
-
-If you'd like a handy Xcode docset:
-
-    $ cd docs/html/
-    $ make
-
-You can either run `make install` in `docs/html/` to install the docset into your home directory, or you can do whatever you wish with the `SimpleGeo.docset` that was created there.
+    $ ./appledoc .
 
 ## Support
 

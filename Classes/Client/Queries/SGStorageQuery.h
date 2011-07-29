@@ -37,6 +37,7 @@
  */
 @interface SGStorageQuery : SGNearbyQuery
 {
+    @private
     NSString *layer;
     NSString *cursor;
     SGSortOrder sortType;
@@ -61,19 +62,19 @@
 @property (nonatomic, retain) SGSortOrder sortType;
 
 //! Start date for query
-@property (nonatomic, readonly) NSDate *startDate;
+@property (nonatomic, retain, readonly) NSDate *startDate;
 
 //! End date for query
-@property (nonatomic, readonly) NSDate *endDate;
+@property (nonatomic, retain, readonly) NSDate *endDate;
 
 //! Property type for property filtering
-@property (nonatomic, readonly) SGStoredPropertyType propertyType;
+@property (nonatomic, retain, readonly) SGStoredPropertyType propertyType;
 
 //! Property name for property filtering
-@property (nonatomic, readonly) NSString *propertyName;
+@property (nonatomic, retain, readonly) NSString *propertyName;
 
 //! Property value for property filtering
-@property (nonatomic, readonly) NSObject *propertyValue;
+@property (nonatomic, retain, readonly) NSObject *propertyValue;
 
 //! Property start value for range-based property filtering
 @property (nonatomic, retain) NSObject *propertyStartValue;
@@ -81,31 +82,32 @@
 //! Property end value for a range-based property filtering
 @property (nonatomic, retain) NSObject *propertyEndValue;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a point-based Storage query
  * @param point     Point
  * @param layer     Layer
  */
-+ (id)queryWithPoint:(SGPoint *)point
-               layer:(NSString *)layer;
++ (SGStorageQuery *)queryWithPoint:(SGPoint *)point
+                             layer:(NSString *)layer;
 
 /*!
  * Create an address-based Storage query
  * @param address   Address
  * @param layer     Layer
  */
-+ (id)queryWithAddress:(NSString *)address
-                 layer:(NSString *)layer;
++ (SGStorageQuery *)queryWithAddress:(NSString *)address
+                               layer:(NSString *)layer;
 
 /*!
  * Construct an envelope-based Storage query
  * @param envelope  Envelope
  * @param layer     Layer
  */
-+ (id)queryWithEnvelope:(SGEnvelope *)envelope
-                  layer:(NSString *)layer;
++ (SGStorageQuery *)queryWithEnvelope:(SGEnvelope *)envelope
+                                layer:(NSString *)layer;
 
 /*!
  * Construct a point-based Storage query
@@ -131,7 +133,8 @@
 - (id)initWithEnvelope:(SGEnvelope *)envelope
                  layer:(NSString *)layer;
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 /*!
  * Set a property name by which to query

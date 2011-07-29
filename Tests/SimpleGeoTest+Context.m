@@ -35,14 +35,8 @@
 #pragma mark Context Test Data
 
 @interface SimpleGeoTest (ContextData)
-
-- (NSMutableArray *)contextFilters;
-- (NSMutableArray *)contextCategories;
-- (NSMutableArray *)contextSubcategories;
-- (NSMutableArray *)contextDemographicsTables;
-
 @end
-@implementation SimpleGeoTest (StorageData)
+@implementation SimpleGeoTest (ContextData)
 
 - (NSMutableArray *)contextFilters
 {
@@ -104,7 +98,7 @@
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
                                        ^(NSDictionary *response) {
-                                           GHAssertEquals([query.filters count], [response count],
+                                           GHAssertEquals([query.filters count]+2, [response count],
                                                           @"Response should contain only filtered parts");
                                            [self successBlock](response);
                                        } failureBlock:[self failureBlock]]];

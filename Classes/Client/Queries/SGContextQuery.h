@@ -37,22 +37,23 @@
  */
 @interface SGContextQuery : SGQuery
 {
-    NSMutableArray *featureCategories;
-    NSMutableArray *featureSubcategories;
-    NSMutableArray *filters;
-    NSMutableArray *acsTableIDs;
+    @private
+    NSArray *featureCategories;
+    NSArray *featureSubcategories;
+    NSArray *filters;
+    NSArray *acsTableIDs;
 }
 
 //! Feature categories to include in the Context response
-@property (nonatomic, retain) NSMutableArray *featureCategories;
+@property (nonatomic, retain) NSArray *featureCategories;
 
 //! Feature subcategories to include in the Context response
-@property (nonatomic, retain) NSMutableArray *featureSubcategories;
+@property (nonatomic, retain) NSArray *featureSubcategories;
 
 //! Filters for returning only part of a Context response
-@property (nonatomic, retain) NSMutableArray *filters;
+@property (nonatomic, retain) NSArray *filters;
 
 //! ACS [demographics tables](https://simplegeo.com/docs/api-endpoints/simplegeo-context#demographics) to include in the Context response;
-@property (nonatomic, retain) NSMutableArray *acsTableIDs;
+@property (nonatomic, retain) NSArray *acsTableIDs;
 
 @end

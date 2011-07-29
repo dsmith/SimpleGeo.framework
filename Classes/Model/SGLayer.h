@@ -33,6 +33,7 @@
  */
 @interface SGLayer : NSObject
 {
+    @private
     NSString *name;
     NSString *title;
     NSString *description;
@@ -64,7 +65,8 @@
 //! Date the layer was last updated
 @property (nonatomic, readonly) NSDate *updated;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create an SGLayer
@@ -104,7 +106,8 @@
  */
 - (id)initWithDictionary:(NSDictionary *)layerDictionary;
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 /*!
  * Dictionary representation of the layer

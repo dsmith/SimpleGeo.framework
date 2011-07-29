@@ -33,7 +33,8 @@
 
 @implementation SimpleGeo (Features)
 
-#pragma mark Feature Request Methods
+#pragma mark -
+#pragma mark Requests
 
 - (void)getFeatureWithHandle:(NSString *)handle
                         zoom:(NSNumber *)zoom
@@ -51,6 +52,17 @@
                  callback:callback];
 }
 
+- (void)getCategoriesWithCallback:(SGCallback *)callback
+{    
+    NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",
+                     SG_URL_PREFIX, SG_API_VERSION];
+    
+    [self sendHTTPRequest:@"GET"
+                    toURL:url
+               withParams:nil
+                 callback:callback];
+}
+
 - (void)getAnnotationsForFeature:(NSString *)handle
                         callback:(SGCallback *)callback
 {
@@ -63,31 +75,24 @@
                  callback:callback];
 }
 
+#pragma mark -
+#pragma mark Manipulations
+
 - (void)annotateFeature:(NSString *)handle
          withAnnotation:(NSDictionary *)annotation
               isPrivate:(BOOL)isPrivate
                callback:(SGCallback *)callback
 {    
-    NSMutableDictionary *annotationDict = [NSMutableDictionary dictionaryWithDictionary:annotation];
-    if (isPrivate) [annotationDict setValue:[NSNumber numberWithBool:YES] forKey:@"private"];
+    NSMutableDictionary *annotationDict = [NSMutableDictionary dictionaryWithObject:annotation forKey:@"annotations"];
+    [annotationDict setValue:[NSNumber numberWithBool:isPrivate] forKey:@"private"];
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
                      SG_URL_PREFIX, SG_API_VERSION, handle];
     
+    NSLog(@"%@", annotationDict);
     [self sendHTTPRequest:@"POST"
                     toURL:url
                withParams:annotationDict
-                 callback:callback];
-}
-
-- (void)getCategoriesWithCallback:(SGCallback *)callback
-{    
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",
-                     SG_URL_PREFIX, SG_API_VERSION];
-    
-    [self sendHTTPRequest:@"GET"
-                    toURL:url
-               withParams:nil
                  callback:callback];
 }
 

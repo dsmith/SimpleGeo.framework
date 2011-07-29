@@ -1,8 +1,8 @@
 //
-//  SGFeatureTest.m
-//  SimpleGeo.framework
+//  SGReverseGeocode.h
+//  SimpleGeo
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2010-2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,17 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <GHUnit/GHUnit.h>
-#import <YAJL/YAJL.h>
-#import "SGFeature.h"
-#import "SGPoint.h"
+#import "SGAddress.h"
+@class SGPoint;
 
-@interface SGFeatureTest : GHTestCase { }
-@end
+@interface SGReverseGeocode : SGAddress
+{
+    @private
+    SGPoint *point;
+    NSNumber *distance;
+}
 
-@implementation SGFeatureTest
-
-#pragma mark Feature Conversion Methods
-
-//
+@property (nonatomic, readonly) SGPoint *point;
+@property (nonatomic, readonly) NSNumber *distance;
 
 @end

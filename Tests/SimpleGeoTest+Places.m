@@ -28,106 +28,43 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-/*#import "SimpleGeoTest.h"
+#import "SimpleGeoTest.h"
 #import "SimpleGeo+Places.h"
 
-#pragma mark Places Test Data
-
-@interface SimpleGeoTest (StorageData)
-
-- (SGPlace *)placeSimple;
-- (SGPlace *)placeTaggedOutlier;
-- (SGPlace *)placeClassified;
-- (SGPlace *)placePrivate;
-
-@end
-
-@implementation SimpleGeoTest (StorageData)
-
-- (SGPlace *)placeSimple
-{
-    return [SGPlace placeWithName:@"Simple Place"
-                            point:[self point]];
-}
-
-- (SGPlace *)placeTaggedOutlier
-{
-    SGPlace *place = [SGPlace placeWithName:@"Tagged Place"
-                                      point:[self outlierPoint]];
-    [place setTags:[NSMutableArray arrayWithObjects:@"tag1", @"tag2", nil]];
-    return place;
-}
-
-- (SGPlace *)placeClassified
-{
-    SGPlace *place = [SGPlace placeWithName:@"Classified Place"
-                                      point:[self point]];
-    NSDictionary *classifier1 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
-                                                        category:SGPlacesCategoryArtsCenter
-                                                     subcategory:SGPlacesCategoryArtMuseum];
-    NSDictionary *classifier2 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
-                                                        category:SGPlacesCategoryPark
-                                                     subcategory:SGPlacesCategoryStadium];
-    [place setClassifiers:[NSMutableArray arrayWithObjects:classifier1, classifier2, nil]];
-    return place;
-}
-
-- (SGPlace *)placePrivate
-{
-    return [SGPlace placeWithName:@"Private Place"
-                            point:[self point]];
-}
-
-@end
+#define SGTestPlacesLatitude 22.917923
+#define SGTestPlacesLongitude -125.859375
 
 #pragma mark Places Add/Update Tests
 
-@interface PlacesAddTests : SimpleGeoTest
+@interface PlacesEditTests : SimpleGeoTest
 @end
-@implementation PlacesAddTests
+@implementation PlacesEditTests
 
-- (void)testAddPlace
+- (void)testAddDeletePlace
 {
     [self prepare];
-    [[self client] addPlace:[self placeSimple]
+    SGPlace *place = [SGPlace placeWithName:@"Simple Place"
+                                      point:[SGPoint pointWithLat:SGTestPlacesLatitude
+                                                              lon:SGTestPlacesLongitude]];
+    NSDictionary *classifier1 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
+                                                        category:SGPlaceCategoryArtsAndPerformance
+                                                     subcategory:SGPlaceCategoryArena];
+    NSDictionary *classifier2 = [NSDictionary classifierWithType:SGFeatureTypePublicPlace
+                                                        category:SGPlaceCategoryPark
+                                                     subcategory:SGPlaceCategoryShopping];
+    [place setClassifiers:[NSMutableArray arrayWithObjects:classifier1, classifier2, nil]];
+    [place setTags:[NSArray arrayWithObjects:@"tag1", @"tag2", @"tag3", nil]];
+    [[self client] addPlace:place
                    callback:[SGCallback callbackWithSuccessBlock:
                              ^(NSDictionary *response) {
-                                 [self setAddedPlaceIDs:[NSMutableArray arrayWithObject:[response objectForKey:@"id"]]];
-                                 [self successBlock](response);
+                                 [self prepare];
+                                 [[self client] deletePlace:[response objectForKey:@"id"]
+                                                   callback:[SGCallback callbackWithSuccessBlock:
+                                                             ^(NSDictionary *response) {
+                                                                 [self successBlock](response);
+                                                             } failureBlock:[self failureBlock]]];
+                                 [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
                              } failureBlock:[self failureBlock]]];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)testAddPlaceWithTags
-{
-    [self prepare];
-    [[self client] addPlace:[self placeTaggedOutlier]
-                   callback:[SGCallback callbackWithSuccessBlock:
-                             ^(NSDictionary *response) {
-                                 [addedPlaceIDs addObject:[response objectForKey:@"id"]];
-                                 [self successBlock](response);
-                             } failureBlock:[self failureBlock]]];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)testAddPlaceWithClassifiers
-{
-    [self prepare];
-    [[self client] addPlace:[self placeClassified]
-                   callback:[SGCallback callbackWithSuccessBlock:
-                             ^(NSDictionary *response) {
-                                 [addedPlaceIDs addObject:[response objectForKey:@"id"]];
-                                 [self successBlock](response);
-                             } failureBlock:[self failureBlock]]];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)testUpdatePlaceWithPrivacy
-{
-    [self prepare];
-    [[self client] updatePlace:[self.addedPlaceIDs objectAtIndex:0]
-                     withPlace:[self placePrivate]
-                      callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -155,13 +92,15 @@
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
+/*
+COMING SOON
 - (void)testGetPlacesForEnvelope
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithEnvelope:[self envelope]];
     [[self client] getPlacesForQuery:query callback:SGTestCallback];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
+}*/
 
 - (void)testGetPlacesWithLimitsAndConvertFeatureCollection
 {
@@ -171,47 +110,31 @@
     [query setLimit:SGTestLimit];
     [[self client] getPlacesForQuery:query
                             callback:[SGCallback callbackWithSuccessBlock:
-                                   ^(NSDictionary *response) {
-                                       GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
-                                                               query.limit, @"Should return no more records than the limit");
-                                       [self checkSGCollectionConversion:response type:SGCollectionTypePlaces];
-                                       [self successBlock](response);
-                                   } failureBlock:[self failureBlock]]];
+                                      ^(NSDictionary *response) {
+                                          GHTestLog(@"%@",response);
+                                          NSArray *places = [NSArray arrayWithSGCollection:response type:SGCollectionTypePlaces];
+                                          GHTestLog(@"%d %@",(int)[places count],places);
+                                          GHAssertEquals((int)[places count], SGTestLimit, @"query should return the limit");
+                                          [self checkSGCollectionConversion:response type:SGCollectionTypePlaces];
+                                          [self successBlock](response);
+                                      } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetPlacesWithFilters
 {
     [self prepare];
-    SGPlacesQuery *query = [SGPlacesQuery queryWithAddress:SGTestAddress];
-    [query setCategories:SGTestPlacesCategories];
-    [query setSearchString:SGTestPlacesSearchString];
-    [[self client] getPlacesForQuery:query callback:SGTestCallback];
+    SGPlacesQuery *query = [SGPlacesQuery queryWithPoint:[self point]];
+    [query setCategories:[NSArray arrayWithObject:SGPlaceSubcategoryOfficeBuilding]];
+    [query setSearchString:@"SimpleGeo"];
+    [[self client] getPlacesForQuery:query
+                            callback:[SGCallback callbackWithSuccessBlock:
+                                      ^(NSDictionary *response) {
+                                          NSArray *places = [NSArray arrayWithSGCollection:response type:SGCollectionTypePlaces];
+                                          GHAssertEquals((int)[places count], 1, @"query should return one matching place");
+                                          [self successBlock](response);
+                                      } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 @end
-
-#pragma mark Places Delete Tests
-
-@interface PlacesRemoveTests : SimpleGeoTest
-@end
-@implementation PlacesRemoveTests
-
-- (void)test_DeletePlace
-{
-    [self prepare];
-    [[self client] deletePlace:[self.addedPlaceIDs objectAtIndex:0]
-                      callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-- (void)test_DeleteUpdatedPlace
-{
-    [self prepare];
-    [[self client] deletePlace:[self.addedPlaceIDs objectAtIndex:1]
-                      callback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
-}
-
-@end*/

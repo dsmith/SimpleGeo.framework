@@ -62,6 +62,8 @@
 - (void)requestDidFail:(NSError *)error;
 
 // Check Methods
+- (void)checkSGFeatureConversion:(NSDictionary *)response
+                          object:(SGGeoObject *)object;
 - (void)checkSGCollectionConversion:(NSDictionary *)response
                                type:(SGCollectionType)type;
 

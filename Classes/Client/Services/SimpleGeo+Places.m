@@ -35,7 +35,8 @@
 
 @implementation SimpleGeo (Places)
 
-#pragma mark Places Request Methods
+#pragma mark -
+#pragma mark Requests
 
 - (void)getPlacesForQuery:(SGPlacesQuery *)query
                  callback:(SGCallback *)callback
@@ -56,12 +57,12 @@
                callback:callback];
 }
 
-#pragma mark Places Manipulation Methods
+#pragma mark -
+#pragma mark Manipulations
 
 - (void)addPlace:(SGPlace *)place
         callback:(SGCallback *)callback
 {
-    
     NSString *url = [NSString stringWithFormat:@"%@/%@/places",
                      SG_URL_PREFIX, SG_API_VERSION];
     

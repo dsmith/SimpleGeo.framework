@@ -38,7 +38,8 @@
  */
 @interface SimpleGeo (Places)
 
-#pragma mark Places Request Methods
+#pragma mark -
+#pragma mark Requests
 
 /*!
  * Find places matching an SGPlacesQuery
@@ -48,7 +49,8 @@
 - (void)getPlacesForQuery:(SGPlacesQuery *)query
                  callback:(SGCallback *)callback;
 
-#pragma mark Places Manipulation Methods
+#pragma mark -
+#pragma mark Manipulations
 
 /*!
  * Add a feature to the Places database 

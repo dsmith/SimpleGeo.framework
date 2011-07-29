@@ -35,7 +35,8 @@
 
 @synthesize radius, limit;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 - (id)init
 {

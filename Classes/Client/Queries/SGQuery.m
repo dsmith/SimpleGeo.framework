@@ -36,7 +36,8 @@
 
 @synthesize point, address, envelope;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (id)queryWithPoint:(SGPoint *)point
 {
@@ -80,6 +81,7 @@
     return self;
 }
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc {

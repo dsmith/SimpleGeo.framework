@@ -29,16 +29,17 @@
 //
 
 #import "SGPolygon.h"
-#import "SGPolygon+Private.h"
+#import "SGPolygon+Internal.h"
 #import "SGPoint.h"
-#import "SGPoint+Private.h"
+#import "SGPoint+Internal.h"
 #import "SGEnvelope.h"
 
 @implementation SGPolygon
 
 @synthesize rings;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SGPolygon *)polygonWithRings:(NSArray *)rings
 {
@@ -84,7 +85,8 @@
     return nil;
 }
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 - (NSArray *)boundary
 {
@@ -153,7 +155,8 @@
     return [[self asGeoJSON] description];
 }
 
-#pragma mark Comparison Methods
+#pragma mark -
+#pragma mark Comparison
 
 - (BOOL)isEqual:(id)object
 {
@@ -165,7 +168,8 @@
     return [rings hash];
 }
 
-#pragma mark Private Methods
+#pragma mark -
+#pragma mark Internal
 
 + (SGPolygon *)polygonWithArray:(NSArray *)polygon
 {
@@ -185,6 +189,7 @@
     return [self initWithRings:allRings];
 }
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

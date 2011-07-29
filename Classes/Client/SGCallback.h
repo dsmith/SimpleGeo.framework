@@ -28,9 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <Foundation/Foundation.h>
-#import "SimpleGeo.h"
-
 #if NS_BLOCKS_AVAILABLE
 typedef void (^SGFailureBlock)(NSError *error);
 typedef void (^SGSuccessBlock)(NSDictionary *response);
@@ -74,6 +71,9 @@ typedef void (^SGSuccessBlock)(NSDictionary *response);
 @property (nonatomic, readonly) SGFailureBlock failureBlock;
 
 #endif
+
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a delegate-based callback

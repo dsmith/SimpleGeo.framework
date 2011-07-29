@@ -30,7 +30,7 @@
 
 #import "SGMultiPolygon.h"
 #import "SGPolygon.h"
-#import "SGPolygon+Private.h"
+#import "SGPolygon+Internal.h"
 #import "SGPoint.h"
 #import "SGEnvelope.h"
 
@@ -38,7 +38,8 @@
 
 @synthesize polygons;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SGMultiPolygon *)multiPolygonWithPolygons:(NSArray *)polygons
 {
@@ -73,7 +74,8 @@
     return nil;
 }
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 -(BOOL)containsPoint:(SGPoint *)point
 {
@@ -119,7 +121,8 @@
     return [[self asGeoJSON] description];
 }
 
-#pragma mark Comparison Methods
+#pragma mark -
+#pragma mark Comparison
 
 - (BOOL)isEqual:(id)object
 {
@@ -131,6 +134,7 @@
     return [polygons hash];
 }
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

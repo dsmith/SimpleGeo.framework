@@ -28,7 +28,6 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <YAJL/YAJL.h>
 #import "SimpleGeo.h"
 #import "SimpleGeo+Internal.h"
 
@@ -39,7 +38,8 @@ NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
 
 @synthesize consumerKey, consumerSecret;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SimpleGeo *)clientWithConsumerKey:(NSString *)key
                       consumerSecret:(NSString *)secret
@@ -56,8 +56,7 @@ NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
         consumerKey = [key retain];
         consumerSecret = [secret retain];
         NSDictionary *infoDictionary = [[NSBundle bundleForClass:[self class]] infoDictionary];
-        NSString *deviceName;
-        NSString *OSName;
+        NSString *deviceName, *OSName;
         #if TARGET_OS_IPHONE
         deviceName = [[UIDevice currentDevice] model];
         OSName = [[UIDevice currentDevice] systemVersion];
@@ -71,6 +70,145 @@ NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
     }
     return self;
 }
+
+#pragma mark -
+#pragma mark Request
+
+- (void)sendHTTPRequest:(NSString *)type
+                  toURL:(NSString *)url
+             withParams:(NSDictionary *)params 
+               callback:(SGCallback *)callback
+{
+    ASIHTTPRequest* request = nil;
+    if([type isEqualToString:@"POST"] || [type isEqualToString:@"PUT"]) {
+        request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+        [request appendPostData:[params JSONData]];
+    } else {
+        NSString *queryParameters = @"";
+        if(params && [params count])
+            queryParameters = [NSString stringWithFormat:@"?%@",
+                               [self normalizeRequestParameters:params]];
+        url = [url stringByAppendingString:queryParameters];
+        request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+    }
+    
+    request.requestMethod = type;
+    if(consumerKey && consumerSecret) {
+        [request signRequestWithClientIdentifier:consumerKey
+                                          secret:consumerSecret
+                                 tokenIdentifier:nil
+                                          secret:nil
+                                     usingMethod:ASIOAuthHMAC_SHA1SignatureMethod];
+    }
+    
+    SGLog(@"Sending %@ to %@", type, url);
+    
+    request.userInfo = [NSDictionary dictionaryWithObject:callback forKey:@"callback"];    
+    [request setDelegate:self];
+    [request addRequestHeader:@"Accept" value:@"application/json"];
+    [request addRequestHeader:@"User-Agent" value:userAgent];
+    [request startAsynchronous];
+}
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{    
+    if(200 <= [request responseStatusCode] && [request responseStatusCode] < 300)
+        [self handleResponse:request failed:NO];
+    else
+        [self handleResponse:request failed:YES];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [self handleResponse:request failed:YES];
+}
+
+#pragma mark -
+#pragma mark Dispatcher
+
+- (void)handleResponse:(ASIHTTPRequest *)response
+                failed:(BOOL)failed
+{
+    NSDictionary* userInfo = [response userInfo];
+    if(userInfo) {
+        SGCallback *callback = [userInfo objectForKey:@"callback"];
+        NSDictionary *responseData = [[response responseData] objectFromJSONData];
+        NSError *error = nil;
+        if (failed) {            
+            error = [NSError errorWithDomain:[response.url description]
+                                        code:[response responseStatusCode]
+                                    userInfo:nil];
+            SGLog(@"request failed - %@", [error localizedDescription]);
+            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.failureMethod]) {
+                [callback.delegate performSelector:callback.failureMethod withObject:error];
+            }
+            #if NS_BLOCKS_AVAILABLE
+            if(callback.failureBlock) {
+                callback.failureBlock(error);
+            }
+            #endif
+        } else {
+            SGLog(@"Request succeeded");
+            if(callback && callback.delegate && [callback.delegate respondsToSelector:callback.successMethod]) {
+                [callback.delegate performSelector:callback.successMethod withObject:responseData];
+            }
+            #if NS_BLOCKS_AVAILABLE
+            if(callback.successBlock) {
+                callback.successBlock(responseData);
+            }
+            #endif
+        }
+    }
+}
+
+#pragma mark -
+#pragma mark Helpers
+
+- (NSString *)baseEndpointForQuery:(SGQuery *)query
+{
+    if (query.point) return [NSString stringWithFormat:@"%f,%f.json",
+                             query.point.latitude,
+                             query.point.longitude];
+    else if (query.envelope) return [NSString stringWithFormat:@"%f,%f,%f,%f.json",
+                                     query.envelope.north,
+                                     query.envelope.west,
+                                     query.envelope.south,
+                                     query.envelope.east];
+    else return [NSString stringWithFormat:@"address.json"];
+}
+
+- (NSURL *)encodeURLString:(NSString *)urlString
+{
+    NSString *result = (NSString *) [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                               (CFStringRef)urlString,
+                                                                                               NULL,
+                                                                                               CFSTR("!*'();:@&=+$,/?#[]"),
+                                                                                               kCFStringEncodingUTF8)) autorelease];
+    return [NSURL URLWithString:result];
+}
+
+- (NSString *)normalizeRequestParameters:(NSDictionary *)parameters
+{
+    NSMutableArray *paramPairs = [NSMutableArray array];
+    NSArray *paramNames = [parameters allKeys];
+    for (NSString *paramName in paramNames) {
+        NSObject *paramObject = [parameters objectForKey:paramName];
+        NSArray *paramValues;
+        if (paramObject && ([paramObject isKindOfClass:[NSString class]] || [paramObject isKindOfClass:[NSNumber class]])) {
+            paramValues = [NSArray arrayWithObject:paramObject];
+        } else if (paramObject && [paramObject isKindOfClass:[NSArray class]]) {
+            paramValues = (NSArray *)paramObject;
+        }
+        for (NSObject *paramValue in paramValues) {
+            [paramPairs addObject:[NSString stringWithFormat:@"%@=%@", paramName, paramValue]];
+        }
+    }
+    if ([paramPairs count] > 0) return [paramPairs componentsJoinedByString:@"&"];
+    return nil;
+}
+
+#pragma mark -
+#pragma mark Memory
 
 - (void)dealloc
 {

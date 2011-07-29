@@ -66,7 +66,7 @@ for subcat in fsubcats:
 
 output += '\n#pragma mark Feature Categories (Places)\n\n'
 for cat in pcats:
-    output += '#define SGPlacesCategory' + cleanName(cat) + ' @\"' + cat + '\"\n'
+    output += '#define SGPlaceCategory' + cleanName(cat) + ' @\"' + cat + '\"\n'
 
 output += '\n#pragma mark Feature Subcategories (Places)\n\n'
 for subcat in psubcats:

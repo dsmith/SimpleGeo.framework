@@ -29,13 +29,14 @@
 //
 
 #import "SGPoint.h"
-#import "SGPoint+Private.h"
+#import "SGPoint+Internal.h"
 
 @implementation SGPoint
 
 @synthesize latitude, longitude, created;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SGPoint *)pointWithLat:(double)latitude
                       lon:(double)longitude
@@ -75,16 +76,8 @@
     return nil;
 }
 
-#pragma mark Convenience Methods
-
-- (BOOL)isInsidePolygon:(SGGeometry *)polygon
-{
-    if ([polygon isKindOfClass:[SGPolygon class]])
-        return [(SGPolygon *)polygon containsPoint:self];
-    else if ([polygon isKindOfClass:[SGMultiPolygon class]])
-        return [(SGMultiPolygon *)polygon containsPoint:self];
-    return NO;
-}
+#pragma mark -
+#pragma mark Convenience
 
 - (NSDictionary *)asGeoJSON
 {
@@ -103,7 +96,8 @@
     return [[self asGeoJSON] description];
 }
 
-#pragma mark Comparison Methods
+#pragma mark -
+#pragma mark Comparison
 
 - (BOOL)isEqual:(id)object
 {
@@ -119,7 +113,8 @@
            [[NSNumber numberWithDouble:longitude] hash];
 }
 
-#pragma mark Private Methods
+#pragma mark -
+#pragma mark Internal
 
 + (SGPoint *)pointWithArray:(NSArray *)point
 {

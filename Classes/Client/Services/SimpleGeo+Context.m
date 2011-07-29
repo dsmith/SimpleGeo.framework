@@ -34,7 +34,8 @@
 
 @implementation SimpleGeo (Context)
 
-#pragma mark Context Request Methods
+#pragma mark -
+#pragma mark Requests
 
 - (void)getContextForQuery:(SGContextQuery *)query
                   callback:(SGCallback *)callback

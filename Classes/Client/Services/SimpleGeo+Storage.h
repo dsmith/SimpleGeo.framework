@@ -40,7 +40,8 @@ extern NSString * const SG_API_VERSION_STORAGE;
  */
 @interface SimpleGeo (Storage)
 
-#pragma mark Record Request Methods
+#pragma mark -
+#pragma mark Record Requests
 
 /*!
  * Request a record by ID
@@ -74,7 +75,8 @@ extern NSString * const SG_API_VERSION_STORAGE;
                      cursor:(NSString *)cursor
                    callback:(SGCallback *)callback;
 
-#pragma mark Record Manipulation Methods
+#pragma mark -
+#pragma mark Record Manipulations
 
 /*!
  * Add or update a record; If a record already exists with the provided ID, it
@@ -105,7 +107,8 @@ extern NSString * const SG_API_VERSION_STORAGE;
              inLayer:(NSString *)layerName
             callback:(SGCallback *)callback;
 
-#pragma mark Layer Request Methods
+#pragma mark -
+#pragma mark Layer Requests
 
 /*!
  * Get information about a specific layer
@@ -129,7 +132,8 @@ extern NSString * const SG_API_VERSION_STORAGE;
 - (void)getLayersWithCursor:(NSString *)cursor
                    callback:(SGCallback *)callback;
 
-#pragma mark Layer Manipulation Methods
+#pragma mark -
+#pragma mark Layer Manipulations
 
 /*!
  * Add or update a layer

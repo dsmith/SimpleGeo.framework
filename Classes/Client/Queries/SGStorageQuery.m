@@ -30,28 +30,37 @@
 
 #import "SGStorageQuery.h"
 
+@interface SGStorageQuery ()
+@property (nonatomic, retain, readwrite) NSDate *startDate;
+@property (nonatomic, retain, readwrite) NSDate *endDate;
+@property (nonatomic, retain, readwrite) SGStoredPropertyType propertyType;
+@property (nonatomic, retain, readwrite) NSString *propertyName;
+@property (nonatomic, retain, readwrite) NSObject *propertyValue;
+@end
+
 @implementation SGStorageQuery
 
 @synthesize layer, cursor, sortType, startDate, endDate, propertyType, propertyName, propertyValue, propertyStartValue, propertyEndValue;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
-+ (id)queryWithPoint:(SGPoint *)point
-               layer:(NSString *)layer
++ (SGStorageQuery *)queryWithPoint:(SGPoint *)point
+                             layer:(NSString *)layer
 {
     return [[[SGStorageQuery alloc] initWithPoint:point
                                             layer:layer] autorelease];
 }
 
-+ (id)queryWithAddress:(NSString *)address
-                 layer:(NSString *)layer
++ (SGStorageQuery *)queryWithAddress:(NSString *)address
+                               layer:(NSString *)layer
 {
     return [[[SGStorageQuery alloc] initWithAddress:address
                                               layer:layer] autorelease];
 }
 
-+ (id)queryWithEnvelope:(SGEnvelope *)envelope
-                  layer:(NSString *)layer
++ (SGStorageQuery *)queryWithEnvelope:(SGEnvelope *)envelope
+                                layer:(NSString *)layer
 {
     return [[[SGStorageQuery alloc] initWithEnvelope:envelope
                                                layer:layer] autorelease];
@@ -87,7 +96,8 @@
     return self;
 }
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 - (void)setProperty:(NSString *)property
              ofType:(SGStoredPropertyType)type
@@ -101,23 +111,19 @@
              ofType:(SGStoredPropertyType)type
              equals:(NSObject *)value
 {
-    [propertyType release];
-    [propertyName release];
-    [propertyValue release];
-    propertyType = [type retain];
-    propertyName = [property retain];
-    propertyValue = [value retain];
+    self.propertyType = type;
+    self.propertyName = property;
+    self.propertyValue = value;
 }
 
 - (void)setDateRangeFrom:(NSDate *)aStartDate
                       to:(NSDate *)anEndDate
 {
-    [startDate release];
-    [endDate release];
-    startDate = [aStartDate retain];
-    endDate = [anEndDate retain];
+    self.startDate = aStartDate;
+    self.endDate = anEndDate;
 }
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

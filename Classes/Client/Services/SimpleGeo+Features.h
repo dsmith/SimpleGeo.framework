@@ -36,7 +36,8 @@
  */
 @interface SimpleGeo (Features)
 
-#pragma mark Feature Request Methods
+#pragma mark -
+#pragma mark Requests
 
 /*!
  * Get a feature with a specific handle
@@ -49,12 +50,21 @@
                     callback:(SGCallback *)callback;
 
 /*!
+ * Get the overall list of SimpleGeo categories
+ * @param callback  Request callback
+ */
+- (void)getCategoriesWithCallback:(SGCallback *)callback;
+
+/*!
  * Get annotations attached to a feature
  * @param handle        Feature handle
  * @param callback  Request callback
  */
 - (void)getAnnotationsForFeature:(NSString *)handle
                         callback:(SGCallback *)callback;
+
+#pragma mark -
+#pragma mark Manipulations
 
 /*!
  * Annotate a feature
@@ -67,11 +77,5 @@
          withAnnotation:(NSDictionary *)annotation
               isPrivate:(BOOL)isPrivate
                callback:(SGCallback *)callback;
-
-/*!
- * Get the overall list of SimpleGeo categories
- * @param callback  Request callback
- */
-- (void)getCategoriesWithCallback:(SGCallback *)callback;
 
 @end

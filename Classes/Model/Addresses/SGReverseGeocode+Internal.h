@@ -1,8 +1,8 @@
 //
-//  SGPolygon+Private.h
-//  SimpleGeo.framework
+//  SGReverseGeocode+Internal.h
+//  SimpleGeo
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2010-2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,20 +28,10 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGPolygon.h"
+#import "SGReverseGeocode.h"
 
-@interface SGPolygon (Private)
+@interface SGReverseGeocode (Internal)
 
-/*!
- * Create a polygon from an array of coordinates
- * @param polygon Polygon array
- */
-+ (SGPolygon *)polygonWithArray:(NSArray *)polygon;
-
-/*!
- * Create a polygon from an array of coordinates
- * @param polygon Polygon array
- */
-- (id)initWithArray:(NSArray *)polygon;
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONDictionary;
 
 @end

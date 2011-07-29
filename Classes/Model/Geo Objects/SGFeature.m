@@ -1,5 +1,5 @@
 //
-//  SGObject.m
+//  SGFeature.m
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.
@@ -28,74 +28,66 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGObject.h"
-#import "SGGeometry.h"
+#import "SGFeature.h"
 
-@implementation SGObject
+@implementation SGFeature
 
-@synthesize identifier, geometry, properties, distance, selfLink;
+@synthesize name, classifiers;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
+
++ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature
+{
+    return [[[SGFeature alloc] initWithGeoJSON:geoJSONFeature] autorelease];
+}
 
 - (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature
 {
-    self = [super init];
+    self = [super initWithGeoJSON:geoJSONFeature];
     if (self) {
-        geometry = [[SGGeometry geometryWithGeoJSON:[geoJSONFeature objectForKey:@"geometry"]] retain];
-        identifier = [[geoJSONFeature objectForKey:@"id"] retain];
-        [self setProperties:[geoJSONFeature objectForKey:@"properties"]];
-        // subclasses should set selfLink, distance
+        // name
+        name = [[self.properties objectForKey:@"name"] retain];
+        [self.properties removeObjectForKey:@"name"];
+        // classifiers
+        NSArray *someClassifiers = [self.properties objectForKey:@"classifiers"];
+        if (someClassifiers && [someClassifiers count] > 0)
+            [self setClassifiers:[self.properties objectForKey:@"classifiers"]];
+        [self.properties removeObjectForKey:@"classifiers"];
     }
     return self;
 }
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
-- (void)setProperties:(NSDictionary *)someProperties
+- (void)setClassifiers:(NSArray *)someClassifiers
 {
-    [properties release];
-    properties = [[NSMutableDictionary dictionaryWithDictionary:someProperties] retain];
+    [self setMutableClassifiers:[NSMutableArray arrayWithArray:someClassifiers]];
+}
+
+- (void)setMutableClassifiers:(NSMutableArray *)someClassifiers
+{
+    [classifiers release];
+    classifiers = [someClassifiers retain];
 }
 
 - (NSDictionary *)asGeoJSON
 {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-    [dictionary setObject:@"Feature" forKey:@"type"];
-    [dictionary setValue:[geometry asGeoJSON] forKey:@"geometry"];
-    [dictionary setValue:identifier forKey:@"id"];
-    [dictionary setValue:[NSMutableDictionary dictionaryWithDictionary:properties] forKey:@"properties"];
-    // subclasses should set selfLink, distance
+    NSMutableDictionary *dictionary = (NSMutableDictionary *)[super asGeoJSON];    
+    [[dictionary objectForKey:@"properties"] setValue:name forKey:@"name"]; // name
+    [[dictionary objectForKey:@"properties"] setValue:classifiers forKey:@"classifiers"]; // classifiers
+    
     return dictionary;
 }
 
-- (NSString *)description
-{
-    return [[self asGeoJSON] description];
-}
-
-#pragma mark Comparison Methods
-
-- (BOOL)isEqual:(id)object
-{
-    if (object == self) return YES;
-    if (!object || ![object isKindOfClass:[self class]]) return NO;
-    return [identifier isEqual:[object identifier]];
-}
-
-- (NSUInteger)hash
-{
-    return [identifier hash];
-}
-
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc
 {
-    [geometry release];
-    [identifier release];
-    [properties release];
-    [distance release];
-    [selfLink release];
+    [name release];
+    [classifiers release];
     [super dealloc];
 }
 

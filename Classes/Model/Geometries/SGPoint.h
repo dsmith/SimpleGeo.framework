@@ -52,7 +52,8 @@
 //! Date created
 @property (nonatomic, retain) NSDate *created;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a point from a pair of coordinates
@@ -69,13 +70,5 @@
  */
 - (id)initWithLat:(double)latitude
               lon:(double)longitude;
-
-#pragma mark Convenience Methods
-
-/*!
- * Determine if the point lies within a given polygon
- * @param polygon Polygon to check
- */
-- (BOOL)isInsidePolygon:(SGGeometry *)polygon;
 
 @end

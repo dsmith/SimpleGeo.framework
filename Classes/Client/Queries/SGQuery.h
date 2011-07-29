@@ -36,6 +36,7 @@
  */
 @interface SGQuery : NSObject
 {
+    @private
     SGPoint *point;
     NSString *address;
     SGEnvelope *envelope;
@@ -50,7 +51,8 @@
 //! Envelope for a bounding box API query
 @property (nonatomic, readonly) SGEnvelope *envelope;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a point-based API query

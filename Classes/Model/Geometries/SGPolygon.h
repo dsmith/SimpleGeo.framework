@@ -36,15 +36,20 @@
 /*!
  * Polygon representation
  */
-@interface SGPolygon : SGGeometry
+@interface SGPolygon : SGGeometry <SGRegionGeometry>
 {
+    @private
     NSArray *rings;
 }
 
 //! LinearRings that define this polygon
 @property (nonatomic, retain) NSArray *rings;
 
-#pragma mark Instantiation Methods
+//! Bounding box for the polygon
+@property (nonatomic, readonly) SGEnvelope *envelope;
+
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a polygon from a set of LinearRings of SGPoints
@@ -76,7 +81,8 @@
 - (id)initWithBoundary:(NSArray *)boundary
                  holes:(NSArray *)holes;
 
-#pragma mark Convenience Methods
+#pragma mark -
+#pragma mark Convenience
 
 /*!
  * Boundary ring
@@ -87,16 +93,5 @@
  * Array of hole rings
  */
 - (NSArray *)holes;
-
-/*!
- * Bounding box
- */
-- (SGEnvelope *)envelope;
-
-/*!
- * Determine if a given point lies within the bounds of the polygon
- * @param point Point to check
- */
-- (BOOL)containsPoint:(SGPoint *)point;
 
 @end

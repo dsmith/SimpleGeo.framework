@@ -31,9 +31,22 @@
 #import "SimpleGeoTest.h"
 #import "NSArray+SGCollection.h"
 
+@interface SimpleGeoTest ()
+- (void)removeAPISpecificKeys:(NSMutableDictionary *)geoObject;
+@end
+
 @implementation SimpleGeoTest
 
 @synthesize addedPlaceIDs, recordHistoryCursor;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        addedPlaceIDs = [[NSMutableArray array] retain];
+    }
+    return self;
+}
 
 - (BOOL)shouldRunOnMainThread
 {
@@ -88,7 +101,7 @@
 - (SGSuccessBlock)successBlock
 {
     return [[^(NSDictionary *response) {
-        SGLog(@"%@", response);
+        GHTestLog(@"%@", response);
         [self notify:kGHUnitWaitStatusSuccess];
     } copy] autorelease];
 }
@@ -96,7 +109,7 @@
 - (SGFailureBlock)failureBlock
 {
     return [[^(NSError *error) {
-        SGLog(@"%@", error.description);
+        GHTestLog(@"%@", error.description);
         [self notify:kGHUnitWaitStatusFailure];
     } copy] autorelease];
 }
@@ -117,16 +130,47 @@
 
 #pragma mark Basic Check Methods
 
+- (void)checkSGFeatureConversion:(NSDictionary *)response
+                          object:(SGGeoObject *)object
+{
+    NSMutableDictionary *alteredResponse = [[NSMutableDictionary dictionaryWithDictionary:response] retain];;
+    [self removeAPISpecificKeys:alteredResponse];
+    GHAssertEqualObjects(alteredResponse, [object asGeoJSON],
+                         @"Feature's GeoJSON should match response geoJSON");
+    [alteredResponse release];
+}
+
 - (void)checkSGCollectionConversion:(NSDictionary *)response
                                type:(SGCollectionType)type
 {
     NSArray *features = [NSArray arrayWithSGCollection:response type:type];
-    NSDictionary *featureCollection = [features asSGCollection:type];
+    GeoJSONCollectionType collectionType = GeoJSONCollectionTypeFeatures;
+    if (type == SGCollectionTypePoints) collectionType = GeoJSONCollectionTypeGeometries;
+    
+    NSMutableDictionary *alteredResponse = [NSMutableDictionary dictionaryWithDictionary:response];
+    NSArray *objects = [alteredResponse objectForKey:@"features"];
+    for (NSMutableDictionary *object in objects) {
+        [self removeAPISpecificKeys:object];
+    }
+    
     NSMutableDictionary *cleanResponse = [NSMutableDictionary dictionary];
-    [cleanResponse setValue:[response objectForKey:@"type"] forKey:@"type"];
-    [cleanResponse setValue:[response objectForKey:@"features"] forKey:@"features"];
-    [cleanResponse setValue:[response objectForKey:@"geometries"] forKey:@"geometries"];
+    NSDictionary *featureCollection = [features asGeoJSONCollection:collectionType];
+    [cleanResponse setValue:[alteredResponse objectForKey:@"type"] forKey:@"type"];
+    [cleanResponse setValue:[alteredResponse objectForKey:@"features"] forKey:@"features"];
+    [cleanResponse setValue:[alteredResponse objectForKey:@"geometries"] forKey:@"geometries"];
     GHAssertEqualObjects(cleanResponse, featureCollection, @"Feature's GeoJSON should match response geoJSON");
+}
+
+- (void)removeAPISpecificKeys:(NSMutableDictionary *)object
+{
+    [object removeObjectForKey:@"distance"];
+    [object removeObjectForKey:@"selfLink"];
+    [object removeObjectForKey:@"layerLink"];
+    
+    NSMutableDictionary *propsDict = [NSMutableDictionary dictionaryWithDictionary:[object objectForKey:@"properties"]];
+    [propsDict removeObjectForKey:@"distance"];
+    [propsDict removeObjectForKey:@"href"];
+    [object setObject:propsDict forKey:@"properties"];
 }
 
 @end

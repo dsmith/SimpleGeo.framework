@@ -39,7 +39,8 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 
 @implementation SimpleGeo (Storage)
 
-#pragma mark Record Request Methods
+#pragma mark -
+#pragma mark Record Requests
 
 - (void)getRecord:(NSString *)recordID
           inLayer:(NSString *)layerName
@@ -102,7 +103,8 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                  callback:callback];
 }
 
-#pragma mark Record Manipulation Methods
+#pragma mark -
+#pragma mark Record Manipulations
 
 - (void)addOrUpdateRecord:(SGStoredRecord *)record
                  callback:(SGCallback *)callback
@@ -119,7 +121,7 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@.json",
                      SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
     
-    NSDictionary *featureCollection = [records asSGCollection:SGCollectionTypeRecords];
+    NSDictionary *featureCollection = [records asGeoJSONCollection:GeoJSONCollectionTypeFeatures];
     
     [self sendHTTPRequest:@"POST"
                     toURL:url
@@ -140,7 +142,8 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                  callback:callback];
 }
 
-#pragma mark Layer Request Methods
+#pragma mark -
+#pragma mark Layer Requests
 
 - (void)getLayer:(NSString *)layerName
         callback:(SGCallback *)callback
@@ -175,7 +178,8 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                  callback:callback];
 }
 
-#pragma mark Layer Manipulation Methods
+#pragma mark -
+#pragma mark Layer Manipulations
 
 - (void)addOrUpdateLayer:(SGLayer *)layer
                 callback:(SGCallback *)callback

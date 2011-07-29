@@ -34,6 +34,7 @@
 
 @synthesize featureCategories, featureSubcategories, filters, acsTableIDs;
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

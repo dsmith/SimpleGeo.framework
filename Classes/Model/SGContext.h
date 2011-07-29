@@ -1,8 +1,8 @@
 //
-//  SGPlace.h
-//  SimpleGeo.framework
+//  NSDictionary+SGContext.h
+//  SimpleGeo
 //
-//  Copyright (c) 2011, SimpleGeo Inc.
+//  Copyright (c) 2010-2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,50 +28,30 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGFeature.h"
-@class SGPoint;
+@class SGReverseGeocode;
 
-/*!
- * Place representation
- */
-@interface SGPlace : SGFeature
+@interface SGContext : NSObject
 {
-    // optional
-    NSMutableArray *tags;
-    BOOL isPrivate;
+    @private
+    NSDate *timestamp;
+    NSDictionary *query;
+    SGReverseGeocode *address;
+    NSArray *features;
+    NSDictionary *demographics;
+    NSArray *intersections;
+    NSDictionary *weather;
 }
 
-//! Place tags
-@property (nonatomic, retain) NSMutableArray *tags;
+@property (nonatomic, readonly) NSDate *timestamp;
+@property (nonatomic, readonly) NSDictionary *query;
+@property (nonatomic, readonly) SGReverseGeocode *address;
+@property (nonatomic, readonly) NSArray *features;
+@property (nonatomic, readonly) NSDictionary *demographics;
+@property (nonatomic, readonly) NSArray *intersections;
+@property (nonatomic, readonly) NSDictionary *weather;
 
-//! Place visibility
-@property (nonatomic, assign) BOOL isPrivate;
++ (SGContext *)contextWithDictionary:(NSDictionary *)dictionary;
 
-#pragma mark Instantiation Methods
-
-/*!
- * Create an SGPlace with a name, and location
- * @param name          Place name
- * @param point         Place location
- */
-+ (SGPlace *)placeWithName:(NSString *)name
-                     point:(SGPoint *)point;
-
-/*!
- * Construct an SGPlace from a dictionary that
- * abides by the GeoJSON Feature specification.
- * Note: geoJSON Feature must contain a "name"
- * key and value in the property dictionary
- * @param geoJSONFeature    Feature dictionary
- */
-+ (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-/*!
- * Construct an SGPlace with a name and location
- * @param name          Place name
- * @param point         Place location
- */
-- (id)initWithName:(NSString *)name
-             point:(SGPoint *)point;
+- (id)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

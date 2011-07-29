@@ -37,7 +37,8 @@
  */
 @interface SimpleGeo (Context)
 
-#pragma mark Context Request Methods
+#pragma mark -
+#pragma mark Requests
 
 /*!
  * Get Context matching an SGContextQuery

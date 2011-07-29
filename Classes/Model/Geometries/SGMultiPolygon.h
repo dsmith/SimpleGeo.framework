@@ -36,14 +36,20 @@
 /*!
  * MultiPolygon representation
  */
-@interface SGMultiPolygon : SGGeometry {
+@interface SGMultiPolygon : SGGeometry <SGRegionGeometry>
+{
+    @private
     NSArray *polygons;
 }
 
 //! Polygons that define this multi-polygon
 @property (nonatomic, retain) NSArray *polygons;
 
-#pragma mark Instantiation Methods
+//! Bounding box for the multi-polygon
+@property (nonatomic, readonly) SGEnvelope *envelope;
+
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a multi-polygon from a set of Polygons
@@ -56,18 +62,5 @@
  * @param polygons Polygons
  */
 - (id)initWithPolygons:(NSArray *)polygons;
-
-#pragma mark Convenience Methods
-
-/*!
- * Determine if a given point lies within the bounds of the polygon
- * @param point Point to check
- */
-- (BOOL)containsPoint:(SGPoint *)point;
-
-/*!
- * Bounding box
- */
-- (SGEnvelope *)envelope;
 
 @end

@@ -1,8 +1,8 @@
 //
-//  SGObject.h
+//  SGPlace.h
 //  SimpleGeo.framework
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,63 +28,65 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGGeometry.h"
+#import "SGFeature.h"
+@class SGPoint;
+@class SGAddress;
 
 /*!
- * Abstract object representation
+ * Place representation
  */
-@interface SGObject : NSObject
+@interface SGPlace : SGFeature
 {
-    // required
-    SGGeometry *geometry;
-    // optional
-    NSString *identifier;
-    NSMutableDictionary *properties;
-    // from request
-    NSDictionary *selfLink;
-    NSNumber *distance;
+    @private
+    SGAddress *address;
+    NSMutableArray *tags;
+    BOOL isPrivate;
 }
 
-//! Object geometry
-@property (nonatomic, retain) SGGeometry *geometry;
+//! Place location
+@property (nonatomic, readonly) SGPoint *point;
 
-//! Object ID
-@property (nonatomic, retain) NSString *identifier;
+//! Place tags
+@property (nonatomic, retain, setter = setMutableTags:) NSMutableArray *tags;
 
-//! Object properties
-@property (nonatomic, retain) NSDictionary *properties;
+//! Place visibility
+@property (nonatomic, assign) BOOL isPrivate;
 
-//! API URL for the Object.
-//! Only present if the Object originated from an API request
-@property (nonatomic, readonly) NSDictionary *selfLink;
-
-//! Distance (in meters) from the query point.
-//! Valid for SGObjects with point geometry
-//! Only present if the Object originated from a nearby request
-@property (nonatomic, readonly) NSNumber *distance;
-
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
- * Construct an SGObject from a dictionary that
- * abides by the GeoJSON Feature specification
+ * Create an SGPlace with a name, and location
+ * @param name          Place name
+ * @param point         Place location
+ */
++ (SGPlace *)placeWithName:(NSString *)name
+                     point:(SGPoint *)point;
+
+/*!
+ * Construct an SGPlace from a dictionary that
+ * abides by the GeoJSON Feature specification.
+ * Note: geoJSON Feature must contain a "name"
+ * key and value in the property dictionary
  * @param geoJSONFeature    Feature dictionary
  */
-- (id)initWithGeoJSON:(NSDictionary *)geoJSONFeature;
-
-#pragma mark Convenience Methods
++ (SGPlace *)placeWithGeoJSON:(NSDictionary *)geoJSONFeature;
 
 /*!
- * Set properties; creates a
- * deep mutable copy of a properties dictionary
- * @param properties    Feature properties
+ * Construct an SGPlace with a name and location
+ * @param name          Place name
+ * @param point         Place location
  */
-- (void)setProperties:(NSDictionary *)properties;
+- (id)initWithName:(NSString *)name
+             point:(SGPoint *)point;
+
+#pragma mark -
+#pragma mark Convenience
 
 /*!
- * Dictionary representation of the SGObject that
- * conforms to the geoJSON Feature specification
+ * Set tags from an immutable array of tags
+ * @param tags          Tags
  */
-- (NSDictionary *)asGeoJSON;
+- (void)setTags:(NSMutableArray *)tags;
 
 @end

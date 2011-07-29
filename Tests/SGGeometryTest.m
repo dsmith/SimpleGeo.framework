@@ -39,4 +39,38 @@
 
 @implementation SGGeometryTest
 
+- (void)testGeometryForPolygonContainsPoint
+{
+    SGPolygon *singlePolygon = [SGPolygon polygonWithRings:
+                                [NSArray arrayWithObjects:
+                                 [NSArray arrayWithObjects:
+                                  [SGPoint pointWithLat:2.0 lon:2.0],
+                                  [SGPoint pointWithLat:0.0 lon:2.0],
+                                  [SGPoint pointWithLat:0.0 lon:0.0],
+                                  [SGPoint pointWithLat:2.0 lon:0.0],
+                                  [SGPoint pointWithLat:2.0 lon:2.0],
+                                  nil],
+                                 [NSArray arrayWithObjects:
+                                  [SGPoint pointWithLat:1.0 lon:1.0],
+                                  [SGPoint pointWithLat:0.0 lon:1.0],
+                                  [SGPoint pointWithLat:0.0 lon:0.0],
+                                  [SGPoint pointWithLat:1.0 lon:0.0],
+                                  [SGPoint pointWithLat:1.0 lon:1.0],
+                                  nil],
+                                 nil]
+                                ];
+    SGPoint *testPoint1 = [SGPoint pointWithLat:3.0 lon:3.0]; // outside
+    SGPoint *testPoint2 = [SGPoint pointWithLat:1.5 lon:3.0]; // outside but in scope
+    SGPoint *testPoint3 = [SGPoint pointWithLat:1.5 lon:1.5]; // inside
+    SGPoint *testPoint4 = [SGPoint pointWithLat:0.5 lon:0.5]; // inside, but in hole
+    BOOL contains1 = [singlePolygon containsPoint:testPoint1];
+    BOOL contains2 = [singlePolygon containsPoint:testPoint2];
+    BOOL contains3 = [singlePolygon containsPoint:testPoint3];
+    BOOL contains4 = [singlePolygon containsPoint:testPoint4];
+    GHAssertEquals(contains1, NO, nil);
+    GHAssertEquals(contains2, NO, nil);
+    GHAssertEquals(contains3, YES, nil);
+    GHAssertEquals(contains4, NO, nil);
+}
+
 @end

@@ -35,6 +35,7 @@
  */
 @interface SGNearbyQuery : SGQuery
 {
+    @private
     double radius;
     int limit;
 }

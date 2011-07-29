@@ -1,8 +1,8 @@
 //
-//  SGFeature.h
-//  SimpleGeo.framework
+//  SGEnvelope+Mapkit.m
+//  SimpleGeo
 //
-//  Copyright (c) 2010, SimpleGeo Inc.
+//  Copyright (c) 2010-2011, SimpleGeo Inc.
 //  All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,32 +28,35 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SGObject.h"
+#import <CoreLocation/CoreLocation.h>
+#import "SGEnvelope+Mapkit.h"
 
-/*!
- * Feature representation
- */
-@interface SGFeature : SGObject
+@implementation SGEnvelope (Mapkit)
+
+- (MKMapRect)mapRect
 {
-    // required
-    NSString *name;
-    // optional
-    NSMutableArray *classifiers;
+    MKMapPoint nw = MKMapPointForCoordinate(CLLocationCoordinate2DMake(north, west));
+    MKMapPoint se = MKMapPointForCoordinate(CLLocationCoordinate2DMake(south, east));
+    MKMapRect mapBounds = MKMapRectMake(nw.x, nw.y, (se.x-nw.x), (se.y-nw.y));
+    return mapBounds;
 }
 
-//! Feature name
-@property (nonatomic, retain) NSString *name;
+- (MKPolygon *)asMKPolygon
+{
+    CLLocationCoordinate2D coordinates[5] = {
+        CLLocationCoordinate2DMake(north, west),
+        CLLocationCoordinate2DMake(north, east),
+        CLLocationCoordinate2DMake(south, east),
+        CLLocationCoordinate2DMake(south, west),
+        CLLocationCoordinate2DMake(north, west)};
+    MKPolygon *polygon = [MKPolygon polygonWithCoordinates:coordinates count:5 interiorPolygons:nil];
+    free(coordinates);
+    return polygon;
+}
 
-//! Feature classifiers
-@property (nonatomic, retain) NSMutableArray *classifiers;
-
-#pragma mark Instantiation Methods
-
-/*!
- * Create an SGFeature from a dictionary that
- * abides by the GeoJSON Feature specification
- * @param geoJSONFeature    Feature dictionary
- */
-+ (SGFeature *)featureWithGeoJSON:(NSDictionary *)geoJSONFeature;
+- (NSArray *)overlays
+{
+    return [NSArray arrayWithObject:[self asMKPolygon]];
+}
 
 @end

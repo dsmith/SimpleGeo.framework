@@ -30,11 +30,13 @@
 
 #import "SGGeometry.h"
 #import "SGPoint.h"
+#import "SGEnvelope.h"
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
 
 @implementation SGGeometry
 
+#pragma mark -
 #pragma mark GeoJSON -> SGGeometry
 
 + (SGGeometry *)geometryWithGeoJSON:(NSDictionary *)geoJSONGeometry
@@ -47,10 +49,12 @@
     NSString *type = [geoJSONGeometry objectForKey:@"type"];
     if ([type isEqual:@"Point"]) return [[SGPoint alloc] initWithGeoJSON:geoJSONGeometry];
     else if ([type isEqual:@"Polygon"]) return [[SGPolygon alloc] initWithGeoJSON:geoJSONGeometry];
-    else if ([type isEqual:@"MultiPolygon"]) return [[SGMultiPolygon alloc] initWithGeoJSON:geoJSONGeometry];    
+    else if ([type isEqual:@"MultiPolygon"]) return [[SGMultiPolygon alloc] initWithGeoJSON:geoJSONGeometry];
+    else if ([geoJSONGeometry objectForKey:@"bbox"]) return [[SGEnvelope alloc] initWithGeoJSON:geoJSONGeometry];
     return nil;
 }
 
+#pragma mark -
 #pragma mark SGGeometry -> GeoJSON
 
 - (NSDictionary *)asGeoJSON

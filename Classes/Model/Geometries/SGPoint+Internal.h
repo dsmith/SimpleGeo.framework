@@ -1,5 +1,5 @@
 //
-//  SGPoint+Private.h
+//  SGPoint+Internal.h
 //  SimpleGeo.framework
 //
 //  Copyright (c) 2010, SimpleGeo Inc.

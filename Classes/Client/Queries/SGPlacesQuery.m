@@ -34,6 +34,7 @@
 
 @synthesize searchString, categories;
 
+#pragma mark -
 #pragma mark Memory
 
 - (void)dealloc

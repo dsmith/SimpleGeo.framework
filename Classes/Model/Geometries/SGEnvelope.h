@@ -28,13 +28,15 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <SimpleGeo/SimpleGeo.h>
+#import "SGGeometry.h"
+@class SGPoint;
 
 /*!
  * Bounding box representation
  */
-@interface SGEnvelope : SGGeometry
+@interface SGEnvelope : SGGeometry <SGRegionGeometry>
 {
+    @private
     double north;
     double west;
     double south;
@@ -53,7 +55,11 @@
 //! Eastern longitude (right coordinate)
 @property (nonatomic, assign) double east;
 
-#pragma mark Instantiation Methods
+//! Center coordinate
+@property (nonatomic, readonly) SGPoint *center;
+
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a bounding box from edge coordinates

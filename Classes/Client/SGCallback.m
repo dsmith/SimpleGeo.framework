@@ -44,6 +44,9 @@
 @synthesize successBlock, failureBlock;
 #endif
 
+#pragma mark -
+#pragma mark Instantiation
+
 + (SGCallback *) callbackWithDelegate:(id)delegate
                         successMethod:(SEL)successMethod
                         failureMethod:(SEL)failureMethod
@@ -87,6 +90,9 @@
 }
 
 #endif
+
+#pragma mark -
+#pragma mark Memory
 
 - (void)dealloc
 {

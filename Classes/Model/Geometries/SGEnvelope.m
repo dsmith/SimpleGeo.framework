@@ -29,15 +29,14 @@
 //
 
 #import "SGEnvelope.h"
+#import "SGPoint.h"
 
 @implementation SGEnvelope
 
-@synthesize north;
-@synthesize east;
-@synthesize south;
-@synthesize west;
+@synthesize north, east, south, west;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 + (SGEnvelope *)envelopeWithNorth:(double)northernLat
                              west:(double)westernLon
@@ -65,7 +64,47 @@
     return self;
 }
 
-#pragma mark Convenience Methods
+- (id)initWithGeoJSON:(NSDictionary *)geoJSONGeometry
+{
+    NSArray *points = [geoJSONGeometry objectForKey:@"bbox"];
+    if (points && [points count] == 4) 
+        return [self initWithWithNorth:[[points objectAtIndex:0] doubleValue]
+                                  west:[[points objectAtIndex:1] doubleValue]
+                                 south:[[points objectAtIndex:2] doubleValue]
+                                  east:[[points objectAtIndex:3] doubleValue]];
+    return nil;
+}
+
+#pragma mark -
+#pragma mark Convenience
+
+- (SGPoint *)center
+{
+    double lon = (east + west) / 2.0;
+    if (west > east) {
+        if (lon > 0) lon += -180;
+        else lon += 180;
+    }
+    return [SGPoint pointWithLat:(north + south) / 2.0
+                             lon:lon];
+}
+
+- (SGEnvelope *)envelope
+{
+    return self;
+}
+
+- (BOOL)containsPoint:(SGPoint *)point
+{
+    BOOL inLatitudeRange = (point.latitude > south && point.latitude < north);
+    BOOL inLongitudeRange;
+    if (east > west) {
+        inLongitudeRange = (point.longitude > west && point.longitude < east);
+    } else {
+        inLongitudeRange = (point.longitude > west || point.longitude < east);
+    }
+    return (inLatitudeRange && inLongitudeRange);
+}
 
 - (NSDictionary *)asGeoJSON
 {
@@ -82,7 +121,8 @@
     return [[self asGeoJSON] description];
 }
 
-#pragma mark Comparison Methods
+#pragma mark -
+#pragma mark Comparison
 
 - (BOOL)isEqual:(id)object
 {

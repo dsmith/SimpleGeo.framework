@@ -27,6 +27,4 @@ Icon?
 
 # Project-specific ignores
 Documentation/
-ext/
-iOS/ext/
 Tests/SimpleGeoTestSettings.h

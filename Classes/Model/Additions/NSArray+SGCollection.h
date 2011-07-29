@@ -35,10 +35,12 @@
  */
 @interface NSArray (SGCollection)
 
-#pragma mark SGCollection -> SGObjects
+#pragma mark -
+#pragma mark SG GeoJSON Collection -> SGGeoObjects
 
 typedef enum {
     SGCollectionTypePoints,
+    SGCollectionTypeObjects,
     SGCollectionTypeFeatures,
     SGCollectionTypePlaces,
     SGCollectionTypeRecords,
@@ -62,13 +64,19 @@ typedef enum {
 - (id)initWithSGCollection:(NSDictionary *)collection
                       type:(SGCollectionType)collectionType;
 
-#pragma mark SGObjects -> SGCollection
+#pragma mark -
+#pragma mark SGGeoObjects -> GeoJSONCollection
+
+typedef enum {
+    GeoJSONCollectionTypeGeometries,
+    GeoJSONCollectionTypeFeatures,
+} GeoJSONCollectionType;
 
 /*!
- * Create a GeoJSON Collection dictionary from
- * an array of SGGeometries or SGFeatures
+ * Create a GeoJSON Collection dictionary from an array
+ * of objects that respond to *asGeoJSON*
  * @param collectionType    Collection type
  */
-- (NSDictionary *)asSGCollection:(SGCollectionType)collectionType;
+- (NSDictionary *)asGeoJSONCollection:(GeoJSONCollectionType)collectionType;
 
 @end

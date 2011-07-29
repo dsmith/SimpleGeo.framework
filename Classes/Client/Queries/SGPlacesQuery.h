@@ -36,14 +36,15 @@
  */
 @interface SGPlacesQuery : SGNearbyQuery
 {
+    @private
     NSString *searchString;
-    NSMutableArray *categories;
+    NSArray *categories;
 }
 
 //! Seach string for query
 @property (nonatomic, retain) NSString *searchString;
 
 //! Categories to query
-@property (nonatomic, retain) NSMutableArray *categories;
+@property (nonatomic, retain) NSArray *categories;
 
 @end

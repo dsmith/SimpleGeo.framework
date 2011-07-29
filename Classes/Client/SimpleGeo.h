@@ -28,53 +28,50 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+// Requests
 #import "ASIHTTPRequest.h"
+#import "ASIHTTPRequest+OAuth.h"
+#import "JSONKit.h"
+#import "SGCallback.h"
 
+// Geometry
 #import "SGGeometry.h"
 #import "SGPoint.h"
 #import "SGEnvelope.h"
 #import "SGPolygon.h"
 #import "SGMultiPolygon.h"
 
-#import "SGLayer.h"
-#import "SGFeature.h"
-#import "SGPlace.h"
-#import "SGStoredRecord.h"
-
 #if TARGET_OS_IPHONE
+    // Mapkit Additions
     #import "SGGeometry+Mapkit.h"
     #import "SGPoint+Mapkit.h"
     #import "SGPolygon+Mapkit.h"
-    #import "SGMultiPolygon+Mapkit.h"    
+    #import "SGMultiPolygon+Mapkit.h"   
+    #import "SGEnvelope+Mapkit.h"
 #endif
 
+// Objects
+#import "SGAddress.h"
+#import "SGReverseGeocode.h"
+#import "SGContext.h"
+#import "SGLayer.h"
+
+// Query Objects
 #import "SGContextQuery.h"
 #import "SGPlacesQuery.h"
 #import "SGStorageQuery.h"
 
+// Geo Objects
+#import "SGGeoObject.h"
+#import "SGFeature.h"
+#import "SGPlace.h"
+#import "SGStoredRecord.h"
+
+// Helpers
 #import "SGTypes.h"
 #import "SGCategories.h"
-#import "SGCallback.h"
 #import "NSArray+SGCollection.h"
 #import "NSDictionary+Classifier.h"
-
-/*!
- * \mainpage
- *
- * \section intro_sec Introduction
- *
- * You've reached the documentation for SimpleGeo's Objective-C client.
- * This framework makes it easy to add location-aware features to your app.
- *
- * Need help embedding the framework in your app?
- * Follow the <a href="https://github.com/simplegeo/SimpleGeo.framework/blob/master/README.md">README</a> on Github
- *
- * Need help getting started?
- * Check out our iOS <a href="https://simplegeo.com/docs/tutorials/objective-c)">tutorial.</a>
- *
- * Want easier access to these docs while developing?
- * Download an <a href="https://github.com/simplegeo/SimpleGeo.framework/downloads">Xcode docset.</a>
- */
 
 extern NSString * const SG_API_VERSION;
 extern NSString * const SG_URL_PREFIX;
@@ -84,6 +81,7 @@ extern NSString * const SG_URL_PREFIX;
  */
 @interface SimpleGeo: NSObject
 {
+    @private
     NSString *userAgent;
     NSString *consumerKey;
     NSString *consumerSecret;
@@ -95,7 +93,8 @@ extern NSString * const SG_URL_PREFIX;
 //! Client consumer secret
 @property (nonatomic, readonly) NSString *consumerSecret;
 
-#pragma mark Instantiation Methods
+#pragma mark -
+#pragma mark Instantiation
 
 /*!
  * Create a client for making requests
@@ -115,6 +114,7 @@ extern NSString * const SG_URL_PREFIX;
 
 @end
 
+// Services
 #import "SimpleGeo+Context.h"
 #import "SimpleGeo+Features.h"
 #import "SimpleGeo+Places.h"
