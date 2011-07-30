@@ -93,6 +93,9 @@ extern NSString * const SG_URL_PREFIX;
 //! Client consumer secret
 @property (nonatomic, readonly) NSString *consumerSecret;
 
+//! Timeout interval for requests
+@property (nonatomic, assign) NSTimeInterval requestTimeout;
+
 #pragma mark -
 #pragma mark Instantiation
 

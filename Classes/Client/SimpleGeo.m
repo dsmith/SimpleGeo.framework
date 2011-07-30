@@ -71,6 +71,16 @@ NSString * const SG_URL_PREFIX = @"https://api.simplegeo.com";
     return self;
 }
 
+- (void)setRequestTimeout:(NSTimeInterval)requestTimeout
+{
+    [ASIHTTPRequest setDefaultTimeOutSeconds:requestTimeout];
+}
+
+- (NSTimeInterval)requestTimeout
+{
+    return [ASIHTTPRequest defaultTimeOutSeconds];
+}
+
 #pragma mark -
 #pragma mark Request
 
