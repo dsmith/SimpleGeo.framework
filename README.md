@@ -11,7 +11,7 @@ submodule](http://book.git-scm.com/5_submodules.html). In either case, you'll wa
 Here's an example of adding `SimpleGeo.framework` as a submodule:
 
     $ git submodule add -b framework-ios \
-      git://github.com/simplegeo/SimpleGeo.framework.git ext/SimpleGeo.framework
+      git://github.com/simplegeo/SimpleGeo.framework.git Resources/SimpleGeo.framework
 
 ## Embedding in an iOS Application
 
@@ -28,12 +28,11 @@ Add the following additional frameworks to your project by clicking on your Targ
 * CoreLocation
 * MapKit
 * libz
-* YAJLiOS (if it's not already present)
 * SimpleGeo (if it's not already present)
 
 Non-system frameworks must be statically linked to your application (iOS does not allow embedded frameworks), so you'll need to add `-ObjC` and `-all_load` to "Other Linker Flags" (accessible via the "Linking" section under your Target's  "Build Settings" tab).
 
-[SimpleGeo-iPhone](https://github.com/simplegeo/SimpleGeo-iPhone) is an example of an iOS application built using `SimpleGeo.framework`.
+[SimpleGeo-iOS](https://github.com/simplegeo/SimpleGeo-iOS) is an example of an iOS application built using `SimpleGeo.framework`.
 
 ## Embedding in a Cocoa Application
 
@@ -44,10 +43,9 @@ Add the following additional frameworks to your project by clicking on your Targ
 * CoreServices
 * SystemConfiguration
 * libz
-* YAJL (if it's not already present)
 * SimpleGeo (if it's not already present)
 
-[SimpleApp](https://github.com/simplegeo/SimpleApp) is an example of a Cocoa application built using `SimpleGeo.framework`.
+[SimpleGeo-Mac](https://github.com/simplegeo/SimpleGeo-Mac) is an example of a Cocoa application built using `SimpleGeo.framework`.
 
 ## Getting Started
 
@@ -55,16 +53,15 @@ If you'd like help getting started with some basic tutorials, visit our [Objecti
 
 ## Working from Source
 
-You may download and modify the `SimpleGeo.framework` source code to meet custom needs. If you make edits that may be appreciated by others, please submit a gitHub pull request.
+You may download and modify the `SimpleGeo.framework` source code to meet custom needs. If you make edits that may be appreciated by others, please submit a GitHub pull request.
 
 ### Downloading Dependencies
 
 `SimpleGeo.framework` depends on the following codebases:
 
 * [`ASIHTTPRequest`](http://allseeing-i.com/ASIHTTPRequest/) (a git submodule)
-* [`ASIHTTPRequest+OAuth`](https://github.com/AlterTap/asi-http-request-oauth.git) (a git submodule)
-* [`YAJL.framework`](https://github.com/gabriel/yajl-objc/downloads) (for Cocoa projects)
-* [`YAJLiOS.framework`](https://github.com/gabriel/yajl-objc/downloads) (for iOS projects)
+* [`ASIHTTPRequest+OAuth`](https://github.com/AlterTap/asi-http-request-oauth) (a git submodule)
+* [`JSONKit`](https://github.com/johnezang/JSONKit) (a git submodule)
 * [`GHUnit.framework`](https://github.com/gabriel/gh-unit/downloads) (for testing)
 
 An included script can get you up and running quickly. To download and update dependencies, simply run:
@@ -73,10 +70,8 @@ An included script can get you up and running quickly. To download and update de
 
 The script does the following:
 
-* Downloads [`YAJL.framework`](https://github.com/gabriel/yajl-objc/downloads) into the framework's ext/ directory
-* Downloads [`YAJLiOS.framework`](https://github.com/gabriel/yajl-objc/downloads) into the framework's iOS/ext directory
-* Downloads [`GHUnit.framework`](https://github.com/gabriel/gh-unit/downloads) into the framework's ext/ directory
-* Runs `$ git submodule update --init` to download and update the [`ASIHTTPRequest`](http://allseeing-i.com/ASIHTTPRequest/) and [`ASIHTTPRequest+OAuth`](https://github.com/AlterTap/asi-http-request-oauth.git) submodules. If git is not installed, the appropriate files are simply downloaded into the framework's ext/ directory.
+* Downloads [`GHUnit.framework`](https://github.com/gabriel/gh-unit/downloads) into the framework's Resources/ directory
+* Runs `$ git submodule update --init` to download and update the [`ASIHTTPRequest`](http://allseeing-i.com/ASIHTTPRequest/), [`ASIHTTPRequest+OAuth`](https://github.com/AlterTap/asi-http-request-oauth), and [`JSONKit`](https://github.com/johnezang/JSONKit) submodules. If git is not installed, the appropriate files are simply downloaded into the framework's Resources/ directory.
 
 ### Building for OS X
 
