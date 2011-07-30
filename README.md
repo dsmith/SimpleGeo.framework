@@ -66,7 +66,7 @@ You may download and modify the `SimpleGeo.framework` source code to meet custom
 
 An included script can get you up and running quickly. To download and update dependencies, simply run:
 
-	./scripts/update-dependencies
+	./Scripts/update-dependencies
 
 The script does the following:
 
