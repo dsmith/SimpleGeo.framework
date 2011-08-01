@@ -26,4 +26,5 @@ Icon?
 .Trashes
 
 # Project-specific ignores
-docs/
+Documentation/
+Tests/SimpleGeoTestSettings.h
