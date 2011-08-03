@@ -43,10 +43,10 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     
-    [parameters setValue:[query.filters componentsJoinedByString:@","] forKey:@"filter"];
-    [parameters setValue:[query.featureCategories componentsJoinedByString:@","] forKey:@"features__category"];
-    [parameters setValue:[query.featureSubcategories componentsJoinedByString:@","] forKey:@"features__subcategory"];
-    [parameters setValue:[query.acsTableIDs componentsJoinedByString:@","]  forKey:@"demographics.acs__table"];
+    [parameters setValue:query.filters forKey:@"filter"];
+    [parameters setValue:query.featureCategories forKey:@"features__category"];
+    [parameters setValue:query.featureSubcategories forKey:@"features__subcategory"];
+    [parameters setValue:query.acsTableIDs forKey:@"demographics.acs__table"];
     
     [self sendHTTPRequest:@"GET"
                    toFile:[NSString stringWithFormat:@"/context/%@",[self baseEndpointForQuery:query]]

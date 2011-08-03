@@ -45,7 +45,7 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.searchString forKey:@"q"];
-    [parameters setValue:[query.categories componentsJoinedByString:@","] forKey:@"category"];
+    [parameters setValue:query.categories forKey:@"category"];
     [parameters setValue:[NSString stringWithFormat:@"%f", query.radius] forKey:@"radius"];
     [parameters setValue:[NSString stringWithFormat:@"%d", query.limit] forKey:@"num"];
                   
