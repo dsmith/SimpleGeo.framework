@@ -31,6 +31,8 @@
 #import "SimpleGeo+Features.h"
 #import "SimpleGeo+Internal.h"
 
+#import "JSONKit.h"
+
 @implementation SimpleGeo (Features)
 
 #pragma mark -
@@ -43,22 +45,17 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     if (zoom) [parameters setValue:[NSString stringWithFormat:@"%d",[zoom intValue]] forKey:@"zoom"];
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, handle];
-    
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:[NSString stringWithFormat:@"/features/%@", handle]
                withParams:parameters
                  callback:callback];
 }
 
 - (void)getCategoriesWithCallback:(SGCallback *)callback
 {    
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/categories.json",
-                     SG_URL_PREFIX, SG_API_VERSION];
     
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:@"/features/categories"
                withParams:nil
                  callback:callback];
 }
@@ -66,11 +63,8 @@
 - (void)getAnnotationsForFeature:(NSString *)handle
                         callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
-                     SG_URL_PREFIX, SG_API_VERSION, handle];
-    
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                   toFile:[NSString stringWithFormat:@"/features/%@/annotations", handle]
                withParams:nil
                  callback:callback];
 }
@@ -86,13 +80,9 @@
     NSMutableDictionary *annotationDict = [NSMutableDictionary dictionaryWithObject:annotation forKey:@"annotations"];
     [annotationDict setValue:[NSNumber numberWithBool:isPrivate] forKey:@"private"];
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@/annotations.json",
-                     SG_URL_PREFIX, SG_API_VERSION, handle];
-    
-    NSLog(@"%@", annotationDict);
     [self sendHTTPRequest:@"POST"
-                    toURL:url
-               withParams:annotationDict
+                   toFile:[NSString stringWithFormat:@"/features/%@/annotations", handle]
+               withParams:[annotationDict JSONData]
                  callback:callback];
 }
 

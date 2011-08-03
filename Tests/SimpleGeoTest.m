@@ -31,13 +31,15 @@
 #import "SimpleGeoTest.h"
 #import "NSArray+SGCollection.h"
 
+static SimpleGeo *sharedClient = nil;
+
 @interface SimpleGeoTest ()
 - (void)removeAPISpecificKeys:(NSMutableDictionary *)geoObject;
 @end
 
 @implementation SimpleGeoTest
 
-@synthesize addedPlaceIDs, recordHistoryCursor;
+@synthesize addedPlaceIDs, recordHistoryCursor, failureBlock;
 
 - (id)init
 {
@@ -57,8 +59,10 @@
 
 - (SimpleGeo *)client
 {
-    return [SimpleGeo clientWithConsumerKey:SGTestKey
-                             consumerSecret:SGTestSecret];
+    if(!sharedClient)
+        sharedClient = [[SimpleGeo clientWithConsumerKey:SGTestKey
+                                          consumerSecret:SGTestSecret] retain];
+    return sharedClient;
 }
 
 - (SGPoint *)point
@@ -83,27 +87,11 @@
 
 #pragma mark Basic Callbacks
 
-- (SGCallback *)blockCallbacks
-{
-    return [SGCallback callbackWithSuccessBlock:[self successBlock]
-                                   failureBlock:[self failureBlock]];
-}
-
 - (SGCallback *)delegateCallbacks
 {
-    return [SGCallback callbackWithDelegate:self
-                              successMethod:@selector(requestDidSucceed:)
-                              failureMethod:@selector(requestDidFail:)];
-}
-
-#pragma mark Basic Handler Blocks
-
-- (SGSuccessBlock)successBlock
-{
-    return [[^(NSDictionary *response) {
-        GHTestLog(@"%@", response);
-        [self notify:kGHUnitWaitStatusSuccess];
-    } copy] autorelease];
+    return [[[SGCallback alloc] initWithDelegate:self
+                                  successMethod:@selector(requestDidSucceed:)
+                                  failureMethod:@selector(requestDidFail:)] autorelease];
 }
 
 - (SGFailureBlock)failureBlock
@@ -116,7 +104,7 @@
 
 #pragma mark Basic Handler Delegate Methods
 
-- (void)requestDidSucceed:(NSDictionary *)response
+- (void)requestDidSucceed:(NSObject *)response
 {
     GHTestLog(@"%@", response);
     [self notify:kGHUnitWaitStatusSuccess];
@@ -130,7 +118,7 @@
 
 #pragma mark Basic Check Methods
 
-- (void)checkSGFeatureConversion:(NSDictionary *)response
+- (void)checkSGFeatureConversion:(id)response
                           object:(SGGeoObject *)object
 {
     NSMutableDictionary *alteredResponse = [[NSMutableDictionary dictionaryWithDictionary:response] retain];;
@@ -140,7 +128,7 @@
     [alteredResponse release];
 }
 
-- (void)checkSGCollectionConversion:(NSDictionary *)response
+- (void)checkSGCollectionConversion:(id)response
                                type:(SGCollectionType)type
 {
     NSArray *features = [NSArray arrayWithSGCollection:response type:type];
@@ -148,9 +136,11 @@
     if (type == SGCollectionTypePoints) collectionType = GeoJSONCollectionTypeGeometries;
     
     NSMutableDictionary *alteredResponse = [NSMutableDictionary dictionaryWithDictionary:response];
-    NSArray *objects = [alteredResponse objectForKey:@"features"];
-    for (NSMutableDictionary *object in objects) {
-        [self removeAPISpecificKeys:object];
+    NSMutableArray *objects = [NSMutableArray array];
+    for (NSDictionary *object in [alteredResponse objectForKey:@"features"]) {
+        NSMutableDictionary *feature = [NSMutableDictionary dictionaryWithDictionary:object];
+        [self removeAPISpecificKeys:feature];
+        [objects addObject:feature];
     }
     
     NSMutableDictionary *cleanResponse = [NSMutableDictionary dictionary];

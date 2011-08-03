@@ -28,37 +28,12 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SimpleGeo.h"
+@class SimpleGeo;
+
+extern NSString *SG_API_VERSION;
+extern NSString *SG_MAIN_URL;
 
 @interface SimpleGeo (Internal)
-
-#pragma mark -
-#pragma mark Request
-
-/*!
- * Send an API request
- * @param type      Request type
- * @param url       Request URL
- * @param params    Request parameters
- * @param callback  Request callback
- */
-- (void)sendHTTPRequest:(NSString *)type
-                  toURL:(NSString *)url
-             withParams:(NSDictionary *)parameters 
-               callback:(SGCallback *)callback;
-
-#pragma mark -
-#pragma mark Dispatcher
-
-/*!
- * Handle an API response;
- * Dispatch the response data (or error) appropriately
- * depending on the specified callback mechanism
- * @param response  Finished HTTP request object
- * @param failed    Whether or not the request failed
- */
-- (void) handleResponse:(ASIHTTPRequest *)response
-                 failed:(BOOL)failed;
 
 #pragma mark -
 #pragma mark Helpers
@@ -70,16 +45,15 @@
  */
 - (NSString *)baseEndpointForQuery:(SGQuery *)query;
 
-/*!
- * Encode a URL string
- * @param urlString     String to encode
- */
-- (NSURL *)encodeURLString:(NSString *)urlString;
+- (void)sendHTTPRequest:(NSString *)type
+                 toFile:(NSString *)file
+             withParams:(id)params 
+               callback:(SGCallback *)callback;
 
-/*!
- * Normalize an array of request parameters into a URL string
- * @param parameters    Parameter array
- */
-- (NSString *)normalizeRequestParameters:(NSDictionary *)parameters;
+- (void)sendHTTPRequest:(NSString *)type
+                 toFile:(NSString *)file
+             withParams:(id)params 
+                version:(NSString *)version
+               callback:(SGCallback *)callback;
 
 @end

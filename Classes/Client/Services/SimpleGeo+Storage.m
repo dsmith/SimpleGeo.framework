@@ -32,10 +32,10 @@
 #import "SimpleGeo+Internal.h"
 #import "SGStorageQuery.h"
 #import "NSArray+SGCollection.h"
-#import "SGCallback.h"
 #import "SGLayer.h"
+#import "JSONKit.h"
 
-NSString * const SG_API_VERSION_STORAGE = @"0.1";
+static NSString *storageAPIVersion = @"0.1";
 
 @implementation SimpleGeo (Storage)
 
@@ -46,12 +46,12 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
           inLayer:(NSString *)layerName
          callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
+    NSString *url = [NSString stringWithFormat:@"/records/%@/%@", layerName, recordID];
     
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:url
                withParams:nil
+                  version:storageAPIVersion
                  callback:callback];
 }
 
@@ -75,12 +75,12 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     [parameters setValue:query.propertyStartValue forKey:@"prop.start"];
     [parameters setValue:query.propertyEndValue forKey:@"prop.end"];
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/nearby/%@",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, query.layer, [self baseEndpointForQuery:query]];
+    NSString *url = [NSString stringWithFormat:@"/records/%@/nearby/%@", query.layer, [self baseEndpointForQuery:query]];
 
     [self sendHTTPRequest:@"GET"
-                  toURL:url
+                    toFile:url
              withParams:parameters
+                  version:storageAPIVersion     
                callback:callback];
 }
 
@@ -94,12 +94,12 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     if (limit) [parameters setValue:[NSString stringWithFormat:@"%d", [limit intValue]] forKey:@"limit"];
     [parameters setValue:cursor forKey:@"cursor"];
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@/history.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
+    NSString *url = [NSString stringWithFormat:@"/records/%@/%@/history", layerName, recordID];
     
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:url
                withParams:parameters
+                  version:storageAPIVersion
                  callback:callback];
 }
 
@@ -118,14 +118,14 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
                    inLayer:(NSString *)layerName
                   callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
+    NSString *url = [NSString stringWithFormat:@"/records/%@", layerName];
     
     NSDictionary *featureCollection = [records asGeoJSONCollection:GeoJSONCollectionTypeFeatures];
     
     [self sendHTTPRequest:@"POST"
-                    toURL:url
-               withParams:featureCollection
+                    toFile:url
+               withParams:[featureCollection JSONData]
+                  version:storageAPIVersion
                  callback:callback];
 }
 
@@ -133,12 +133,12 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
              inLayer:(NSString *)layerName
             callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/records/%@/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName, recordID];
+    NSString *url = [NSString stringWithFormat:@"/records/%@/%@", layerName, recordID];
     
     [self sendHTTPRequest:@"DELETE"
-                    toURL:url
+                    toFile:url
                withParams:nil
+                  version:storageAPIVersion     
                  callback:callback];
 }
 
@@ -148,12 +148,12 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 - (void)getLayer:(NSString *)layerName
         callback:(SGCallback *)callback
 {    
-    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
+    NSString *url = [NSString stringWithFormat:@"/layers/%@", layerName];
     
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:url
                withParams:nil
+                  version:storageAPIVersion
                  callback:callback];
 }
 
@@ -169,12 +169,10 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:cursor forKey:@"cursor"];
     
-    NSString *url = [NSString stringWithFormat:@"%@/%@/layers.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE];
-    
     [self sendHTTPRequest:@"GET"
-                    toURL:url
+                    toFile:@"/layers"
                withParams:parameters
+                  version:storageAPIVersion
                  callback:callback];
 }
 
@@ -184,24 +182,24 @@ NSString * const SG_API_VERSION_STORAGE = @"0.1";
 - (void)addOrUpdateLayer:(SGLayer *)layer
                 callback:(SGCallback *)callback
 {    
-    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layer.name];
+    NSString *url = [NSString stringWithFormat:@"/layers/%@", layer.name];
     
     [self sendHTTPRequest:@"PUT"
-                    toURL:url
-               withParams:[layer asDictionary]
+                    toFile:url
+               withParams:[[layer asDictionary] JSONData]
+                  version:storageAPIVersion
                  callback:callback];
 }
 
 - (void)deleteLayer:(NSString *)layerName
            callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/layers/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION_STORAGE, layerName];
+    NSString *url = [NSString stringWithFormat:@"/layers/%@", layerName];
     
     [self sendHTTPRequest:@"DELETE"
-                    toURL:url
+                    toFile:url
                withParams:nil
+                  version:storageAPIVersion
                  callback:callback];
 }
 

@@ -47,11 +47,11 @@
     [[self client] getFeatureWithHandle:SGTestFeatureHandlePoint
                                    zoom:nil
                                callback:[SGCallback callbackWithSuccessBlock:
-                                         ^(NSDictionary *response) {
-                                             SGFeature *feature = [SGFeature featureWithGeoJSON:response];
+                                         ^(id response) {
+                                             SGFeature *feature = [SGFeature featureWithGeoJSON:(NSDictionary *)response];
                                              SGLog(@"SGFeature: %@", feature);
-                                             [self checkSGFeatureConversion:response object:feature];
-                                             [self successBlock](response);
+                                             [self checkSGFeatureConversion:(NSDictionary *)response object:feature];
+                                             [self requestDidSucceed:response];
                                          } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -62,11 +62,11 @@
     [[self client] getFeatureWithHandle:SGTestFeatureHandlePolygon
                                    zoom:[NSNumber numberWithInt:5]
                                callback:[SGCallback callbackWithSuccessBlock:
-                                         ^(NSDictionary *response) {
-                                             SGFeature *feature = [SGFeature featureWithGeoJSON:response];
+                                         ^(id response) {
+                                             SGFeature *feature = [SGFeature featureWithGeoJSON:(NSDictionary *)response];
                                              SGLog(@"SGFeature: %@", feature);
                                              [self checkSGFeatureConversion:response object:feature];
-                                             [self successBlock](response);
+                                             [self requestDidSucceed:response];
                                          } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -77,11 +77,11 @@
     [[self client] getFeatureWithHandle:SGTestFeatureHandleMultiPolygon
                                    zoom:nil
                                callback:[SGCallback callbackWithSuccessBlock:
-                                         ^(NSDictionary *response) {
-                                             SGFeature *feature = [SGFeature featureWithGeoJSON:response];
+                                         ^(id response) {
+                                             SGFeature *feature = [SGFeature featureWithGeoJSON:(NSDictionary *)response];
                                              SGLog(@"SGFeature: %@", feature);
                                              [self checkSGFeatureConversion:response object:feature];
-                                             [self successBlock](response);
+                                             [self requestDidSucceed:response];
                                          } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -90,7 +90,7 @@
 {
     [self prepare];
     [[self client] getAnnotationsForFeature:SGTestFeatureHandlePolygon
-                                   callback:SGTestCallback];
+                                   callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -102,7 +102,7 @@
     [[self client] annotateFeature:SGTestFeatureHandlePoint
                     withAnnotation:testAnnotations
                          isPrivate:YES
-                          callback:SGTestCallback];
+                          callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -111,10 +111,10 @@
     [self prepare];
     [[self client] getAnnotationsForFeature:SGTestFeatureHandlePoint
                                    callback:[SGCallback callbackWithSuccessBlock:
-                                             ^(NSDictionary *response) {
-                                                 GHAssertEqualObjects([[[response objectForKey:@"private"] objectForKey:@"testAnnotations"] objectForKey:@"testNote"],
+                                             ^(id response) {
+                                                 GHAssertEqualObjects([[[(NSDictionary *)response objectForKey:@"private"] objectForKey:@"testAnnotations"] objectForKey:@"testNote"],
                                                                       @"testing", @"Feature's annotation should contain our annotation");
-                                                 [self successBlock](response);
+                                                 [self requestDidSucceed:response];
                                              } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -122,8 +122,8 @@
 - (void)testGetCategories
 {
     [self prepare];
-    [[self client] getCategoriesWithCallback:SGTestCallback];
-    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
+    [[self client] getCategoriesWithCallback:[self delegateCallbacks]];
+    [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];    
 }
 
 @end

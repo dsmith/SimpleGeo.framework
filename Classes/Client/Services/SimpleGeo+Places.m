@@ -32,6 +32,7 @@
 #import "SimpleGeo+Internal.h"
 #import "SGPlacesQuery.h"
 #import "SGPlace.h"
+#import "JSONKit.h"
 
 @implementation SimpleGeo (Places)
 
@@ -44,15 +45,12 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setValue:query.address forKey:@"address"];
     [parameters setValue:query.searchString forKey:@"q"];
-    [parameters setValue:query.categories forKey:@"category"];
+    [parameters setValue:[query.categories componentsJoinedByString:@","] forKey:@"category"];
     [parameters setValue:[NSString stringWithFormat:@"%f", query.radius] forKey:@"radius"];
     [parameters setValue:[NSString stringWithFormat:@"%d", query.limit] forKey:@"num"];
-    
-    NSString *url = [NSString stringWithFormat:@"%@/%@/places/%@",
-                     SG_URL_PREFIX, SG_API_VERSION, [self baseEndpointForQuery:query]];
                   
     [self sendHTTPRequest:@"GET"
-                  toURL:url
+                    toFile:[NSString stringWithFormat:@"/places/%@",[self baseEndpointForQuery:query]]
              withParams:parameters
                callback:callback];
 }
@@ -63,36 +61,30 @@
 - (void)addPlace:(SGPlace *)place
         callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/places",
-                     SG_URL_PREFIX, SG_API_VERSION];
+    NSString *urlString = [NSString stringWithFormat:@"%@/%@/places", 
+                           SG_MAIN_URL, SG_API_VERSION, nil];
     
     [self sendHTTPRequest:@"POST"
-                    toURL:url
-               withParams:[place asGeoJSON]
-                 callback:callback];
+                    toURL:[NSURL URLWithString:urlString]
+               withParams:[[place asGeoJSON] JSONData]
+                 callback:callback];    
 }
 
 - (void)updatePlace:(NSString *)identifier
           withPlace:(SGPlace *)place
            callback:(SGCallback *)callback
 {
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, identifier];
-    
     [self sendHTTPRequest:@"POST"
-                    toURL:url
-               withParams:[place asGeoJSON]
+                   toFile:[NSString stringWithFormat:@"/features/%@", identifier]
+               withParams:[[place asGeoJSON] JSONData]
                  callback:callback];
 }
 
 - (void)deletePlace:(NSString *)identifier
            callback:(SGCallback *)callback
-{
-    NSString *url = [NSString stringWithFormat:@"%@/%@/features/%@.json",
-                     SG_URL_PREFIX, SG_API_VERSION, identifier];
-    
+{   
     [self sendHTTPRequest:@"DELETE"
-                    toURL:url
+                   toFile:[NSString stringWithFormat:@"/features/%@", identifier]
                withParams:nil
                  callback:callback];
 }

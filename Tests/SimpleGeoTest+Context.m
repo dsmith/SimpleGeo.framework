@@ -70,7 +70,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithPoint:[self point]];
-    [[self client] getContextForQuery:query callback:SGTestCallback];
+    [[self client] getContextForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -78,7 +78,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithAddress:SGTestAddress];
-    [[self client] getContextForQuery:query callback:SGTestCallback];
+    [[self client] getContextForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -86,7 +86,7 @@
 {
     [self prepare];
     SGContextQuery *query = [SGContextQuery queryWithEnvelope:[self envelope]];
-    [[self client] getContextForQuery:query callback:SGTestCallback];
+    [[self client] getContextForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -97,10 +97,10 @@
     [query setFilters:[self contextFilters]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals([query.filters count]+2, [response count],
+                                       ^(id response) {
+                                           GHAssertEquals([query.filters count]+2, [(NSDictionary *)response count],
                                                           @"Response should contain only filtered parts");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -112,10 +112,10 @@
     [query setFeatureCategories:[self contextCategories]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals([query.featureCategories count], [[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals([query.featureCategories count], [[(NSDictionary *)response objectForKey:@"features"] count],
                                                           @"Response should contain only features with specified categories");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -127,10 +127,10 @@
     [query setFeatureSubcategories:[self contextSubcategories]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals([query.featureSubcategories count], [[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals([query.featureSubcategories count], [[(NSDictionary *)response objectForKey:@"features"] count],
                                                           @"Response should contain only features with specified subcategories");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -142,12 +142,12 @@
     [query setAcsTableIDs:[self contextDemographicsTables]];
     [[self client] getContextForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
+                                       ^(id response) {
                                            for (NSString *table in [query acsTableIDs]) {
-                                               GHAssertNotNil([[[response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:table],
+                                               GHAssertNotNil([[[(NSDictionary *)response objectForKey:@"demographics"] objectForKey:@"acs"] objectForKey:table],
                                                               @"Response should contain specified demographics tables");
                                            }
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }

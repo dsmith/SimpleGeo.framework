@@ -29,10 +29,7 @@
 //
 
 // Requests
-#import "ASIHTTPRequest.h"
-#import "ASIHTTPRequest+OAuth.h"
-#import "JSONKit.h"
-#import "SGCallback.h"
+#import "SGHTTPClient.h"
 
 // Geometry
 #import "SGGeometry.h"
@@ -73,28 +70,12 @@
 #import "NSArray+SGCollection.h"
 #import "NSDictionary+Classifier.h"
 
-extern NSString * const SG_API_VERSION;
-extern NSString * const SG_URL_PREFIX;
-
 /*!
  * Client interface
  */
-@interface SimpleGeo: NSObject
+@interface SimpleGeo: SGHTTPClient
 {
-    @private
-    NSString *userAgent;
-    NSString *consumerKey;
-    NSString *consumerSecret;
 }
-
-//! Client consumer key
-@property (nonatomic, readonly) NSString *consumerKey;
-
-//! Client consumer secret
-@property (nonatomic, readonly) NSString *consumerSecret;
-
-//! Timeout interval for requests
-@property (nonatomic, assign) NSTimeInterval requestTimeout;
 
 #pragma mark -
 #pragma mark Instantiation
@@ -106,14 +87,6 @@ extern NSString * const SG_URL_PREFIX;
  */
 + (SimpleGeo *)clientWithConsumerKey:(NSString *)consumerKey
                       consumerSecret:(NSString *)consumerSecret;
-
-/*!
- * Construct a client for making requests
- * @param consumerKey    OAuth consumer key
- * @param consumerSecret OAuth consumer secret
- */
-- (id)initWithConsumerKey:(NSString *)consumerKey
-           consumerSecret:(NSString *)consumerSecret;
 
 @end
 

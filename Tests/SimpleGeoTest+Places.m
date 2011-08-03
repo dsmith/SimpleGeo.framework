@@ -56,12 +56,12 @@
     [place setTags:[NSArray arrayWithObjects:@"tag1", @"tag2", @"tag3", nil]];
     [[self client] addPlace:place
                    callback:[SGCallback callbackWithSuccessBlock:
-                             ^(NSDictionary *response) {
+                             ^(id response) {
                                  [self prepare];
-                                 [[self client] deletePlace:[response objectForKey:@"id"]
+                                 [[self client] deletePlace:[(NSDictionary *)response objectForKey:@"id"]
                                                    callback:[SGCallback callbackWithSuccessBlock:
-                                                             ^(NSDictionary *response) {
-                                                                 [self successBlock](response);
+                                                             ^(id response) {
+                                                                 [self requestDidSucceed:response];
                                                              } failureBlock:[self failureBlock]]];
                                  [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
                              } failureBlock:[self failureBlock]]];
@@ -80,7 +80,7 @@
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithPoint:[self point]];
-    [[self client] getPlacesForQuery:query callback:SGTestCallback];
+    [[self client] getPlacesForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -88,7 +88,7 @@
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithAddress:SGTestAddress];
-    [[self client] getPlacesForQuery:query callback:SGTestCallback];
+    [[self client] getPlacesForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -98,7 +98,7 @@ COMING SOON
 {
     [self prepare];
     SGPlacesQuery *query = [SGPlacesQuery queryWithEnvelope:[self envelope]];
-    [[self client] getPlacesForQuery:query callback:SGTestCallback];
+    [[self client] getPlacesForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }*/
 
@@ -110,13 +110,13 @@ COMING SOON
     [query setLimit:SGTestLimit];
     [[self client] getPlacesForQuery:query
                             callback:[SGCallback callbackWithSuccessBlock:
-                                      ^(NSDictionary *response) {
+                                      ^(id response) {
                                           GHTestLog(@"%@",response);
-                                          NSArray *places = [NSArray arrayWithSGCollection:response type:SGCollectionTypePlaces];
+                                          NSArray *places = [NSArray arrayWithSGCollection:(NSDictionary *)response type:SGCollectionTypePlaces];
                                           GHTestLog(@"%d %@",(int)[places count],places);
                                           GHAssertEquals((int)[places count], SGTestLimit, @"query should return the limit");
-                                          [self checkSGCollectionConversion:response type:SGCollectionTypePlaces];
-                                          [self successBlock](response);
+                                          [self checkSGCollectionConversion:(NSDictionary *)response type:SGCollectionTypePlaces];
+                                          [self requestDidSucceed:response];
                                       } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -129,10 +129,10 @@ COMING SOON
     [query setSearchString:@"SimpleGeo"];
     [[self client] getPlacesForQuery:query
                             callback:[SGCallback callbackWithSuccessBlock:
-                                      ^(NSDictionary *response) {
-                                          NSArray *places = [NSArray arrayWithSGCollection:response type:SGCollectionTypePlaces];
+                                      ^(id response) {
+                                          NSArray *places = [NSArray arrayWithSGCollection:(NSDictionary *)response type:SGCollectionTypePlaces];
                                           GHAssertEquals((int)[places count], 1, @"query should return one matching place");
-                                          [self successBlock](response);
+                                          [self requestDidSucceed:response];
                                       } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }

@@ -36,10 +36,13 @@
 {
     NSMutableArray *addedPlaceIDs;
     NSString *recordHistoryCursor;
+    
+    SGFailureBlock failureBlock;
 }
 
 @property (nonatomic, retain) NSMutableArray *addedPlaceIDs;
 @property (nonatomic, retain) NSString *recordHistoryCursor;
+@property (nonatomic, readonly) SGFailureBlock failureBlock;
 
 // Test client
 - (SimpleGeo *)client;
@@ -50,21 +53,16 @@
 - (SGEnvelope *)envelope;
 
 // Test callbacks
-- (SGCallback *)blockCallbacks;
 - (SGCallback *)delegateCallbacks;
 
-// Test blocks
-- (SGSuccessBlock)successBlock;
-- (SGFailureBlock)failureBlock;
-
 // Test delegate methods
-- (void)requestDidSucceed:(NSDictionary *)response;
+- (void)requestDidSucceed:(NSObject *)response;
 - (void)requestDidFail:(NSError *)error;
 
 // Check Methods
-- (void)checkSGFeatureConversion:(NSDictionary *)response
+- (void)checkSGFeatureConversion:(id)response
                           object:(SGGeoObject *)object;
-- (void)checkSGCollectionConversion:(NSDictionary *)response
+- (void)checkSGCollectionConversion:(id)response
                                type:(SGCollectionType)type;
 
 @end

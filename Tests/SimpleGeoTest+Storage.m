@@ -117,7 +117,7 @@
 - (void)testAddLayer
 {
     [self prepare];
-    [[self client] addOrUpdateLayer:[self layer] callback:SGTestCallback];
+    [[self client] addOrUpdateLayer:[self layer] callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -127,7 +127,7 @@
     SGLayer *layer = [self layer];
     [layer setDescription:@"updated!"];
     [layer setCallbackURLs:nil];
-    [[self client] addOrUpdateLayer:layer callback:SGTestCallback];
+    [[self client] addOrUpdateLayer:layer callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -135,7 +135,7 @@
 {
     [self prepare];
     [[self client] addOrUpdateRecord:[self recordSimple]
-                            callback:SGTestCallback];
+                            callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -150,7 +150,7 @@
                         nil];
     [[self client] addOrUpdateRecords:records
                               inLayer:SGTestLayer
-                             callback:SGTestCallback];
+                             callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -168,12 +168,12 @@
     [[self client] getRecord:[self recordSimple].identifier
                      inLayer:SGTestLayer
                     callback:[SGCallback callbackWithSuccessBlock:
-                              ^(NSDictionary *response) {
-                                  SGStoredRecord *record = [SGStoredRecord recordWithGeoJSON:response];
+                              ^(id response) {
+                                  SGStoredRecord *record = [SGStoredRecord recordWithGeoJSON:(NSDictionary *)response];
                                   SGLog(@"SGStoredRecord: %@", record);
                                   GHAssertEqualObjects(response, [record asGeoJSON],
                                                        @"Record's GeoJSON should match response geoJSON");
-                                  [self successBlock](response);
+                                  [self requestDidSucceed:response];
                               } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -184,11 +184,11 @@
     SGStorageQuery *query = [SGStorageQuery queryWithPoint:[self point] layer:SGTestLayer];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count], SGTestNumRecords,
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count], SGTestNumRecords,
                                                           @"Should return all records");
                                            [self checkSGCollectionConversion:response type:SGCollectionTypeRecords];
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -197,7 +197,7 @@
 {
     [self prepare];
     SGStorageQuery *query = [SGStorageQuery queryWithAddress:SGTestAddress layer:SGTestLayer];
-    [[self client] getRecordsForQuery:query callback:SGTestCallback];
+    [[self client] getRecordsForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -205,7 +205,7 @@
 {
     [self prepare];
     SGStorageQuery *query = [SGStorageQuery queryWithEnvelope:[self envelope] layer:SGTestLayer];
-    [[self client] getRecordsForQuery:query callback:SGTestCallback];
+    [[self client] getRecordsForQuery:query callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -216,11 +216,11 @@
     [query setLimit:SGTestLimit];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertLessThanOrEqual((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertLessThanOrEqual((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                                    SGTestLimit, @"Should return no more records than the limit");
                                            [self checkSGCollectionConversion:response type:SGCollectionTypeRecords];
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -232,11 +232,11 @@
     [query setRadius:SGTestRadius];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           SGTestNumRecords-1, @"Should omit outlier record");
                                            [self checkSGCollectionConversion:response type:SGCollectionTypeRecords];
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -249,10 +249,10 @@
                          to:[[self recordWithCreationDate].created dateByAddingTimeInterval:1]];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           1, @"Should return single matching record");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -266,10 +266,10 @@
     [query setSortType:SGSortOrderPropertyDescending];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           2, @"Should return two matching records");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -284,10 +284,10 @@
     [query setSortType:SGSortOrderCreatedDescending];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           1, @"Should return one matching record");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -302,10 +302,10 @@
     [query setSortType:SGSortOrderDistance];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           1, @"Should return one matching record");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -319,10 +319,10 @@
     [query setPropertyEndValue:[NSNumber numberWithDouble:2.0]];
     [[self client] getRecordsForQuery:query
                              callback:[SGCallback callbackWithSuccessBlock:
-                                       ^(NSDictionary *response) {
-                                           GHAssertEquals((int)[[response objectForKey:@"features"] count],
+                                       ^(id response) {
+                                           GHAssertEquals((int)[[(NSDictionary *)response objectForKey:@"features"] count],
                                                           1, @"Should return one matching record");
-                                           [self successBlock](response);
+                                           [self requestDidSucceed:response];
                                        } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -335,15 +335,15 @@
                                  limit:[NSNumber numberWithInt:1]
                                 cursor:nil
                               callback:[SGCallback callbackWithSuccessBlock:
-                                        ^(NSDictionary *response) {
-                                            NSObject *cursor = [response objectForKey:@"next_cursor"];
+                                        ^(id response) {
+                                            NSObject *cursor = [(NSDictionary *)response objectForKey:@"next_cursor"];
                                             if ([cursor isKindOfClass:[NSString class]]) [self setRecordHistoryCursor:(NSString *)cursor];
-                                            GHAssertGreaterThan((int)[[response objectForKey:@"geometries"] count], 0,
+                                            GHAssertGreaterThan((int)[[(NSDictionary *)response objectForKey:@"geometries"] count], 0,
                                                                 @"Should return at least one geometry");
-                                            GHAssertLessThanOrEqual((int)[[response objectForKey:@"geometries"] count],
+                                            GHAssertLessThanOrEqual((int)[[(NSDictionary *)response objectForKey:@"geometries"] count],
                                                                    SGTestLimit, @"Should return no more history records than the limit");
                                             [self checkSGCollectionConversion:response type:SGCollectionTypePoints];
-                                            [self successBlock](response);
+                                            [self requestDidSucceed:response];
                                         } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -356,10 +356,10 @@
                                  limit:nil
                                 cursor:self.recordHistoryCursor
                               callback:[SGCallback callbackWithSuccessBlock:
-                                        ^(NSDictionary *response) {
-                                            GHAssertGreaterThan((int)[[response objectForKey:@"geometries"] count], 0,
+                                        ^(id response) {
+                                            GHAssertGreaterThan((int)[[(NSDictionary *)response objectForKey:@"geometries"] count], 0,
                                                                 @"Should return at least one geometry");
-                                            [self successBlock](response);
+                                            [self requestDidSucceed:response];
                                         } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -370,12 +370,12 @@
 {
     [self prepare];
     [[self client] getLayer:SGTestLayer callback:[SGCallback callbackWithSuccessBlock:
-                                                  ^(NSDictionary *response) {
-                                                      SGLayer *layer = [SGLayer layerWithDictionary:response];
+                                                  ^(id response) {
+                                                      SGLayer *layer = [SGLayer layerWithDictionary:(NSDictionary *)response];
                                                       SGLog(@"SGLayer: %@", layer);
                                                       GHAssertEqualObjects(response, [layer asDictionary],
                                                                            @"Layers's JSON should match response JSON");
-                                                      [self successBlock](response);
+                                                      [self requestDidSucceed:response];
                                                   } failureBlock:[self failureBlock]]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
@@ -383,14 +383,14 @@
 - (void)testGetLayers
 {
     [self prepare];
-    [[self client] getLayersWithCallback:SGTestCallback];
+    [[self client] getLayersWithCallback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
 - (void)testGetLayersWithCursor
 {
     [self prepare];
-    [[self client] getLayersWithCursor:SGTestLayersCursor callback:SGTestCallback];
+    [[self client] getLayersWithCursor:SGTestLayersCursor callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -407,7 +407,7 @@
     [self prepare];
     [[self client] deleteRecord:SGTestRecordID
                         inLayer:SGTestLayer
-                       callback:SGTestCallback];
+                       callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
@@ -415,7 +415,7 @@
 {
     [self prepare];
     [[self client] deleteLayer:@"com.simplegeo.testing.ios"
-                      callback:SGTestCallback];
+                      callback:[self delegateCallbacks]];
     [self waitForStatus:kGHUnitWaitStatusSuccess timeout:SGTestTimeout];
 }
 
